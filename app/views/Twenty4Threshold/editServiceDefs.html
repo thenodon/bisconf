@@ -1,0 +1,276 @@
+#{extends 'main.html' /}
+#{set title: 'Edit servicedefs' /}
+<h1>
+&{'EditServicedefs'}
+</h1>
+
+<h2>
+    ${servicedef.hostname} &#8658; ${servicedef.servicename} &#8658; ${servicedef.serviceitemname}
+</h2>
+    
+<div class="downlink">
+<ul>
+    <li>
+        <a href="@{addServiceDefs(servicedef.hostname,servicedef.servicename,servicedef.serviceitemname)}">&{'Add'}</a>
+    </li>
+    <li>
+        <a href="@{listServiceDefs()}">&{'ListServiceDefs'}</a>
+    </li>
+<ul>
+</div>
+    
+<!-- 
+${DayOfWeek = new String[7]} 
+${DayOfWeek[0] = "&{'Sunday'}"} 
+${DayOfWeek[1] = "&{'Monday'}"} 
+${DayOfWeek[2] = "&{'Tuesday'}"} 
+${DayOfWeek[3] = "&{'Wednesday'}"} 
+${DayOfWeek[4] = "&{'Thursday'}"} 
+${DayOfWeek[5] = "&{'Friday'}"} 
+${DayOfWeek[6] = "&{'Saturday'}"} 
+-->
+    
+#{if hashperiod}
+    <table class="periods">
+        <thead>
+            <tr>
+                <th>&{'Periods'}</th>
+                <th>&{'PeriodData'}</th>
+                <th>&{'Hour'}</th>
+                <th>&{'Action'}</th>
+                *{ <th>&{'Hash'}</th> }*
+            </tr>
+        </thead>
+        <tbody>
+            #{list items:hashperiod.keySet(), as:'period'}
+                <tr>
+                    <td>
+                
+                    <table class="period">
+                        
+                        <thead>
+                            <tr>
+                                <th>&{'Month'}</th>
+                                <th>&{'DayOfMonth'}</th>
+                                <th>&{'Action'}</th>
+                            </tr>
+                        </thead>
+                        
+                        <tbody>
+                        
+                            #{list hashperiod.get(period).months, as:'month'}
+                            <tr>
+                                <td>
+                                    ${month.month}
+                                </td>
+                                <td>
+                                    ${month.dayofmonth}
+                                </td>
+                                <td> 
+                                <a href="@{deletePeriodMonth(servicedef.hostname,servicedef.servicename,servicedef.serviceitemname,period,month.month,month.dayofmonth)}">&{'Delete'}</a>
+                                </td>
+                            </tr>
+                            #{/list}
+                
+                            <tr>
+                        
+                            #{form @Twenty4Threshold.addPeriodMonth()}
+                            <td>
+                        
+                            &{'Month'}: 
+                            <select class="selectperiod" name="month">
+                                <option value="none">&{'None'}</option>
+                                #{list items:1..12, as:'i'}
+                                    <option value="${i}">${i}</option>
+                                #{/list}
+                            </select>
+                        
+                            </td><td>
+                        
+                            &{'DayOfMonth'}: 
+                            <select class="selectperiod" name="dayofmonth">
+                                <option value="none">&{'None'}</option>
+                                #{list items:1..31, as:'i'}
+                                    <option value="${i}">${i}</option>
+                                #{/list}
+                            </select>
+                        
+                            </td><td>
+                        
+                            <input type="hidden" name="periodindex" value="${period}" />
+                            <input type="hidden" name="hostname" value="${servicedef.hostname}" />
+                            <input type="hidden" name="servicename" value="${servicedef.servicename}" />
+                            <input type="hidden" name="serviceitemname" value="${servicedef.serviceitemname}" />
+                        
+                            <input class="periodbutton" type="submit" value="&{'Add'}" /><br />
+                        
+                            </td>
+                        
+                            #{/form}
+                            
+                            </tr>
+                        
+                        </tbody>
+                                                     
+                   </table>
+                    
+                   <table class="period">
+                        <thead>
+                            <tr>
+                                <th>&{'Week'}</th>
+                                <th>&{'DayOfWeek'}</th>
+                                <th>&{'Action'}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #{list hashperiod.get(period).weeks, as:'week'}
+                
+                            <tr>
+                                <td>
+                                    ${week.week}
+                                </td>
+                                <td>
+                                    ${DayOfWeek[week.dayofweek-1]}
+                                </td>
+                                <td> 
+                                <a href="@{deletePeriodWeek(servicedef.hostname,servicedef.servicename,servicedef.serviceitemname,period,week.week,week.dayofweek)}">&{'Delete'}</a>
+                                </td>
+                            </tr>
+                            #{/list}
+                
+                        
+                            <tr>
+
+                    
+                            #{form @Twenty4Threshold.addPeriodWeek()}
+                            <td>    
+                            &{'Week'}: 
+                            <select class="selectperiod" name="week">
+                                <option value="none">&{'None'}</option>
+                                #{list items:1..53, as:'i'}
+                                    <option value="${i}">${i}</option>
+                                #{/list}
+                            </select>
+                            </td><td>
+                            
+                            &{'DayOfWeek'}: 
+                            <select class="selectperiod" name="dayofweek">
+                                <option value="none">&{'None'}</option>
+                                #{list items:1..7, as:'i'}
+                                    <option value="${i}">${DayOfWeek[i-1]}</option>
+                                #{/list}
+                            </select>
+                            </td>
+                        
+                            <td> 
+                            <input type="hidden" name="periodindex" value="${period}" />
+                            <input type="hidden" name="hostname" value="${servicedef.hostname}" />
+                            <input type="hidden" name="servicename" value="${servicedef.servicename}" />
+                            <input type="hidden" name="serviceitemname" value="${servicedef.serviceitemname}" />
+                        
+                            <input class="periodbutton" type="submit" value="&{'Add'}" /><br />
+                            </td>
+                            
+                            #{/form}               
+                            
+                    
+                            </tr>    
+                        <tbody>
+                             
+                    </table>
+                   
+                    
+                    </td>
+                    <td>
+                    
+                    <div class="periodedit">    
+                    #{form @Twenty4Threshold.savePeriodData()}
+                        <br />
+                        <label for="calcmethod">&{'CalcMetod'}</label>
+                        <select id="calcmethod" name="calcmethod">
+                            <option value="${hashperiod.get(period).calcmethod}">${hashperiod.get(period).calcmethod}</option>
+                            
+                                <option value="&gt;">&gt;</option>
+                                <option value="&lt;">&lt;</option>
+                                <option value="=">=</option>
+                            
+                        </select>
+                        <br />
+                       
+                        <label for="warning">&{'Warning'}</label>
+                        <input id="warning" type="text" name="warning" value="${hashperiod.get(period).warning}" /> 
+                        <br />
+                        
+                        <label for="critical">&{'Critical'}</label>
+                        <input id="critical" type="text" name="critical" value="${hashperiod.get(period).critical}" /> 
+                        <br />
+                        
+                        <input type="hidden" name="periodindex" value="${period}" />
+                        <input type="hidden" name="hostname" value="${servicedef.hostname}" />
+                        <input type="hidden" name="servicename" value="${servicedef.servicename}" />
+                        <input type="hidden" name="serviceitemname" value="${servicedef.serviceitemname}" />
+                    
+                        <input class="submitbutton" type="submit" value="&{'Save'}" /><br />
+
+                    #{/form}
+                    <div>
+                    </td>
+                    
+                    
+                    <td>
+                        <!-- ${hourCounter=new Integer(0)} -->
+                        <table class="hour">
+                        #{list hours.get(hashperiod.get(period).hoursIDREF), as:'hour'}
+                            <tr>
+                                #{if hourCounter < 10}
+                                    <td>0${hourCounter++}</td><td>${hour} </td>
+                                #{/if}
+                                #{else}
+                                    <td>${hourCounter++}</td><td>${hour} </td>
+                                #{/else}
+                            <tr>
+                        #{/list}
+                        </table>
+                        
+                        <div class="hourselect">
+                        #{form @Twenty4Threshold.selectHourID()}
+    
+                        <label for="hourid">&{'HourID'}:</label>
+                        <select id="hourid" name="hourid">
+                            <option value="${hashperiod.get(period).hoursIDREF}" >${hashperiod.get(period).hoursIDREF}</option>
+                            #{list allhourids, as: 'hour'}
+                                <option value="${hour}">${hour}</option>
+                            #{/list}
+                        </select>
+                        
+                        <input type="hidden" name="periodindex" value="${period}" />
+                        <input type="hidden" name="hostname" value="${servicedef.hostname}" />
+                        <input type="hidden" name="servicename" value="${servicedef.servicename}" />
+                        <input type="hidden" name="serviceitemname" value="${servicedef.serviceitemname}" />
+                        <input class="submitbutton" type="submit" value="&{'Select'}" /><br />
+
+                         #{/form}
+                         <a href="@{editHour(hashperiod.get(period).hoursIDREF)}">&{'Edit'}</a>
+                         </div>                        
+                    </td>
+                *{    <td>${hashperiod.get(period).critical}</td> }*
+                *{    <td>${hashperiod.get(period).hoursIDREF}</td> }*
+                    
+                    <td>
+                        <a href="@{deleteServiceDefs(servicedef.hostname,servicedef.servicename,servicedef.serviceitemname,period)}">&{'Delete'}</a>
+                    </td>
+                *{      <td>    }*
+                *{     ${period}}*
+                *{     </td>    }*
+                </tr>
+            #{/list}
+        </tbody>
+    </table>
+    
+
+#{/if}
+#{else}
+<p>
+&{'ServiceDefDoNotExist'}
+</p>
+#{/else}

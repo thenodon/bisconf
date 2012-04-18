@@ -1,0 +1,27 @@
+#{extends 'main.html' /}
+#{set title:'Add Urlproperty' /}
+
+<h1>
+&{'AddtProperties'}
+</h1>
+
+<div class="downlink">
+<ul>
+<li>
+<a href="@{UrlProperties.list()}">&{'ListUrlProperties'}</a>
+</li>
+<ul>
+</div>
+
+<div class="saveedit">
+
+#{form @UrlProperties.save()}
+    
+    &{'Key'}: <input type="text" name="key" />  
+    &{'Value'}: <input type="text" name="value" value="${value}" />
+    <br />
+    
+    <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" />
+    
+#{/form}
+</div>

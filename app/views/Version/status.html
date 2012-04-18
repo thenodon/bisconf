@@ -1,0 +1,40 @@
+#{extends 'main.html' /}
+#{set title: 'Bischeck status' /}
+
+<h1>
+Information of process bischeck 
+</h1>
+#{if bisprop.get('bischeckversion') == "0.3.3"}
+
+<table class="listtable">
+  <tr>
+    <td>&{'BischeckVersion'}</td><td>${bisprop.get('bischeckversion')}</td>
+  </tr>
+  <tr>
+    <td>&{'BischeckPid'}</td><td>${bisprop.get('pid')}</td>
+  </tr>
+  <tr>
+    <td>&{'BischeckUptime'}</td><td>${bisprop.get('uptime')}</td>
+  </tr>
+</table>
+#{/if}
+#{else}
+<table class="listtable">
+  <tr>
+    <td>&{'BischeckVersion'}</td><td>${bisprop.get('bischeckversion')}</td>
+  </tr>
+  <tr>
+    <td>&{'BischeckPid'}</td><td>${bisprop.get('pid')}</td>
+  </tr>
+  <tr>
+    <td>&{'BischeckUptime'}</td><td>${bisprop.get('uptime')}</td>
+  </tr>
+  <tr>
+    <td>&{'BischeckReloadTime'}</td><td>${bisprop.get('reloadtime')}</td>
+  </tr>
+  <tr>
+    <td>&{'BischeckReloadCount'}</td><td>${bisprop.get('reloadcount')}</td>
+  </tr>
+</table>  
+#{/else}
+

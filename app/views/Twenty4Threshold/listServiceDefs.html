@@ -1,0 +1,49 @@
+#{extends 'main.html' /}
+#{set title: 'List hosts' /}
+
+<h1>
+&{'ListServiceDefs'}    
+</h1>
+
+<div class="downlink">
+<ul>
+<li>
+<a href="@{index()}">&{'Twenty4Threshold'}</a>
+</li>
+<ul>
+</div>
+
+
+#{if servicedefs}
+    <table class="listtable">
+        <thead>
+            <tr>
+                <th>&{'Host'}</th>
+                <th>&{'Service'}</th>
+                <th>&{'ServiceItem'}</th>
+                <th>&{'Action'}</th>
+            </tr>
+        </thead>
+        <tbody>
+            #{list servicedefs, as:'servicedef'}
+                <tr>
+                    <td>${servicedef.hostname}</td>
+                    <td>${servicedef.servicename}</td>
+                    <td>${servicedef.serviceitemname}</td>
+                    <td>
+                        <a href="@{editServiceDefs(servicedef.hostname,servicedef.servicename,servicedef.serviceitemname)}">&{'Edit'}</a>
+                        <a href="@{deleteServiceDefs(servicedef.hostname)}">&{'Delete'}</a>
+                    </td>
+                </tr>
+            #{/list}
+        </tbody>
+    </table>
+    
+#{/if}
+
+#{else}
+    <p>
+        Must add host!
+    </p>
+#{/else} 
+

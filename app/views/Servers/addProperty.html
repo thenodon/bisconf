@@ -1,0 +1,36 @@
+#{extends 'main.html' /}
+#{set title:'Add property' /}
+
+<h1>
+&{'AddServerProperty'}
+</h1>
+
+<h2>
+${servername}
+</h2>
+
+
+<div class="downlink">
+<ul>
+<li>
+<a href="@{Servers.edit(servername)}">&{'EditServer'}</a>
+</li>
+</ul>
+</div>
+
+
+
+<div class="saveedit">
+#{form @Servers.saveProperty()}
+    
+    
+    
+    &{'Key'}: <input type="text" name="key" />  
+    &{'Value'}: <input type="text" name="value" value="${value}" />
+    <br />
+    
+    <input type="hidden" name="servername" value="${servername}" />
+    <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" />
+
+#{/form}
+</div>

@@ -1,0 +1,122 @@
+#{extends 'main.html' /}
+#{set title: 'Edit servicedefs' /}
+
+
+
+#{if hashperiod}
+    <table border="3">
+        <thead>
+            <tr>
+                <th>&{'Periods'}</th>
+                <th>&{'PeriodData'}</th>
+                <th>&{'Hour'}</th>
+                <th>&{'Action'}</th>
+                <th>&{'Hash'}</th>
+            </tr>
+        </thead>
+        <tbody>
+            #{list items:hashperiod.keySet(), as:'period'}
+                <tr>
+                    <td>
+                
+                    <table border="1">
+                        <thead>
+                            <tr>
+                                <th>&{'Month'}</th>
+                                <th>&{'DayOfMonth'}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                    #{list hashperiod.get(period).months, as:'month'}
+                
+                            <tr>
+                                <td>
+                                    ${month.month}
+                                </td>
+                                <td>
+                                    ${month.dayofmonth}
+                                </td>
+                            </tr>
+                   #{/list}
+                
+                        </tbody>
+                   </table>
+                
+                
+                   
+                   <table border="1">
+                        <thead>
+                            <tr>
+                                <th>&{'Week'}</th>
+                                <th>&{'DayOfWeek'}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                   #{list hashperiod.get(period).weeks, as:'week'}
+                
+                            <tr>
+                                <td>
+                                    ${week.week}
+                                </td>
+                                <td>
+                                    ${week.dayofweek}
+                                </td>
+                            </tr>
+                    #{/list}
+                
+                        </tbody>
+                    </table>
+                
+                    </td>
+                    
+                    <td>
+                        
+                    #{form @Twenty4Threshold.savePeriodData()}
+    
+                        &{'CalcMetod'}: <input type="text" name="calcmethod" value="${hashperiod.get(period).calcmethod}" /> <br />
+                        &{'Warning'}: <input type="text" name="warning" value="${hashperiod.get(period).warning}" /> <br />
+                        &{'Critical'}: <input type="text" name="critical" value="${hashperiod.get(period).critical}" /> <br />
+                        <input type="hidden" name="periodindex" value="${period}" />
+                        <input type="hidden" name="hostname" value="${servicedef.hostname}" />
+                        <input type="hidden" name="servicename" value="${servicedef.servicename}" />
+                        <input type="hidden" name="serviceitemname" value="${servicedef.serviceitemname}" />
+                    
+                        <input type="submit" value="&{'Save'}" /><br />
+
+                    #{/form}
+                    </td>
+                    
+                    
+                    <td>
+                        <!-- ${hourCounter=new Integer(0)} -->
+                        <table border="1">
+                        #{list hours.get(hashperiod.get(period).hoursIDREF), as:'hour'}
+                            <tr>
+                                #{if hourCounter < 10}
+                                    <td>0${hourCounter++}</td><td>${hour} </td>
+                                #{/if}
+                                #{else}
+                                    <td>${hourCounter++}</td><td>${hour} </td>
+                                #{/else}
+                            <tr>
+                        #{/list}
+                        </table>
+                    </td>
+                *{    <td>${hashperiod.get(period).critical}</td> }*
+                *{    <td>${hashperiod.get(period).hoursIDREF}</td> }*
+                    
+                    <td>
+                        *{<a href="@{editServiceDefs(servicedef.hostname,servicedef.servicename,servicedef.serviceitemname)}">&{'Edit'}</a>}*
+                        *{<a href="@{deleteServiceDefs(servicedef.hostname)}">&{'Delete'}</a>}*
+                    </td>
+                    <td>
+                    ${period}
+                    </td>
+                </tr>
+            #{/list}
+        </tbody>
+    </table>
+    
+
+#{/if}
+<a href="@{listServiceDefs()}">&{'Back'}</a>

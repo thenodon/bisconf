@@ -1,0 +1,61 @@
+#{extends 'main.html' /}
+#{set title: 'Edit servers' /}
+
+
+<h1>
+&{'EditServer'}    
+</h1>
+
+<h2>
+${server.name}
+<h2>
+
+<div class="downlink">
+<ul>
+<li>
+<a href="@{Servers.addProperty(server.name)}">&{'AddProperty'}</a>
+</li>
+<li>
+<a href="@{Servers.list()}">&{'ListServers'}</a>
+</li>
+</ul>
+</div>
+
+<div class="saveedit">
+
+#{form @Servers.save()}
+        
+    <label for="classname">&{'Classname'}</label>
+    <input id="classname" type="text" name="classname" value="${server.clazz}"/>
+    <br />
+    
+    <input type="hidden" name="servername" value="${server.name}">
+    
+    <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" />
+
+#{/form}
+</div>
+
+    <table class="listtable">
+        <thead>
+            <tr>
+                <th>&{'Key'}</th>
+                <th>&{'Value'}</th>
+                <th>&{'Action'}</th>
+            </tr>
+        </thead>
+        <tbody>
+            #{list server.property, as:'property'}
+                <tr>
+                    <td>${property.key}</td>
+                    <td>${property.value}</td>
+                    <td>
+                        <a href="@{editProperty(server.name,property.key,property.value)}">&{'Edit'}</a>
+                        <a href="@{deleteProperty(server.name,property.key)}">&{'Delete'}</a>
+                    </td>
+                </tr>
+            #{/list}
+        </tbody>
+    </table>
+    
+

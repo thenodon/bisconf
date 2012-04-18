@@ -1,0 +1,19 @@
+#{extends 'main.html' /}
+#{set title:'Add version' /}
+<h1>
+&{'AddVersion'}
+</h1>
+
+<div class="saveedit">
+#{form @Version.save()}
+    
+    <label for="comment">&{'Comment'}</label>
+    <input id="comment" type="text" name="comment"  />
+    <br />
+    
+    <input type="hidden" name="username" value="${username}">
+    
+    <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" /><br />
+
+#{/form}
+

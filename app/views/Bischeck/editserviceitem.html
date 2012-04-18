@@ -1,0 +1,57 @@
+#{extends 'main.html' /}
+#{set title:'Edit serviceitem' /}
+
+<h1>
+&{'EditServiceItem'}
+</h1>
+
+<h2>
+${host.name} &#8658; ${service.name} &#8658; ${serviceitem.name} 
+</h2>
+
+<div class="downlink">
+<ul>
+<li>
+<a href="@{editservice(host.name,service.name)}">&{'BackToService'}</a>
+</li><li>
+<a href="@{edithost(host.name)}">&{'BackToHost'}</a>
+</li><li>
+<a href="@{listhosts()}">&{'BackToHosts'}</a>
+</li>
+<ul>
+</div>
+
+<div class="saveedit">
+#{form @Bischeck.saveserviceitem()}
+    
+    
+    <label for="name">&{'ServiceItemName'}</label> 
+    <input id="name" type="text" name="name" value="${serviceitem.name}" />
+    <br />
+    
+    <label for="desc">&{'Description'}</label> 
+    <textarea id="desc" name="desc">${serviceitem.desc}</textarea>
+    <br />
+    
+    <label for="execstatement">&{'ServiceItemExecstatement'}</label> 
+    <input id="execstatement" type="text" name="execstatement" value="${serviceitem.execstatement}" />
+    <br />
+    
+    <label for="serviceitemclass">&{'ServiceItemclass'}</label> 
+    <input id="serviceitemclass" type="text" name="serviceitemclass" value="${serviceitem.serviceitemclass}" />
+    <br />
+    
+    <label for="thresholdclass">&{'ServiceItemThresholdclass'}"</label> 
+    <input id="thresholdclass" type="text" name="thresholdclass" value="${serviceitem.thresholdclass}" />
+    <br />
+    
+    
+    <input type="hidden" name="oldname" value="${serviceitem.name}">
+    <input type="hidden" name="servicename" value="${service.name}">
+    <input type="hidden" name="hostname" value="${host.name}">
+    
+    <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" />
+    
+
+#{/form}
+</div>

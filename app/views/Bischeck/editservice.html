@@ -1,0 +1,98 @@
+#{extends 'main.html' /}
+#{set title:'Edit service' /}
+
+<h1>
+&{'EditService'}    
+</h1>
+
+<h2>
+${host.name} &#8658; ${service.name}
+</h2>
+
+<div class="downlink">
+<ul>
+<li>
+<a href="@{addserviceitem(host.name,service.name)}">&{'AddServiceItem'}</a>
+</li><li>
+<a href="@{edithost(host.name)}">&{'BackToHost'}</a>
+</li><li>
+<a href="@{listhosts()}">&{'BackToHosts'}</a>
+</li><li>
+</ul>
+</div>
+
+<div class="saveedit">
+#{form @Bischeck.saveservice()  }
+    
+    <label for="name">&{'ServiceName'}</label> 
+    <input id="name" type="text" name="name" value="${service.name}" />
+    <br />
+    
+    <label for="desc">&{'Description'}</label> 
+    <textarea id="desc" name="desc">${service.desc}</textarea>
+    <br />
+    
+    <label for="url">&{'ServiceUrl'}</label> 
+    <input id ="url" type="text" name="url" value="${service.url}" />
+    <br />
+    
+    <label for="driver">&{'ServiceDriver'}</label> 
+    <input id="driver" type="text" name="driver" value="${service.driver}" />
+    <br />
+    
+    <p>
+    &{'ServiceSendServer'}
+    </p>
+    
+    <div class="radio">
+    #{if service.sendserver}
+       
+        <label for="true">True</label><INPUT id="true" type="radio" name="sendserver" value="true" checked> <br />
+        <label for="false">False</label><INPUT id="false" type="radio" name="sendserver" value="false">   
+    #{/if}
+    #{else}
+        <label for="true">True</label><INPUT id="true" type="radio" name="sendserver" value="true" > <br />
+        <label for="false">False</label><INPUT id="false" type="radio" name="sendserver" value="false" checked>  
+    #{/else}
+    </div>
+    
+    <input type="hidden" name="oldname" value="${service.name}">
+    <input type="hidden" name="hostname" value="${host.name}">
+    
+    <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" />
+    
+
+#{/form}
+</div>
+
+<a href="@{listserviceschedules(host.name,service.name)}">&{'ListServiceSchedules'}</a></br>
+
+#{if service.serviceitem}
+    <table class="listtable">
+    #{list service.serviceitem, as:'serviceitem'}
+        <tr>
+            <td>&{'ServiceItemName'}</td><td>${serviceitem.name}</td>
+        </tr><tr>
+            <td>&{'ServiceItemDesc'}</td><td>${serviceitem.desc}</td>
+        </tr><tr>
+            <td>&{'ServiceItemExecstatment'}</td><td>${serviceitem.execstatement}</td>
+        </tr><tr>
+            <td>&{'ServiceItemClass'}</td><td>${serviceitem.serviceitemclass}</td>
+        </tr><tr>
+            <td>&{'ServiceItemThresholdClass'}</td><td>${serviceitem.thresholdclass}</td>
+        </tr><tr>
+            <td>
+            <a href="@{editserviceitem(host.name,service.name,serviceitem.name)}">&{'EditServiceItem'}</a>
+            <a href="@{deleteserviceitem(host.name,service.name,serviceitem.name)}">&{'DeleteServiceItem'}</a>
+            </td>
+        </tr>
+        <tr class="separator">
+            <td></td><td></td>
+        </tr>
+    #{/list}
+    </table>    
+#{/if}
+#{else}
+    Must add serviceitem! </br>
+#{/else}
+

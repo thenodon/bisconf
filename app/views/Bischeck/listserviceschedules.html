@@ -1,0 +1,52 @@
+#{extends 'main.html' /}
+#{set title: 'List service schedules' /}
+
+<h1>
+&{'ListServiceSchedules'}    
+</h1>
+
+<h2>
+${host.name} &#8658; ${service.name}
+</h2>
+
+<div class="downlink">
+<ul>
+<li>
+<a href="@{addserviceschedule(host.name,service.name)}">&{'AddServiceSchedule'}</a> 
+</li>
+<li>
+<a href="@{editservice(host.name,service.name)}">&{'BackToService'}</a> 
+</li>
+<ul>
+</div>
+
+#{if service.schedule}
+    <table class="listtable">
+        <thead>
+            <tr>
+                <th>&{'Schedule'}</th>
+                <th>&{'Action'}</th>
+            </tr>
+        </thead>
+        <tbody>
+            #{list service.schedule, as:'schedule'}
+            
+                <tr>
+                    <td>${schedule}</td>
+                    <td>
+                        <a href="@{editserviceschedule(host.name,service.name,schedule)}">&{'Edit'}</a>
+                        <a href="@{deleteserviceschedule(host.name,service.name,schedule)}">&{'Delete'}</a>
+                    </td>
+                </tr>
+            #{/list}
+        </tbody>
+    </table>
+    
+#{/if}
+
+#{else}
+    <p>
+        Must add service schedule!
+    </p>
+#{/else} 
+

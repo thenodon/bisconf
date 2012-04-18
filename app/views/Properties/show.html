@@ -1,0 +1,44 @@
+#{extends 'main.html' /}
+#{set title:'Home' /}
+
+
+${propertiesconfig}
+
+#{set 'moreScripts'}
+<script type="text/javascript">
+    $(function() {
+        $.get("listJSON", function(data) {
+            $.each(data, function(index, prop) {
+                $("#properties").append("<li>" + prop.key +" = "+ prop.value + "</li>");
+            });
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $(function() {
+        $.get("listJSON", function(data) {
+            $.each(data, function(index, prop) {
+                $("#properties1").append(prop.key+"::: <input type=\"text\" name=\"value\" value=\""+prop.value+"\" />");
+                $("#properties1").append("<input type=\"hidden\" name=\"key\" value=\""+ prop.key+"\" /><br />");
+                
+                
+            });
+            $("#properties1").append("<input type=\"submit\" value=\"&{'Save'}\" /><br />");
+        });
+    });
+</script>
+#{/set}
+
+<ul id="properties">
+</ul>
+
+
+
+#{form @Properties.save() , id:'properties1'}
+    
+    
+    
+#{/form}
+
+HELLO

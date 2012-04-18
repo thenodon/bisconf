@@ -1,0 +1,48 @@
+#{extends 'main.html' /}
+#{set title: 'List servers' /}
+
+<h1>
+&{'ListServers'}    
+</h1>
+
+<div class="downlink">
+<ul>
+<li>
+<a href="@{add()}">&{'Add'}</a>
+</li>
+</ul>
+</div>
+
+
+
+#{if servers}
+    <table class="listtable">
+        <thead>
+            <tr>
+                <th>&{'Server'}</th>
+                
+                <th>&{'Action'}</th>
+            </tr>
+        </thead>
+        <tbody>
+            #{list servers, as:'server'}
+                <tr>
+                    <td>${server.name}</td>
+                    
+                    <td>
+                        <a href="@{edit(server.name)}">&{'Edit'}</a>
+                        <a href="@{delete(server.name)}">&{'Delete'}</a>
+                    </td>
+                </tr>
+            #{/list}
+        </tbody>
+    </table>
+    
+#{/if}
+
+#{else}
+    <p>
+        No more servers
+    </p>
+#{/else} 
+

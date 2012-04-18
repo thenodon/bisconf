@@ -1,0 +1,16 @@
+#{extends 'main.html' /}
+#{set title: 'Twenty4Thresholds' /}
+
+<div class="indexlist">
+<ul>
+    <li>
+        <a href="@{Twenty4Threshold.listServiceDefs()}">&{'ListServiceDefs'}</a>
+    </li>
+    <li>
+        <a href="@{Twenty4Threshold.listHolidays()}">&{'Holidays'}</a>
+    </li>
+    <li>
+        <a href="@{Twenty4Threshold.listHours()}">&{'Hours'}</a>    
+    </li>
+</ul>
+</div>

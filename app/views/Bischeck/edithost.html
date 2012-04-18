@@ -1,0 +1,79 @@
+#{extends 'main.html' /}
+#{set title:'Edit host' /}
+
+#{if host}
+    <h1>
+    &{'EditHost'}    
+    </h1>
+   
+    <h2>
+    ${host.name}
+    </h2>
+#{/if}
+
+<div class="downlink">
+<ul>
+<li>
+<a href="@{addservice(host.name)}">&{'AddService'}</a>
+</li><li>
+<a href="@{listhosts()}">&{'BackToHosts'}</a>
+</li>
+</ul>
+</div>
+
+<div class="saveedit">
+#{form @Bischeck.savehost()}
+    
+    <label for="name">&{'HostName'}</label> 
+    <input id="name" type="text" name="name" value="${host.name}" />
+    <br />
+    
+    <label for="desc">&{'Description'}</label>
+    <textarea id ="desc" name="desc">${host.desc}</textarea>
+    <br />
+    
+    <input type="hidden" name="oldname" value="${host.name}">
+    <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" />
+
+#{/form}
+</div>
+
+#{if host.service}
+<table class="listtable">
+
+    #{list host.service, as:'service'}
+    <tr>
+        <td>&{'ServiceName'}</td><td>${service.name}</td>
+    </tr><tr>
+        <td>&{'ServiceDesc'}</td><td>${service.desc}</td>
+    </tr><tr>
+        <td>&{'ServiceSchedules'}</td>
+        <td>
+        #{list service.schedule, as:'schedule'}
+            ${schedule}</br>
+        #{/list}    
+        </td>
+    </tr><tr>
+        #{if ( service.url != null ) }
+            <td>&{'ServiceUrl'}</td><td>${service.url}</td>
+        #{/if}
+    </tr><tr>
+        #{if ( service.driver != null ) }
+            <td>&{'ServiceDriver'}</td><td>${service.driver}</td>
+        #{/if}
+    </tr><tr>
+        <td>
+        <a href="@{editservice(host.name,service.name)}">&{'EditService'}</a>
+        <a href="@{deleteservice(host.name,service.name)}">&{'DeleteService'}</a>
+        </td>
+    </tr>
+    <tr>
+        <td height="1" bgcolor="#000000"> </td> <td  bgcolor="#000000"> </td>
+    </tr>
+    #{/list}
+</table>       
+#{/if}
+#{else}
+ Must add service! </br>
+#{/else}
+

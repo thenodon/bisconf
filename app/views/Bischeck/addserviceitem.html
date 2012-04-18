@@ -1,0 +1,54 @@
+#{extends 'main.html' /}
+#{set title:'Add serviceitem' /}
+
+<h1>
+&{'AddServiceItem'}
+</h1>
+
+<h2>
+${hostname} &#8658; ${servicename} 
+</h2>
+
+<div class="downlink">
+<ul>
+<li>
+<a href="@{editservice(hostname,servicename)}">&{'BackToService'}</a>
+</li>
+</ul>
+</div>
+
+<div class="saveedit">
+#{form @Bischeck.saveserviceitem()}
+    
+    
+    <label for="name">&{'ServiceItemName'}</label> 
+    <input id="name" type="text" name="name" value="${serviceitem.name}" />
+    <br />
+    
+    <label for="desc">&{'Description'}</label> 
+    <textarea id="desc" name="desc">${serviceitem.desc}</textarea>
+    <br />
+    
+    <label for="execstatement">&{'ServiceItemExecstatement'}</label> 
+    <input id="execstatement" type="text" name="execstatement" value="${serviceitem.execstatement}" />
+    <br />
+    
+    <label for="serviceitemclass">&{'ServiceItemclass'}</label> 
+    <input id="serviceitemclass" type="text" name="serviceitemclass" value="${serviceitem.serviceitemclass}" />
+    <br />
+    
+    <label for="thresholdclass">&{'ServiceItemThresholdclass'}"</label> 
+    <input id="thresholdclass" type="text" name="thresholdclass" value="${serviceitem.thresholdclass}" />
+    <br />
+    
+    
+    <input type="hidden" name="hostname" value="${hostname}">
+    <input type="hidden" name="servicename" value="${servicename}">
+    
+    <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" />
+
+
+#{/form}
+</div>
+
+

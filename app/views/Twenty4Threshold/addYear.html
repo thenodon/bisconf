@@ -1,0 +1,15 @@
+#{extends 'main.html' /}
+#{set title: 'List hosts' /}
+
+
+<p>
+&{'NewYear'} 
+    
+</p>
+#{form @saveYear()}
+    
+    &{'Year'}: <input type="text" name="year"  /><br />
+    <input type="submit" value="&{'Save'}" /><br />
+
+#{/form}
+<a href="@{listHolidays()}">&{'ListHolidays'}</a>

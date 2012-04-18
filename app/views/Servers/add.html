@@ -1,0 +1,32 @@
+#{extends 'main.html' /}
+#{set title: 'Add servers' /}
+
+<h1>
+&{'AddServer'}    
+</h1>
+
+<div class="downlink">
+<ul>
+<li>
+<a href="@{Servers.list()}">&{'ListServers'}</a>
+</li>
+</ul>
+</div>
+
+<div class="saveedit">
+
+#{form @Servers.save()}
+    
+    <label for="servername">&{'Servername'}</label>
+    <input id="servername" type="text" name="servername" />
+    <br />
+    
+    <label for="classname">&{'Classname'}</label>
+    <input id="classname" type="text" name="classname"/>
+    <br />
+    
+    <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" />
+
+#{/form}
+
+</div>

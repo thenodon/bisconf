@@ -1,0 +1,39 @@
+#{extends 'main.html' /}
+#{set title:'Edit service schedule' /}
+
+<h1>
+&{'EditServiceSchedule'}    
+</h1>
+
+<h2>
+${host.name} &#8658; ${service.name}
+</h2>
+
+<div class="downlink">
+<ul>
+<li>
+<a href="@{addserviceschedule(host.name,service.name)}">&{'AddServiceSchedule'}</a>
+</li><li>
+<a href="@{listserviceschedules(host.name,service.name)}">&{'ListServiceSchedules'}</a>
+</li><li>
+<a href="@{editservice(host.name,service.name)}">&{'BackToService'}</a>
+</li><li>
+<a href="@{listhosts()}">&{'BackToHosts'}</a>
+</li>
+<ul>
+</div>
+
+<div class="saveedit">
+#{form @Bischeck.saveserviceschedule()}
+    
+    <label for="schedule">&{'Schedule'}</label> 
+    <input id="schedule" type="text" name="schedule" value="${schedule}" />
+    <br />
+    
+    <input type="hidden" name="curschedule" value="${schedule}">
+    <input type="hidden" name="servicename" value="${service.name}">
+    <input type="hidden" name="hostname" value="${host.name}">
+    <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" />
+    
+#{/form}
+</div>

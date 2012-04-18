@@ -1,0 +1,21 @@
+#{extends 'main.html' /}
+#{set title:'Error' /}
+<h1>
+&{'Error'}
+</h1>
+
+<div class="errormessage">
+<p>
+Error: ${message}
+</p
+</div>
+
+<div class="errorstack">
+<p>
+Stack: <br />
+${stacktrace}
+</p>
+</div>
+
+
+<a href="@{Application.index()}">&{'Home'}</a>

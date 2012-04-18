@@ -1,0 +1,63 @@
+#{extends 'main.html' /}
+#{set title:'Edit host' /}
+
+
+
+
+#{if host}
+    <h1>
+    &{'EditUser'}    
+    </h1>
+   
+    <h2>
+    ${user.username}
+    </h2>
+#{/if}
+
+<div class="downlink">
+<ul>
+<li>
+<a href="@{index()}">&{'Home'}</a>
+</li>
+</ul>
+</div>
+
+<div class="saveedit">
+#{form @Application.saveUser(), NAME:"password_form" }
+    
+    <label for="email">&{'Email'}</label> 
+    <input id="email" type="text" name="email" value="${user.email}" />
+    <br />
+    
+    <label for="pasword1">&{'Password'}</label>
+    <input id="password1" type="password" name="password1" onKeyUp="verify.check()" />
+    <br />
+    
+    <label for="pasword2">&{'RePassword'}</label>
+    <input id="password2" type="password" name="repassword2" onKeyUp="verify.check()" />
+    <br />
+    
+    <input type="hidden" name="username" value="${user.username}">
+    <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" />
+    
+    <div id="passwordMatch"></div>
+    <br />
+    
+#{/form}
+</div>
+
+<script type="text/javascript">
+<!--
+
+verify = new verifynotify();
+verify.field1 = document.password_form.password1;
+verify.field2 = document.password_form.password2;
+verify.result_id = "passwordMatch";
+verify.match_html = "<SPAN STYLE=\"color:blue\">&{'PasswordMatch'}<\/SPAN>";
+verify.nomatch_html = "<SPAN STYLE=\"color:red\">&{'PasswordDoNotMatch'}<\/SPAN>";
+
+// Update the result message
+verify.check();
+
+// -->
+</script>

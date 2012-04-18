@@ -1,0 +1,31 @@
+#{extends 'main.html' /}
+#{set title:'Add service' /}
+
+<h1>
+&{'AddHost'}    
+</h1>
+
+<div class="downlink">
+<ul>
+<li>
+<a href="@{listhosts()}">&{'BackToHosts'}</a>
+</li>
+</ul>
+</div>
+
+<div class="saveedit">
+#{form @Bischeck.savehost()}
+    
+    <label for="name">&{'HostName'}</label>
+    <input id="name" type="text" name="name" value="${host.name}" />
+    <br />
+    
+    <label for="desc">&{'Description'}</label>
+    <textarea id="desc" name="desc">${host.desc}</textarea>
+    <br/>
+    
+    <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" />
+    <br/>
+    
+#{/form}
+

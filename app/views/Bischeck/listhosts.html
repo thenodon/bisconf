@@ -1,0 +1,45 @@
+#{extends 'main.html' /}
+#{set title: 'List hosts' /}
+
+<h1>
+&{'ListHosts'}    
+</h1>
+
+<div class="downlink">
+<ul>
+<li>
+<a href="@{addhost()}">&{'Add'}</a>
+</li>
+<ul>
+</div>
+
+#{if hosts}
+    <table class="listtable">
+        <thead>
+            <tr>
+                <th>&{'Host'}</th>
+                <th>&{'Action'}</th>
+            </tr>
+        </thead>
+        <tbody>
+            #{list hosts, as:'host'}
+                <tr>
+                    <td>${host.name}</td>
+                    <td>
+                        <a href="@{edithost(host.name)}">&{'Edit'}</a>
+                        <a href="@{deletehost(host.name)}">&{'Delete'}</a>
+                    </td>
+                </tr>
+            #{/list}
+        </tbody>
+    </table>
+    
+#{/if}
+
+#{else}
+    <p>
+        Must add host!
+    </p>
+#{/else} 
+
+

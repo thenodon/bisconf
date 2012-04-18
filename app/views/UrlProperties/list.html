@@ -1,0 +1,47 @@
+#{extends 'main.html' /}
+#{set title: 'List Url properties' /}
+
+
+<h1>
+&{'ListUrlProperties'}    
+</h1>
+
+
+<div class="downlink">
+<ul>
+<li>
+<a href="@{add()}">&{'Add'}</a>
+</li>
+<ul>
+</div>
+
+#{if properties}
+    <table class="listtable">
+        <thead>
+            <tr>
+                <th>&{'Key'}</th>
+                <th>&{'Value'}</th>
+                <th>&{'Action'}</th>
+            </tr>
+        </thead>
+        <tbody>
+            #{list properties, as:'property'}
+                <tr>
+                    <td>${property.key}</td>
+                    <td>${property.value}</td>
+                    <td>
+                        <a href="@{edit(property.key,property.value)}">&{'Edit'}</a>
+                        <a href="@{delete(property.key)}">&{'Delete'}</a>
+                    </td>
+                </tr>
+            #{/list}
+        </tbody>
+    </table>
+    
+#{/if}
+
+#{else}
+    <p>
+        No more properties
+    </p>
+#{/else} 

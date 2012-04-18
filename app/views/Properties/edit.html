@@ -1,0 +1,25 @@
+#{extends 'main.html' /}
+#{set title:'Edit property' /}
+
+<h1>
+&{'EditProperties'}
+</h1>
+<div class="downlink">
+<ul>
+<li>
+<a href="@{Properties.list()}">&{'ListPropertis'}</a>
+</li>
+<ul>
+</div>
+
+<div class="saveedit">
+#{form @Properties.save()}
+    
+    <label for="value">${key}</label> 
+    <input id="value" type="text" name="value" value="${value}" />
+    <br />
+    <input type="hidden" name="key" value="${key}" />
+    <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" />
+
+#{/form}
+</div>

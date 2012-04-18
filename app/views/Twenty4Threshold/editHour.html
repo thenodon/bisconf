@@ -1,0 +1,70 @@
+#{extends 'main.html' /}
+#{set title: 'Edit hour' /}
+
+
+                
+#{if hour24}
+<h1>
+&{'EditHours'}    
+</h1>
+
+<h2>
+&{'HourID'}: ${hour24.hoursID}
+</h2>
+
+<table class="listtable">
+    <caption>&{'UsedBy'}</caption>
+    <thead>
+            <tr>
+                <th>&{'Host'}</th>
+                <th>&{'Service'}</th>
+                <th>&{'ServiceItem'}</th>
+            </tr>
+        </thead>
+    <tbody>
+    #{list hour2def, as:'servicedef'}
+        
+        <tr>
+            <td>${servicedef.hostname} </td>
+            <td>${servicedef.servicename}</td> 
+            <td>${servicedef.serviceitemname}</td>
+        </tr> 
+                           
+    #{/list}
+    </tbody>
+</table>
+
+<div class="downlink">
+<ul>
+<li>
+<a href="@{listHours()}">&{'ListHours'}</a>
+</li>
+<li>
+<a href="@{index()}">&{'Back'}</a>
+</li>
+<ul>
+</div>
+
+
+
+<div class="edithour">
+#{form @Twenty4Threshold.saveHour()}
+    
+    <!-- ${hourCounter=new Integer(0)} -->
+
+    #{list hour24.hour, as:'hour'}
+        #{if hourCounter < 10}
+            0${hourCounter}: <input type="text" name="0${hourCounter++}" value="${hour}" /> <br />                            
+        #{/if}
+        #{else}                                
+            ${hourCounter}: <input type="text" name="${hourCounter++}" value="${hour}" /> <br />
+        #{/else}
+    #{/list}
+    <input type="hidden" name="hourid" value="${hour24.hoursID}" />
+                    
+    <input class="submitbutton" type="submit" value="&{'Save'}" /><br />
+
+#{/form}
+</div>
+#{/if}
+

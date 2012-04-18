@@ -1,0 +1,55 @@
+#{extends 'main.html' /}
+#{set title: 'List versions' /}
+<h1>
+&{'ListVersions'}
+</h1>
+
+#{if !started}
+<h2>
+&{'BischeckNotStarted'}
+</h2>    
+#{/if}
+#{if versions}
+    <table class="listtable">
+        <thead>
+            <tr>
+                <th>&{'Date'}</th>
+                <th>&{'Username'}</th>
+                <th>&{'Comment'}</th>
+                <th>&{'CurrentVersion'}</th>
+                
+                <th>&{'Action'}</th>
+            </tr>
+        </thead>
+        <tbody>
+            #{list versions, as:'version'}
+                <tr>
+                    <td>${version.created}</td>
+                    <td>${version.username}</td>
+                    <td>${version.comment}</td>
+                    <td>${version.current}</td>
+                    
+                    <td>
+                        <a href="@{select(version.directory)}">&{'Select'}</a>
+                        
+                        #{if version.current == false}
+                            <a href="@{delete(version.directory)}">&{'Delete'}</a>
+                            #{if started}
+                                <a href="@{deploy(version.directory)}">&{'Deploy'}</a>
+                            #{/if}
+                            
+                        #{/if}
+                        
+                    </td>
+                </tr>
+            #{/list}
+        </tbody>
+    </table>
+    
+#{/if}
+
+#{else}
+    <p>
+        No version exist<br />
+    </p>
+#{/else}     

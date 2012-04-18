@@ -1,0 +1,29 @@
+#{extends 'main.html' /}
+#{set title: 'List hosts' /}
+
+<h1>
+&{'NewDay'} 
+</h1>
+<h2>
+&{'Year'} : ${year} 
+</h2>
+<div class="downlink">
+<ul>
+<li>
+<a href="@{listYear(year)}">&{'Back'}</a>
+</li>
+<ul>
+</div>
+
+<div class="saveedit">
+#{form @saveDay()}
+    <label for="day">&{'Day'}</label> 
+    <input id="day" type="text" name="day" value="${day}"  />
+    <br />
+    
+    <input type="hidden" name="year" value="${year}">
+    <input type="hidden" name="oldday" value="${day}">
+    <input class="submitbutton" type="submit" value="&{'Save'}" /><br />
+
+#{/form}
+</div>

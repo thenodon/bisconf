@@ -1,0 +1,48 @@
+#{extends 'main.html' /}
+#{set title: 'Edit holidays' /}
+
+<h1>
+&{'EditHoliday'}    
+</h1>
+
+<h2>
+&{'Year'}: ${holiday.year}
+</h2>
+
+<div class="downlink">
+<ul>
+<li>
+<a href="@{addHour()}">&{'Add'}</a>
+</li>
+<li>
+<a href="@{addDay(holiday.year)}">&{'AddDayOfYear'}</a>
+</li>
+<li>
+<a href="@{listHolidays()}">&{'Back'}</a>
+</li>
+<ul>
+</div>
+
+#{if holiday}
+    <table class="listtable">
+        <thead>
+            <tr>
+                <th>&{'Date'}</th>
+                <th>&{'Action'}</th>
+            </tr>
+        </thead>
+        <tbody>
+            #{list holiday.dayofyear, as:'day'}
+                <tr>
+                    <td>${day}</td>
+                    <td>
+                        <a href="@{editDay(holiday.year,day)}">&{'Edit'}</a>
+                        <a href="@{deleteDay(holiday.year,day)}">&{'Delete'}</a>
+                    </td>
+                </tr>
+            #{/list}
+        </tbody>
+    </table>
+    
+#{/if}
+
