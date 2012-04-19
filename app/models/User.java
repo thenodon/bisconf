@@ -37,12 +37,9 @@ public class User extends Model {
 	}
 
 	public static User connect(String username, String password) {
-		System.out.println("User " + username);
-		System.out.println("Pasword " + password);
 
 		// If first time and admin do not exists
 		if ("admin".equals(username)) {
-			System.out.println("User " + username);
 			if (find("byUsername", username).first() == null) {
 				new User("admin", "admin", "admin", true).save();
 			}
