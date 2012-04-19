@@ -1,5 +1,6 @@
 #{extends 'main.html' /}
 #{set title: 'Edit servicedefs' /}
+
 <h1>
 &{'EditServicedefs'}
 </h1>
@@ -42,10 +43,12 @@ ${DayOfWeek[6] = "&{'Saturday'}"}
             </tr>
         </thead>
         <tbody>
+            
             #{list items:hashperiod.keySet(), as:'period'}
                 <tr>
+                    
                     <td>
-                
+                                
                     <table class="period">
                         
                         <thead>
@@ -213,12 +216,14 @@ ${DayOfWeek[6] = "&{'Saturday'}"}
                         <input class="submitbutton" type="submit" value="&{'Save'}" /><br />
 
                     #{/form}
-                    <div>
+                    </div>
                     </td>
                     
                     
                     <td>
                         <!-- ${hourCounter=new Integer(0)} -->
+                        <a name="${period}"/>
+                        
                         <table class="hour">
                         #{list hours.get(hashperiod.get(period).hoursIDREF), as:'hour'}
                             <tr>
@@ -242,7 +247,7 @@ ${DayOfWeek[6] = "&{'Saturday'}"}
                                 <option value="${hour}">${hour}</option>
                             #{/list}
                         </select>
-                        
+                        <br />
                         <input type="hidden" name="periodindex" value="${period}" />
                         <input type="hidden" name="hostname" value="${servicedef.hostname}" />
                         <input type="hidden" name="servicename" value="${servicedef.servicename}" />
@@ -251,7 +256,8 @@ ${DayOfWeek[6] = "&{'Saturday'}"}
 
                          #{/form}
                          <a href="@{editHour(hashperiod.get(period).hoursIDREF)}">&{'Edit'}</a>
-                         </div>                        
+                         </div>
+                         <br />                        
                     </td>
                 *{    <td>${hashperiod.get(period).critical}</td> }*
                 *{    <td>${hashperiod.get(period).hoursIDREF}</td> }*
@@ -263,6 +269,8 @@ ${DayOfWeek[6] = "&{'Saturday'}"}
                 *{     ${period}}*
                 *{     </td>    }*
                 </tr>
+                
+            
             #{/list}
         </tbody>
     </table>

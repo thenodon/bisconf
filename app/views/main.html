@@ -23,9 +23,17 @@
         //-->
         </script>
         
+        <script type="text/javascript">
+        <!--
+        function jump (anchor) {self.location.hash = anchor}
+        // -->
+        </script>
+        
           
         #{get 'moreScripts' /}
     </head>
+    #{if user != null }
+    
     <div class=header>
     <ul>
     <li>
@@ -36,18 +44,25 @@
         <a href="@{Secure.logout()}">&{'Logout'}</a>
     </li>
     
-    #{if user.isAdmin}
-    <li>
-        <a href="/admin">&{'Admin'}</a>
-    </li>
-    #{/if}
+        #{if user.isAdmin}
+        <li>
+            <a href="/admin">&{'Admin'}</a>
+        </li>
+        #{/if}
+    
+        
     <li>
         Welcome <a href="@{Application.editUser()}">${user.username}!</a> 
     </li>
     </ul>
     </div> 
-    <body>
+    <body onload="jump(${anchor})">
         #{doLayout /}
         <div class="footer">All rights reserved Anders Haal, <a href="http://www.ingby.com">Ingenjörsbyn AB</a></div>
     </body>
+    #{/if}
+    #{else}
+        Please login <a href="@{Secure.login()}"></a>
+    #{/else}
+    
 </html>
