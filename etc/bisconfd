@@ -1,0 +1,16 @@
+#!/bin/sh
+PLAYHOME=/home/andersh/javaapp/play-1.2.4/
+BISCONFHOME=/home/andersh/BIS/bischeck/bisconf/trunk
+BISHOME=/home/andersh/development/bischeck
+
+CLASSBIS=$BISHOME/target/classes:$BISHOME/target/resources
+
+CLASSCONF=$BISCONFHOME/lib/*:$BISCONFHOME/conf
+
+CLASSPLAY=$PLAYHOME/framework/play-1.2.4.jar:$PLAYHOME/framework/lib/*
+
+CLASSPATH=$CLASSPLAY:$CLASSBIS:$CLASSCONF
+
+java -classpath $CLASSPATH -Dbishome=$BISHOME -Dplay.id= -Dapplication.path=$BISCONFHOME -Djava.endorsed.dirs="$PLAYHOME/framework/endorsed" -javaagent:"$PLAYHOME/framework/play-1.2.4.jar" -Dfile.encoding=UTF-8  play.server.Server
+
+
