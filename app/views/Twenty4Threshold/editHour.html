@@ -54,9 +54,11 @@
 
     #{list hour24.hour, as:'hour'}
         #{if hourCounter < 10}
+            <a name="0${hourCounter}"/>
             0${hourCounter}: <input type="text" name="0${hourCounter++}" value="${hour}" /> <br />                            
         #{/if}
         #{else}                                
+            <a name="0${hourCounter}"/>
             ${hourCounter}: <input type="text" name="${hourCounter++}" value="${hour}" /> <br />
         #{/else}
     #{/list}
