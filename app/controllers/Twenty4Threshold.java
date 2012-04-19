@@ -132,7 +132,10 @@ public class Twenty4Threshold extends BasicController {
 	 * @param servicename
 	 * @param serviceitemname
 	 */
-	public static void editServiceDefs(String hostname, String servicename, String serviceitemname) {
+	public static void editServiceDefs(String hostname, String servicename, String serviceitemname, String period) {
+		
+		System.out.println("Period " + period);
+		String anchor = period;
 		
 		XMLTwenty4Threshold config = getCache();
 		Iterator<XMLServicedef> servicedefs = config.getServicedef().iterator();
@@ -156,7 +159,7 @@ public class Twenty4Threshold extends BasicController {
 				
 				List<Integer> allhourids = getAllConfiguredHourID();
  				
-				render(servicedef,hashperiod,hours, allhourids);
+				render(servicedef,hashperiod,hours, allhourids, anchor);
 			}
 		}
 		
@@ -256,7 +259,7 @@ public class Twenty4Threshold extends BasicController {
 			}
 		}
 		
-		editServiceDefs(hostname, servicename, serviceitemname);
+		editServiceDefs(hostname, servicename, serviceitemname,"");
 	}
 	
 	
@@ -276,7 +279,7 @@ public class Twenty4Threshold extends BasicController {
 				servicedef.getServiceitemname().equals(serviceitemname) ) {
 		
 				servicedef.getPeriod().add(new XMLPeriod());
-				editServiceDefs(hostname, servicename, serviceitemname);
+				editServiceDefs(hostname, servicename, serviceitemname,"");
 			}
 		}
 		
@@ -290,7 +293,7 @@ public class Twenty4Threshold extends BasicController {
 		servicedef.getPeriod().add(new XMLPeriod());
 		
 		config.getServicedef().add(servicedef);
-		editServiceDefs(hostname, servicename, serviceitemname);
+		editServiceDefs(hostname, servicename, serviceitemname,"");
 	}
 
 	
@@ -310,7 +313,7 @@ public class Twenty4Threshold extends BasicController {
 				
 			}
 		}
-		editServiceDefs(params.get("hostname"), params.get("servicename"), params.get("serviceitemname"));
+		editServiceDefs(params.get("hostname"), params.get("servicename"), params.get("serviceitemname"),params.get("periodindex"));
 	}
 	
 	
@@ -335,7 +338,7 @@ public class Twenty4Threshold extends BasicController {
 			}
 		}
 		
-		editServiceDefs(params.get("hostname"), params.get("servicename"), params.get("serviceitemname"));
+		editServiceDefs(params.get("hostname"), params.get("servicename"), params.get("serviceitemname"),params.get("periodindex"));
 	}
 	
 	
@@ -373,7 +376,7 @@ public class Twenty4Threshold extends BasicController {
 			}
 		}
 	
-		editServiceDefs(params.get("hostname"), params.get("servicename"), params.get("serviceitemname"));
+		editServiceDefs(params.get("hostname"), params.get("servicename"), params.get("serviceitemname"),params.get("periodindex"));
 	}
 	
 	
@@ -400,8 +403,8 @@ public class Twenty4Threshold extends BasicController {
 				period.getMonths().add(month2add);
 			}
 		}
-	
-		editServiceDefs(params.get("hostname"), params.get("servicename"), params.get("serviceitemname"));
+		
+		editServiceDefs(params.get("hostname"), params.get("servicename"), params.get("serviceitemname"),params.get("periodindex"));
 	}
 	
 	
@@ -438,7 +441,7 @@ public class Twenty4Threshold extends BasicController {
 					period.getWeeks().remove(week2del);
 			}
 		}	
-		editServiceDefs(params.get("hostname"), params.get("servicename"), params.get("serviceitemname"));
+		editServiceDefs(params.get("hostname"), params.get("servicename"), params.get("serviceitemname"),params.get("periodindex"));
 	}
 	
 	
@@ -467,7 +470,7 @@ public class Twenty4Threshold extends BasicController {
 			}
 		}
 	
-		editServiceDefs(params.get("hostname"), params.get("servicename"), params.get("serviceitemname"));
+		editServiceDefs(params.get("hostname"), params.get("servicename"), params.get("serviceitemname"),params.get("periodindex"));
 	
 	}
 	
