@@ -20,7 +20,6 @@ public class Error extends Controller{
 	
 	 
 	public static void show(String message, String stacktrace) {
-		System.out.println("Error:" + message);
 		render(message,stacktrace);
 	}
 	
