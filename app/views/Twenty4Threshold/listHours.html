@@ -17,7 +17,7 @@
 </div>
 
 #{if hour2def}
-    <table class="listtable">
+    <table class="listtable" frame="hsides" border="1">
         <thead>
             <tr>
                 <th>&{'HourId'}</th>
@@ -30,22 +30,13 @@
                 <tr>
                     <td>${hour.key}</td>
                     <td>
-                        <table>
-                        #{list hour.value, as:'def'}
                         
-                        <tr>
-                        <td>
-                        ${def.hostname}
-                        </td>
-                        <td>
-                        ${def.servicename}
-                        </td>
-                        <td>
-                        ${def.serviceitemname}
-                        </td>
-                        </tr>
-                        #{/list}
-                        </table>
+                        #{list hour.value, as:'def'}
+                        <a href="@{editServiceDefs(def.hostname,def.servicename,def.serviceitemname)}">
+                        ${def.hostname} &#8658; ${def.servicename} &#8658; ${def.serviceitemname}</a>
+                        <br />
+                        #{/list} 
+                        
                     </td>
                     
                     <td>
