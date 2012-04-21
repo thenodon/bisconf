@@ -331,7 +331,29 @@ public class Twenty4Threshold extends BasicController {
 			if(servicedef.getHostname().equals(params.get("hostname")) && 
 				servicedef.getServicename().equals(params.get("servicename")) &&
 				servicedef.getServiceitemname().equals(params.get("serviceitemname")) ) {
+				
 				XMLPeriod period = getPeriodByIndex(servicedef, Integer.parseInt(params.get("periodindex")));
+	
+				String warning = params.get("warning");
+				String critical = params.get("critical");
+				validation.required(warning);
+				validation.required(critical);
+				validation.match(critical, "[0-9]+");
+				validation.match(warning, "[0-9]+");
+				validation.max(warning, 100);
+				validation.min(warning, 0);
+				validation.max(critical, 100);
+				validation.min(critical, 0);
+				
+							
+				
+				if (validation.hasErrors()) {
+					// Used to identify the period that had the error
+					flash.put("errperiod", params.get("periodindex"));
+					validation.keep();
+					
+					editServiceDefs(params.get("hostname"), params.get("servicename"), params.get("serviceitemname"),params.get("periodindex"));
+				}
 				period.setCalcmethod(params.get("calcmethod"));
 				period.setWarning(Integer.parseInt(params.get("warning")));
 				period.setCritical(Integer.parseInt(params.get("critical")));
@@ -528,6 +550,15 @@ public class Twenty4Threshold extends BasicController {
 		XMLTwenty4Threshold config = getCache();
 		Iterator<XMLHoliday> holidays = config.getHoliday().iterator();	
 	
+		String year = params.get("year");
+		validation.required(year);
+		validation.match(year, "[0-9]{4}");
+		if (validation.hasErrors()) {
+			// Used to identify the period that had the error
+			validation.keep();
+			addYear();
+		}
+		
 		while (holidays.hasNext()) {
 			XMLHoliday holiday = holidays.next();
 			if (Integer.parseInt(params.get("year")) == holiday.getYear()) {
@@ -570,6 +601,20 @@ public class Twenty4Threshold extends BasicController {
 		 * Check format - One string
 		 */
 		XMLTwenty4Threshold config = getCache();
+		
+		String day = params.get("day");
+		validation.required(day);
+		validation.match(day, "[0-9]{4}");
+		if (validation.hasErrors()) {
+			// Used to identify the period that had the error
+			validation.keep();
+			if (params.get("oldday") != null) {
+				editDay(params.get("year"), params.get("oldday"));
+			}
+			else {
+				addDay(Integer.parseInt(params.get("year")));
+			}
+		}
 		
 		Iterator<XMLHoliday> holidays = config.getHoliday().iterator();
 		// Check if an existing host - update
