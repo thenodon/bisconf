@@ -725,3 +725,96 @@ table.hour td
 #passwordMatch {
     margin-left: 70px;
 }
+
+
+.error {
+    background: red;
+    }
+    
+    
+    
+.scheduleform form {
+
+    font-family: verdana,arial,sans-serif;
+    font-size: 14px;
+    /
+    padding: 10px;
+    background: #9ba6b3;
+    //background: -webkit-gradient(linear, left top, left 60%, from(#9ba6b3), to(#9ba6b3));
+    border-bottom-right-radius:10px;
+    border-bottom-left-radius:10px;
+    
+}
+
+.scheduleform form p {
+    font-family: verdana,arial,sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 5px 0 0 0;
+}
+
+.scheduleform br{
+    //clear: left;
+    margin: 3px;
+}
+
+.scheduleform form textarea {
+    width: 70%;
+    height: 50px;
+}
+
+
+.scheduleform  form input, form textarea {
+    font-family: verdana,arial,sans-serif;
+    font-size: 14px;
+    width: 200px;
+
+    color: #781351;
+    background: #fee3ad;
+    border: 1px solid #781351
+    margin: 5px 0 0 0;
+}
+
+.scheduleform  form select {
+    font-family: verdana,arial,sans-serif;
+    font-size: 14px;
+    width: 100px;
+
+    color: #781351;
+    background: #fee3ad;
+    border: 1px solid #781351
+    margin: 5px 0 0 0;
+}
+
+
+.scheduleform form label {
+    font-family: verdana,arial,sans-serif;
+    font-size: 14px;
+    //font-weight:bold;
+    
+    
+    width: 150px;
+    float: left;
+    clear: left;
+    text-align: right;
+    margin-right: 0.5em;
+    display: block
+        margin: 5px 0 0 0;
+}
+
+.scheduleform form .submitbutton {
+    
+    margin-left: 75px;
+    width: 75px;
+    color: #000;
+    background: #ffa20f;
+    border: 2px outset #d7b9c9
+    
+
+}
+
+.scheduleform form .radio input {
+    //margin-right: 15px;
+    width: 50px;
+}
+    
