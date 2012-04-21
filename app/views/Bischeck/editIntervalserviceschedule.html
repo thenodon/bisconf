@@ -1,0 +1,60 @@
+#{extends 'main.html' /}
+#{set title:'Edit service schedule' /}
+
+<h1>
+&{'EditIntervalServiceSchedule'}    
+</h1>
+
+<h2>
+${host.name} &#8658; ${service.name} 
+#{if schedule} 
+: ${schedule}
+#{/if}
+</h2>
+
+<div class="downlink">
+<ul>
+<a href="@{listserviceschedules(host.name,service.name)}">&{'ListServiceSchedules'}</a>
+</li><li>
+<a href="@{editservice(host.name,service.name)}">&{'BackToService'}</a>
+</li><li>
+<a href="@{listhosts()}">&{'BackToHosts'}</a>
+</li>
+<ul>
+</div>
+
+
+<div class="scheduleform">
+#{form @Bischeck.saveIntervalServiceSchedule()}
+    
+    <label for="interval">&{'Interval'}</label>
+    #{ifnot intervalschedule}
+    <input id="interval" type="text" name="interval" />
+    <span class="error">#{error 'interval' /}</span>
+    #{/ifnot}
+    #{else}
+    <input id="interval" type="text" name="interval" value="${intervalschedule.interval}" />
+    <span class="error">#{error 'interval' /}</span>
+    #{/else}
+    <br />
+    <label for="resolution">&{'Resolution'}</label>
+    <select id="resolution" name="resolution">
+        #{if intervalschedule}
+        <option value="${intervalschedule.resolution}">${intervalschedule.label}</option>
+        #{/if}
+        
+        <option value="S">&{'Seconds'}</option>
+        <option value="M">&{'Minutes'}</option>
+        <option value="H">&{'Hours'}</option>
+                            
+    </select>
+    <br />
+    
+    <input type="hidden" name="curschedule" value="${schedule}">
+    <input type="hidden" name="servicename" value="${service.name}">
+    <input type="hidden" name="hostname" value="${host.name}">
+    <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" />
+    
+#{/form}
+</div>
+

@@ -19,6 +19,7 @@
 #{form @saveDay()}
     <label for="day">&{'Day'}</label> 
     <input id="day" type="text" name="day" value="${day}"  />
+    <span class="error">#{error 'day' /}</span>
     <br />
     
     <input type="hidden" name="year" value="${year}">

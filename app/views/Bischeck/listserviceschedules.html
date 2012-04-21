@@ -12,7 +12,10 @@ ${host.name} &#8658; ${service.name}
 <div class="downlink">
 <ul>
 <li>
-<a href="@{addserviceschedule(host.name,service.name)}">&{'AddServiceSchedule'}</a> 
+<a href="@{editCronserviceschedule(host.name,service.name)}">&{'AddCronServiceSchedule'}</a> 
+</li>
+<li>
+<a href="@{editIntervalserviceschedule(host.name,service.name)}">&{'AddIntervalServiceSchedule'}</a> 
 </li>
 <li>
 <a href="@{editservice(host.name,service.name)}">&{'BackToService'}</a> 
@@ -29,7 +32,7 @@ ${host.name} &#8658; ${service.name}
             </tr>
         </thead>
         <tbody>
-            #{list service.schedule, as:'schedule'}
+            #{list service.schedule.sort(), as:'schedule'}
             
                 <tr>
                     <td>${schedule}</td>

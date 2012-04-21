@@ -201,11 +201,24 @@ ${DayOfWeek[6] = "&{'Saturday'}"}
                         <br />
                        
                         <label for="warning">&{'Warning'}</label>
-                        <input id="warning" type="text" name="warning" value="${hashperiod.get(period).warning}" /> 
+                        <input id="warning" type="text" name="warning" value="${hashperiod.get(period).warning}" />
+                        
+                        #{if flash.errperiod}
+                            <!-- ${err=new Integer(flash.errperiod)}  -->
+                            #{if err == period }
+                            <span class="error">#{error 'warning' /}</span>
+                            #{/if}
+                        #{/if}
                         <br />
                         
                         <label for="critical">&{'Critical'}</label>
                         <input id="critical" type="text" name="critical" value="${hashperiod.get(period).critical}" /> 
+                        #{if flash.errperiod}
+                            <!-- ${err=new Integer(flash.errperiod)}  -->
+                            #{if err == period }
+                            <span class="error">#{error 'critical' /}</span>
+                            #{/if}
+                        #{/if}
                         <br />
                         
                         <input type="hidden" name="periodindex" value="${period}" />

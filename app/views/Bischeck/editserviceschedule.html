@@ -23,11 +23,24 @@ ${host.name} &#8658; ${service.name}
 <ul>
 </div>
 
-<div class="saveedit">
-#{form @Bischeck.saveserviceschedule()}
+${ifnot proxy.iscron }
+
+<div class="">
+#{form @Bischeck.saveIntervalServiceSchedule()}
     
-    <label for="schedule">&{'Schedule'}</label> 
-    <input id="schedule" type="text" name="schedule" value="${schedule}" />
+    &{'IntervalSchedule'}: ${schedule}
+    <br />
+    <label for="interval">&{'Interval'}</label>
+    <input id="interval" type="text" name="interval" value="" />
+    
+    <label for="resolution">&{'Resolution'}</label>
+    <select id="resolution" name="resolution">
+        <option value=""></option>
+        <option value="S">&{'Seconds'}</option>
+        <option value="M">&{'Minutes'}</option>
+        <option value="H">&{'Hours'}</option>
+                            
+    </select>
     <br />
     
     <input type="hidden" name="curschedule" value="${schedule}">
@@ -37,3 +50,34 @@ ${host.name} &#8658; ${service.name}
     
 #{/form}
 </div>
+
+${/if}
+
+${ifnot proxy.iscron }
+
+<div class="">
+#{form @Bischeck.saveCronServiceSchedule()}
+    
+    &{'CronSchedule'}: ${schedule}
+    <br />
+    <label for="interval">&{'Interval'}</label>
+    <input id="interval" type="text" name="interval" value="" />
+    
+    <label for="resolution">&{'Resolution'}</label>
+    <select id="resolution" name="resolution">
+        <option value=""></option>
+        <option value="S">&{'Seconds'}</option>
+        <option value="M">&{'Minutes'}</option>
+        <option value="H">&{'Hours'}</option>
+                            
+    </select>
+    <br />
+    
+    <input type="hidden" name="curschedule" value="${schedule}">
+    <input type="hidden" name="servicename" value="${service.name}">
+    <input type="hidden" name="hostname" value="${host.name}">
+    <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" />
+    
+#{/form}
+</div>
+${/if}

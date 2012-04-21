@@ -1,0 +1,115 @@
+#{extends 'main.html' /}
+#{set title:'Edit service schedule' /}
+
+<h1>
+&{'EditCronServiceSchedule'}    
+</h1>
+
+<h2>
+${host.name} &#8658; ${service.name} 
+</h2>
+
+<div class="downlink">
+<ul>
+<a href="@{listserviceschedules(host.name,service.name)}">&{'ListServiceSchedules'}</a>
+</li><li>
+<a href="@{editservice(host.name,service.name)}">&{'BackToService'}</a>
+</li><li>
+<a href="@{listhosts()}">&{'BackToHosts'}</a>
+</li>
+<ul>
+</div>
+
+
+<div class="scheduleform">
+#{form @Bischeck.saveCronServiceSchedule()}
+    
+    
+    
+    
+    <label for="seconds">&{'Seconds'}</label>
+    #{if cronschedule}
+    <input id="seconds" type="text" name="seconds" value="${cronschedule.seconds}"/>
+    <span class="error">#{error 'cronseconds' /}</span>
+    #{/if}
+    #{else}
+    <input id="seconds" type="text" name="seconds"  />
+    <span class="error">#{error 'cronseconds' /}</span>
+    #{/else}        
+    <br />
+    
+    <label for="minutes">&{'Minutes'}</label>
+    #{if cronschedule}
+    <input id="minutes" type="text" name="minutes" value="${cronschedule.minutes}"/>
+    <span class="error">#{error 'cronminutes' /}</span>
+    #{/if}
+    #{else}
+    <input id="minutes" type="text" name="minutes"  />
+    <span class="error">#{error 'cronminutes' /}</span>
+    #{/else}        
+    <br />
+    
+    <label for="hours">&{'Hours'}</label>
+    #{if cronschedule}
+    <input id="hours" type="text" name="hours" value="${cronschedule.hours}"/>
+    <span class="error">#{error 'cronhours' /}</span>
+    #{/if}
+    #{else}
+    <input id="hours" type="text" name="hours"  />
+    <span class="error">#{error 'cronhours' /}</span>
+    #{/else}        
+    <br />
+    
+    
+    <label for="dayofmonth">&{'Dayofmonth'}</label>
+    #{if cronschedule}
+    <input id="dayofmonth" type="text" name="dayofmonth" value="${cronschedule.dayofmonth}"/>
+    <span class="error">#{error 'crondayofmonth' /}</span>
+    #{/if}
+    #{else}
+    <input id="dayofmonth" type="text" name="dayofmonth"  />
+    <span class="error">#{error 'crondayofmonth' /}</span>
+    #{/else}        
+    <br />
+    
+    <label for="month">&{'Month'}</label>
+    #{if cronschedule}
+    <input id="month" type="text" name="month" value="${cronschedule.month}"/>
+    <span class="error">#{error 'cronmonth' /}</span>
+    #{/if}
+    #{else}
+    <input id="month" type="text" name="month"  />
+    <span class="error">#{error 'cronmonth' /}</span>
+    #{/else}        
+    <br />
+    
+    <label for="dayofweek">&{'Dayofweek'}</label>
+    #{if cronschedule}
+    <input id="dayofweek" type="text" name="dayofweek" value="${cronschedule.dayofweek}"/>
+    <span class="error">#{error 'crondayofweek' /}</span>
+    #{/if}
+    #{else}
+    <input id="dayofweek" type="text" name="dayofweek"  />
+    <span class="error">#{error 'crondayofweek' /}</span>
+    #{/else}        
+    <br />
+    
+    <label for="year">&{'Year'}</label>
+    #{if cronschedule}
+    <input id="year" type="text" name="year" value="${cronschedule.year}"/>
+    <span class="error">#{error 'cronyear' /}</span>
+    #{/if}
+    #{else}
+    <input id="year" type="text" name="year"  />
+    <span class="error">#{error 'cronyear' /}</span>
+    #{/else}        
+    <br />
+    
+    <input type="hidden" name="curschedule" value="${schedule}">
+    <input type="hidden" name="servicename" value="${service.name}">
+    <input type="hidden" name="hostname" value="${host.name}">
+    <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" />
+    
+#{/form}
+</div>
+
