@@ -20,9 +20,12 @@ public class CronSchedule extends Model {
 	public String year;
 
 
-
+	public CronSchedule() {
+	}
+	
 	public CronSchedule(String schedule) {
-		if (schedule.length() != 0) {
+		if (CronExpression.isValidExpression(schedule)) {
+		//if (schedule.length() != 0) {
 			String[] strarr = schedule.split(" ");
 
 			seconds = strarr[0];
@@ -33,6 +36,7 @@ public class CronSchedule extends Model {
 			dayofweek= strarr[5];
 			if (strarr.length == 7)
 				year = strarr[6];
+		//}
 		}
 	}
 
