@@ -11,6 +11,6 @@ CLASSPLAY=$PLAYHOME/framework/play-1.2.4.jar:$PLAYHOME/framework/lib/*
 
 CLASSPATH=$CLASSPLAY:$CLASSBIS:$CLASSCONF
 
-java -classpath $CLASSPATH -Dbishome=$BISHOME -Dplay.id= -Dapplication.path=$BISCONFHOME -Djava.endorsed.dirs="$PLAYHOME/framework/endorsed" -javaagent:"$PLAYHOME/framework/play-1.2.4.jar" -Dfile.encoding=UTF-8  play.server.Server
+java -classpath $CLASSPATH -Dbisconfhome=$BISCONFHOME -Dbishome=$BISHOME -Dplay.id= -Dapplication.path=$BISCONFHOME -Djava.endorsed.dirs="$PLAYHOME/framework/endorsed" -javaagent:"$PLAYHOME/framework/play-1.2.4.jar" -Dfile.encoding=UTF-8  play.server.Server
 
 
