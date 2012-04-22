@@ -45,6 +45,7 @@ import com.ingby.socbox.bischeck.xsd.servers.XMLServers;
 import com.ingby.socbox.bischeck.xsd.twenty4threshold.XMLTwenty4Threshold;
 
 import play.Logger;
+import play.i18n.Messages;
 import sun.management.HotspotRuntimeMBean;
 
 import models.ConfigMeta;
@@ -154,8 +155,12 @@ public class Version extends BasicController{
 					is = p.getInputStream();
 					isr = new InputStreamReader(is);
 					br = new BufferedReader(isr);
-
-					if (br.readLine().equals("not running")) 
+					
+					String line = br.readLine();
+					if (line == null)
+						return false;
+					
+					if (line.equals("not running")) 
 						return false;
 					else 
 						return true;
@@ -221,6 +226,7 @@ public class Version extends BasicController{
 			files[i].delete();
 
 		repos.delete();
+		flash.success(Messages.get("DeleteVersionSuccess"));
 		list();
 	}
 
@@ -383,7 +389,7 @@ public class Version extends BasicController{
 			Servers.getCache();
 
 		SessionData.saveXMLConfigAll(metadir.getPath());
-
+		flash.success(Messages.get("SaveVersionSuccess"));
 		list();
 	}
 
@@ -577,9 +583,13 @@ public class Version extends BasicController{
 			is = p.getInputStream();
 			isr = new InputStreamReader(is);
 			br = new BufferedReader(isr);
-
-			bisprop.put("pid",br.readLine());
-
+			
+			String pid = br.readLine();
+			if (pid != null)
+				bisprop.put("pid",br.readLine());
+			else
+				bisprop.put("pid","not running");
+			
 			try {
 				status = p.waitFor();
 			} catch (InterruptedException ignore) {}
@@ -595,14 +605,15 @@ public class Version extends BasicController{
 			} catch (IOException ignore) {}
 
 		}
-
+		
+		
 		pb = new ProcessBuilder("ps", "--no-headers", "-ostime",bisprop.get("pid"));
 		try {
 			Process p = pb.start();
 			is = p.getInputStream();
 			isr = new InputStreamReader(is);
 			br = new BufferedReader(isr);
-
+			
 			bisprop.put("uptime",br.readLine());
 
 			status = p.waitFor();
