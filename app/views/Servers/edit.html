@@ -26,7 +26,13 @@ ${server.name}
 #{form @Servers.save()}
         
     <label for="classname">&{'Classname'}</label>
-    <input id="classname" type="text" name="classname" value="${server.clazz}"/>
+
+    <select id="classname" name="classname">
+        <option value="${server.clazz}" >${server.clazz}</option>
+        #{list serverclasses, as: 'clazz'}
+            <option value="${clazz}">${clazz}</option>
+        #{/list}
+    </select>
     <br />
     
     <input type="hidden" name="servername" value="${server.name}">
