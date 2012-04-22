@@ -12,7 +12,7 @@
 <div class="downlink">
 <ul>
     <li>
-        <a href="@{addServiceDefs(servicedef.hostname,servicedef.servicename,servicedef.serviceitemname)}">&{'Add'}</a>
+        <a href="@{addPeriod(servicedef.hostname,servicedef.servicename,servicedef.serviceitemname)}">&{'Add'}</a>
     </li>
     <li>
         <a href="@{listServiceDefs()}">&{'ListServiceDefs'}</a>
@@ -206,7 +206,7 @@ ${DayOfWeek[6] = "&{'Saturday'}"}
                         #{if flash.errperiod}
                             <!-- ${err=new Integer(flash.errperiod)}  -->
                             #{if err == period }
-                            <span class="error">#{error 'warning' /}</span>
+                            <span class="error">#{error 'warningerror' /}</span>
                             #{/if}
                         #{/if}
                         <br />
@@ -216,7 +216,7 @@ ${DayOfWeek[6] = "&{'Saturday'}"}
                         #{if flash.errperiod}
                             <!-- ${err=new Integer(flash.errperiod)}  -->
                             #{if err == period }
-                            <span class="error">#{error 'critical' /}</span>
+                            <span class="error">#{error 'criticalerror' /}</span>
                             #{/if}
                         #{/if}
                         <br />
@@ -276,7 +276,7 @@ ${DayOfWeek[6] = "&{'Saturday'}"}
                 *{    <td>${hashperiod.get(period).hoursIDREF}</td> }*
                     
                     <td>
-                        <a href="@{deleteServiceDefs(servicedef.hostname,servicedef.servicename,servicedef.serviceitemname,period)}">&{'Delete'}</a>
+                        <a href="@{deletePeriod(servicedef.hostname,servicedef.servicename,servicedef.serviceitemname,period)}">&{'Delete'}</a>
                     </td>
                 *{      <td>    }*
                 *{     ${period}}*
