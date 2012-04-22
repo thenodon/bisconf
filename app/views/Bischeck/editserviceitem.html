@@ -1,6 +1,7 @@
 #{extends 'main.html' /}
 #{set title:'Edit serviceitem' /}
 
+
 <h1>
 &{'EditServiceItem'}
 </h1>
@@ -39,11 +40,23 @@ ${host.name} &#8658; ${service.name} &#8658; ${serviceitem.name}
     <br />
     
     <label for="serviceitemclass">&{'ServiceItemclass'}</label> 
-    <input id="serviceitemclass" type="text" name="serviceitemclass" value="${serviceitem.serviceitemclass}" /> 
-    <br />
+    <select id="serviceitemclass" name="serviceitemclass">
+        <option value="${serviceitem.serviceitemclass}" >${serviceitem.serviceitemclass}</option>
+        #{list serviceitemclasses, as: 'clazz'}
+            <option value="${clazz}">${clazz}</option>
+        #{/list}
+    </select>
+    <br />                    
     
+    
+        
     <label for="thresholdclass">&{'ServiceItemThresholdclass'}"</label> 
-    <input id="thresholdclass" type="text" name="thresholdclass" value="${serviceitem.thresholdclass}" />
+    <select id="thresholdclass" name="thresholdclass">
+        <option value="${serviceitem.thresholdclass}" >${serviceitem.thresholdclass}</option>
+        #{list thresholdclasses, as: 'clazz'}
+            <option value="${clazz}">${clazz}</option>
+        #{/list}
+    </select>
     <br />
     
     
