@@ -2,7 +2,9 @@ package controllers;
 
 import play.*;
 import play.cache.Cache;
+import play.data.validation.Error;
 import play.data.validation.Validation.Validator;
+import play.i18n.Messages;
 import play.mvc.*;
 
 import java.util.*;
@@ -57,6 +59,7 @@ public class Bischeck extends BasicController {
 			XMLHost host = hosts.next();
 			if (host.getName().equals(hostname)) {
 				config.getHost().remove(host);
+				flash.success(Messages.get("DeleteHostSuccess"));
 				listhosts();
 			}
 		}
@@ -114,6 +117,7 @@ public class Bischeck extends BasicController {
 				else { 
 				host.setName(params.get("name"));
 				host.setDesc(params.get("desc"));
+				flash.success(Messages.get("SaveHostSuccess"));
 				edithost(params.get("name"));
 				}
 				
@@ -134,6 +138,7 @@ public class Bischeck extends BasicController {
 		host.setName(params.get("name"));
 		host.setDesc(params.get("desc"));
 		config.getHost().add(host);
+		flash.success(Messages.get("SaveHostSuccess"));
 		addservice(params.get("name"));
 	}
 
@@ -144,22 +149,6 @@ public class Bischeck extends BasicController {
 	 * 
 	 *************************************/
 	
-	/**
-	 * 
-	 * @param hostname
-	 */
-	/*
-	public static void listservices(String hostname){
-		XMLBischeck config = getCache();
-		Iterator<XMLHost> hosts = config.getHost().iterator();
-		while (hosts.hasNext()){
-			XMLHost host = hosts.next();
-			if (host.getName().equals(hostname))
-				render(host,host.getService());
-		}
-		render();
-	}
-*/
 	
 	/**
 	 * Add a new service to an existing host.
@@ -216,6 +205,7 @@ public class Bischeck extends BasicController {
 					if (service.getName().equals(servicename)) {
 						host.getService().remove(service);
 						//render(host,service,serviceitem);
+						flash.success(Messages.get("DeleteServiceSuccess"));
 						edithost(hostname);
 					}
 
@@ -241,7 +231,10 @@ public class Bischeck extends BasicController {
 					if (service.getName().equals(params.get("oldname"))) {
 						
 						String name = params.get("name");
+						String  url = params.get("url");
 						validation.required(name);
+						validation.required(url);
+						
 						validation.match(name,VALIDNAMEREGEX);
 						if (validation.hasErrors()) {
 							// Used to identify the period that had the error
@@ -253,11 +246,13 @@ public class Bischeck extends BasicController {
 							service.setDesc(params.get("desc"));
 							service.setDriver(params.get("driver"));
 							service.setUrl(params.get("url"));
-							if (params.get("sendserver").equalsIgnoreCase("true"))
-								service.setSendserver(true);
-							else
-								service.setSendserver(false);
-
+							if (!Bootstrap.getBischeckVersion().equals("0.3.0")) {
+								if (params.get("sendserver").equalsIgnoreCase("true"))
+									service.setSendserver(true);
+								else
+									service.setSendserver(false);
+							}
+							flash.success(Messages.get("SaveServiceSuccess"));
 							editservice(params.get("hostname"),params.get("name"));
 						}
 					}
@@ -289,6 +284,7 @@ public class Bischeck extends BasicController {
 				host.getService().add(service);
 			}
 		}
+		flash.success(Messages.get("SaveServiceSuccess"));
 		addserviceitem(params.get("hostname"),params.get("name"));
 	}
 
@@ -337,6 +333,7 @@ public class Bischeck extends BasicController {
 					if (service.getName().equals(params.get("servicename"))) {
 						List<String> schedulelist = service.getSchedule();						
 						schedulelist.remove(params.get("schedule"));
+						flash.success(Messages.get("DeleteScheduleSuccess"));
 						listserviceschedules(params.get("hostname"), params.get("servicename"));
 						
 					}
@@ -359,27 +356,7 @@ public class Bischeck extends BasicController {
 		}
 		else {
 			editIntervalserviceschedule(hostname, servicename, schedule);
-		}
-		/*
-		XMLBischeck config = getCache();
-		Iterator<XMLHost> hosts = config.getHost().iterator();
-		while (hosts.hasNext()){
-			XMLHost host = hosts.next();
-			if (host.getName().equals(hostname)) {
-				Iterator<XMLService> services = host.getService().iterator();
-				while (services.hasNext()) {
-					XMLService service = services.next();
-					if (service.getName().equals(servicename)) {
-						
-						SchedProxy proxy = new SchedProxy(schedule); 
-							
-						render(host,service,schedule, proxy);
-					}
-				}
-			}
-		}
-		render();
-		*/	
+		}	
 	}
 	
 	/**
@@ -416,6 +393,7 @@ public class Bischeck extends BasicController {
 	 */
 	public static void editCronserviceschedule(String hostname, String servicename, String schedule) {
 		XMLBischeck config = getCache();
+		
 		Iterator<XMLHost> hosts = config.getHost().iterator();
 		while (hosts.hasNext()){
 			XMLHost host = hosts.next();
@@ -426,9 +404,29 @@ public class Bischeck extends BasicController {
 					if (service.getName().equals(servicename)) {
 						
 						CronSchedule cronschedule = null;
-						if (schedule != null)
-							cronschedule = new CronSchedule(schedule); 
+						
+						// If error is set in the save 
+						if (validation.hasErrors()) {
+							cronschedule = new CronSchedule(); 
 							
+							if (flash.get("seconds") != null)
+								cronschedule.seconds = flash.get("seconds"); 
+							if (flash.get("minutes") != null)
+								cronschedule.minutes = flash.get("minutes"); 
+							if (flash.get("hours") != null)
+								cronschedule.hours = flash.get("hours"); 
+							if (flash.get("dayofmonth") != null)
+								cronschedule.dayofmonth = flash.get("dayofmonth"); 
+							if (flash.get("month") != null)
+								cronschedule.month = flash.get("month"); 
+							if (flash.get("dayofweek") != null)
+								cronschedule.dayofweek = flash.get("dayofweek"); 
+							if (flash.get("year") != null)
+								cronschedule.year = flash.get("year"); 
+						
+						} else if (schedule != null)
+							cronschedule = new CronSchedule(schedule); 
+					
 						render(host,service,schedule,cronschedule);
 					}
 				}
@@ -436,36 +434,8 @@ public class Bischeck extends BasicController {
 		}
 		render();	
 	}
-	
-	public static void saveserviceschedule() {
-			
-		XMLBischeck config = getCache();
-		Iterator<XMLHost> hosts = config.getHost().iterator();
-		while (hosts.hasNext()){
-			XMLHost host = hosts.next();
-			if (host.getName().equals(params.get("hostname"))) {
-				Iterator<XMLService> services = host.getService().iterator();
-				while (services.hasNext()) {
-					XMLService service = services.next();
-					if (service.getName().equals(params.get("servicename"))) {
-						List<String> schedulelist = service.getSchedule();
-						
-						if (params.get("newschedule") == null) {
-							schedulelist.remove(params.get("curschedule"));
-							schedulelist.add(params.get("schedule"));
-						}
-						else {
-							schedulelist.add(params.get("newschedule"));
-						}
-						listserviceschedules(params.get("hostname"), params.get("servicename"));
-						
-					}
-				}
-			}
-		}
-		render();
-	}
-	
+
+
 	public static void saveIntervalServiceSchedule() {
 		
 		XMLBischeck config = getCache();
@@ -489,14 +459,10 @@ public class Bischeck extends BasicController {
 							editIntervalserviceschedule(params.get("hostname"), params.get("servicename"), params.get("curschedule"));
 						}
 			
-						//if (params.get("newschedule") == null) {
-							schedulelist.remove(params.get("curschedule"));
-							schedulelist.add(params.get("interval")+params.get("resolution"));
-						//}
-						//else {
-						//	schedulelist.add(params.get("newschedule"));
-						//}
+						schedulelist.remove(params.get("curschedule"));
+						schedulelist.add(params.get("interval")+params.get("resolution"));
 						
+						flash.success(Messages.get("SaveScheduleSuccess"));
 						listserviceschedules(params.get("hostname"), params.get("servicename"));
 						
 					}
@@ -519,42 +485,27 @@ public class Bischeck extends BasicController {
 					if (service.getName().equals(params.get("servicename"))) {
 						List<String> schedulelist = service.getSchedule();
 						
-						//String seconds = params.get("seconds");
-						//String minutes = params.get("minutes");
-						//String hours = params.get("hours");
-						//String dayofmonth = params.get("dayofmonth");
-						//String month = params.get("month");
-						//String dayofweek = params.get("dayofweek");
-						//String year = params.get("year");
-			
-						play.data.validation.Error error = null;
 						
-						error = validation.required(params.get("seconds")).error;
-						if(error != null) 
+						if(validation.required(params.get("seconds")).error != null) 
 							validation.addError("cronseconds","validation.cronsrequiered");
 						
-						error = validation.required(params.get("minutes")).error;
-						if(error != null) 
+						if(validation.required(params.get("minutes")).error != null) 
 							validation.addError("cronminutes","validation.cronsrequiered");
 						
-						error = validation.required(params.get("hours")).error;
-						if(error != null) 
+						if(validation.required(params.get("hours")).error != null) 
 							validation.addError("cronhours","validation.cronsrequiered");
-						
-						error = validation.required(params.get("dayofmonth")).error;
-						if(error != null) 
+				
+						if(validation.required(params.get("dayofmonth")).error != null) 
 							validation.addError("crondayofmonth","validation.cronsrequiered");
 												
-						error = validation.required(params.get("month")).error;
-						if(error != null) 
+						if(validation.required(params.get("month")).error != null) 
 							validation.addError("cronmonth","validation.cronsrequiered");
 						
-						error = validation.required(params.get("dayofweek")).error;
-						if(error != null) 
+						if(validation.required(params.get("dayofweek")).error != null) 
 							validation.addError("crondayofweek","validation.cronsrequiered");
 						
 						
-						error = validation.match(params.get("seconds"),
+						Error error = validation.match(params.get("seconds"),
 								"(((([0-9]|[0-5][0-9]),)*([0-9]|[0-5][0-9]))|(([\\*]|[0-9]|[0-5][0-9])(/|-)([0-9]|[0-5][0-9]))|([\\?])|([\\*]))").error;
 						if(error != null) 
 							validation.addError("cronseconds","validation.cronseconds");
@@ -593,6 +544,7 @@ public class Bischeck extends BasicController {
 						if (validation.hasErrors()) {
 							// Used to identify the period that had the error
 							validation.keep();
+							params.flash();
 							editCronserviceschedule(params.get("hostname"), params.get("servicename"), params.get("curschedule"));
 						}
 						
@@ -606,7 +558,7 @@ public class Bischeck extends BasicController {
 								params.get("dayofweek") + " " +
 								params.get("year") );
 
-
+						flash.success(Messages.get("SaveScheduleSuccess"));
 						listserviceschedules(params.get("hostname"), params.get("servicename"));
 
 					}
@@ -667,6 +619,7 @@ public class Bischeck extends BasicController {
 									serviceitem.setExecstatement(params.get("execstatement"));
 									serviceitem.setServiceitemclass(params.get("serviceitemclass"));
 									serviceitem.setThresholdclass(params.get("thresholdclass"));
+									flash.success(Messages.get("SaveServiceItemSuccess"));
 									editserviceitem(params.get("hostname"),params.get("servicename"),params.get("name"));
 								}
 							}
@@ -704,6 +657,7 @@ public class Bischeck extends BasicController {
 					
 					if (service.getName().equals(params.get("servicename"))) {
 						service.getServiceitem().add(serviceitem);
+						flash.success(Messages.get("SaveServiceItemSuccess"));
 						editservice(params.get("hostname"), params.get("servicename"));
 					}
 				}
@@ -749,7 +703,9 @@ public class Bischeck extends BasicController {
 						while (serviceitems.hasNext()){
 							XMLServiceitem serviceitem = serviceitems.next();
 							if (serviceitem.getName().equals(serviceitemname)) {
-								render(host,service,serviceitem);
+								List<String> serviceitemclasses = Populate.getServiceItemClasses();
+								List<String> thresholdclasses = Populate.getThresholdClasses();
+								render(host,service,serviceitem,serviceitemclasses,thresholdclasses);
 							}
 						}
 					}
@@ -778,6 +734,7 @@ public class Bischeck extends BasicController {
 							XMLServiceitem serviceitem = serviceitems.next();
 							if (serviceitem.getName().equals(serviceitemname)) {
 								service.getServiceitem().remove(serviceitem);
+								flash.success(Messages.get("DeleteServiceItemSuccess"));
 								editservice(hostname,servicename);
 							}
 		
