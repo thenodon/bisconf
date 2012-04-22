@@ -32,7 +32,8 @@
                     <td>${servicedef.serviceitemname}</td>
                     <td>
                         <a href="@{editServiceDefs(servicedef.hostname,servicedef.servicename,servicedef.serviceitemname)}">&{'Edit'}</a>
-                        <a href="@{deleteServiceDefs(servicedef.hostname)}">&{'Delete'}</a>
+                        <a href="@{deleteServiceDefs(servicedef.hostname,servicedef.servicename,servicedef.serviceitemname)}">&{'DeleteAllConfig'}</a>
+                        
                     </td>
                 </tr>
             #{/list}
