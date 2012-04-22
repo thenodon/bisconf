@@ -2,6 +2,7 @@ package controllers;
 
 import play.*;
 import play.cache.Cache;
+import play.i18n.Messages;
 import play.mvc.*;
 
 import java.util.*;
@@ -57,7 +58,7 @@ public class Properties extends BasicController {
         	property.setValue(value);
         	propertiesList.add(property);
         }
-        
+        flash.success(Messages.get("SavePropertySuccess"));
         list();
     }
     
@@ -80,7 +81,7 @@ public class Properties extends BasicController {
         		break;
         	}
         }
-    	
+    	flash.success(Messages.get("DeletePropertySuccess"));
         list();
     }
     

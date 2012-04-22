@@ -2,6 +2,7 @@ package controllers;
 
 import play.*;
 import play.cache.Cache;
+import play.i18n.Messages;
 import play.mvc.*;
 
 import java.util.*;
@@ -53,6 +54,7 @@ public class Servers extends BasicController {
         		break;
         	}
     	}
+    	flash.success(Messages.get("DeleteServerSuccess"));
     	list();
     }
 
@@ -69,6 +71,7 @@ public class Servers extends BasicController {
         	
         	if (server.getName().equals(servername)) {
         		server.setClazz(classname);
+        		flash.success(Messages.get("SaveServerSuccess"));
         		edit(servername);
         	}
         }
@@ -77,6 +80,7 @@ public class Servers extends BasicController {
     	server.setName(servername);
     	server.setClazz(classname);
     	serversconfig.getServer().add(server);
+    	flash.success(Messages.get("SaveServerSuccess"));
     	edit(servername);
     }
     
@@ -89,7 +93,8 @@ public class Servers extends BasicController {
         	XMLServer server = servers.next();
         	
         	if (server.getName().equals(servername)) {
-        		render(server);
+        		List<String> serverclasses = Populate.getServerClasses();
+        		render(server, serverclasses);
         	}
         }
     	render();
@@ -137,7 +142,7 @@ public class Servers extends BasicController {
         			property.setValue(value);
         			propertiesList.add(property);
         		}
-        		
+        		flash.success(Messages.get("SaveServerPropertySuccess"));
         		edit(server.getName());
         	}
     	}
@@ -164,6 +169,7 @@ public class Servers extends BasicController {
         		}
         	}
     	}	
+    	flash.success(Messages.get("DeleteServerPropertySuccess"));
     	edit(servername);
     }
 
