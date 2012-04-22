@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>ServiceItem classes</comment>
+<entry key="SQLServiceItem">SQL select statement</entry>
+<entry key="CalculateOnCache">Retrive values from bischeck cache</entry>
+</properties>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>Threshold classes</comment>
+<entry key="Twenty4HourThreshold">24 hour distribution</entry>
+</properties>
