@@ -34,7 +34,7 @@ public class Bootstrap extends Job {
 			bischeckversion = br.readLine();
 			Logger.info("Bisheck version is " + bischeckversion);
 		} catch (Exception ioe) {
-
+			Logger.error("Can not determine the bischeck version");
 		}
 		finally {
 			try {
