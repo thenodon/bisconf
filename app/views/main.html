@@ -49,11 +49,15 @@
             <a href="/admin">&{'Admin'}</a>
         </li>
         #{/if}
-    
-        
     <li>
         Welcome <a href="@{Application.editUser()}">${user.username}!</a> 
     </li>
+    <li>
+        #{if flash.success}             
+            <strong>${flash.success}</strong>
+        #{/if}
+    </li>
+    
     </ul>
     </div> 
     <body onload="jump(${anchor})">
