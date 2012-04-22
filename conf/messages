@@ -4,3 +4,21 @@
 username=Username
 email=Email
 password=Password
+
+validation.cronsrequiered=Required 
+validation.cronseconds=Allowed values: 0-59 and special characters , - * /
+validation.cronminutes=Allowed values: 0-59 and special characters , - * /
+validation.cronhours=Allowed values: 0-23 and special characters , - * /
+validation.crondayofmonth=Allowed values: 1-31 and special characters , - * ? / L W
+validation.cronmonth=Allowed values: 1-12 or JAN-DEC and special characters , - * /
+validation.crondayofweek=Allowed values: 1-7 or SUN-SAT and special characters , - * ? / L #
+validation.cronyear=Allowed values: empty, 1970-2099  and special characters , - * /
+
+validation.warningrequiered=Required
+validation.criticalrequiered=Required
+validation.criticalmatch=Must be a number
+validation.criticalmatch=Must be a number
+validation.warningmax=Max 100
+validation.warningmin=Min 0
+validation.criticalmax=Max 100
+validation.criticalmin=Min 0
