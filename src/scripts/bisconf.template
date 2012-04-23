@@ -4,7 +4,10 @@ PLAYHOME=%PLAYHOME%
 BISCONFHOME=%BISCONFHOME%
 BISHOME=%BISHOME%
 
-CLASSBIS=$BISHOME/target/classes:$BISHOME/target/resources:$BISHOME/lib/quartz-2.0.1.jar
+
+#If running on bischeck 0.3.3 - copy the following jars to bisconf/lib from the 0.4.0 dist
+CLASSBIS=$BISHOME/lib/bischeck-0.4.0.jar:$BISHOME/lib/quartz-2.0.1.jar
+CLASSBIS=$CLASSBIS:$BISHOME/resources
 
 CLASSCONF=$BISCONFHOME/lib/*:$BISCONFHOME/conf
 
