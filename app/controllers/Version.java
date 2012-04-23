@@ -575,7 +575,7 @@ public class Version extends BasicController{
 	}
 
 
-	private static void getNativeAttributes(Map<String, String> bisprop) throws IOException, InterruptedException {
+	private static void getNativeAttributes(Map<String, String> bisprop) throws IOException {
 		Integer status;
 		ProcessBuilder pb = new ProcessBuilder("sudo", "/etc/init.d/bischeckd", "pidstatus");
 		InputStream is = null;
@@ -589,10 +589,10 @@ public class Version extends BasicController{
 			
 			String pid = br.readLine();
 			if (pid != null)
-				bisprop.put("pid",br.readLine());
+				bisprop.put("pid",pid);
 			else
 				bisprop.put("pid","not running");
-			
+			System.out.println();
 			try {
 				status = p.waitFor();
 			} catch (InterruptedException ignore) {}
@@ -609,31 +609,39 @@ public class Version extends BasicController{
 
 		}
 		
-		
-		pb = new ProcessBuilder("ps", "--no-headers", "-ostime",bisprop.get("pid"));
-		try {
-			Process p = pb.start();
-			is = p.getInputStream();
-			isr = new InputStreamReader(is);
-			br = new BufferedReader(isr);
-			
-			bisprop.put("uptime",br.readLine());
-
-			status = p.waitFor();
-
-
-		} finally {
+		if (!bisprop.get("pid").equals("not running")) {
+			pb = new ProcessBuilder("ps", "--no-headers", "-ostime",bisprop.get("pid"));
 			try {
-				br.close();
-			} catch (IOException ignore) {}
-			try {
-				isr.close();
-			} catch (IOException ignore) {}
-			try {
-				is.close();
-			} catch (IOException ignore) {}
+				Process p = pb.start();
+				is = p.getInputStream();
+				isr = new InputStreamReader(is);
+				br = new BufferedReader(isr);
 
+				String uptime = br.readLine();
+				if (uptime != null)
+					bisprop.put("uptime",uptime);
+				else
+					bisprop.put("uptime","N/A");
+				try {
+					status = p.waitFor();
+				} catch (InterruptedException ignore) {}
+
+
+			} finally {
+				try {
+					br.close();
+				} catch (IOException ignore) {}
+				try {
+					isr.close();
+				} catch (IOException ignore) {}
+				try {
+					is.close();
+				} catch (IOException ignore) {}
+
+			}
 		}
+		else
+			bisprop.put("uptime","N/A");
 	}
 
 
