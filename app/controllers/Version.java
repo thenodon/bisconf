@@ -369,8 +369,11 @@ public class Version extends BasicController{
 	 * Save the current working version
 	 */
 	public static void save(String username) {
+		
+		initRepos("admin");
+		
 		Long stamp = System.currentTimeMillis();
-
+		
 		File metadir = new File (reposPath().getAbsolutePath()+File.separator + stamp);
 		ConfigMeta meta = new ConfigMeta();
 		meta.comment = params.get("comment");
