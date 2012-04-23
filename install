@@ -124,10 +124,11 @@ fi
 function usage {
   echo "Usage: $0: -U user -I directory -J java_home "
   echo "-u show usage"
-  echo "-U the user name to install bischeck as and run the daemon as - default nagios"
+  echo "-U the user name to install bisconf as and run the daemon as - default $USERINIT"
   echo "-J java home directory - default is none"
-  echo "-P play! home directory - default /opt/play-1.2.4"
-  echo "-I installation directory for bischeck - default /opt/socbox/addons/bischeck"
+  echo "-P play! home directory - default $PLAYHOME"
+  echo "-I installation directory for bisconf - default $BISCONFHOME"
+  echo "-B current installation directory for bischeck - default $BISHOME"
   echo "-R unistall - permanently remove the installation" 
   echo "-X upgrade from current version - if possible"
 }
@@ -347,6 +348,7 @@ if [ ! -d $BISCONFHOME ] ; then
     cp -a etc $BISCONFHOME
     cp -a app $BISCONFHOME
     cp -a conf $BISCONFHOME
+    cp -a public $BISCONFHOME
     cp svninfo.txt $BISCONFHOME
     
     echo $VERSION > $BISCONFHOME/version.txt
