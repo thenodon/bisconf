@@ -1,0 +1,103 @@
+<project name="bisconf" default="precompile" basedir=".">
+
+    <!-- === Property Definitions ======================================== -->
+
+    <!-- Optional overridden properties -->
+    <property file="${basedir}/version.txt"/>
+
+
+    <!-- ==== File and Directory Names =================================== -->
+    <property name="app.name" value="bisconf" />
+    <property name="app.path" value="/${app.name}" />
+    <property name="app.version" value="0.1.0" />
+    <property name="build.home" value="${basedir}/target" />
+    <property name="etc.home" value="${basedir}/etc" />
+	<property name="src.home" value="${basedir}/src" />
+	<property name="docs.home" value="${basedir}/doc" />
+	<property name="javac_target" value="6" />
+    <property name="javac_src" value="6" />
+    <property name="version.file" value="${basedir}/version.txt" />
+
+	<property environment="env"/>
+    <property name="play.path" value="${env.PLAY_PATH}"/>
+	<import file="${play.path}/resources/application-build.xml"/>
+
+	
+
+    <!-- === All Target ================================================= -->
+    <target name="clean" description="Delete old build and dist directories">
+        <delete dir="${build.home}" />
+    </target>
+
+
+     <target name="dist" depends="clean,  svninfo " description="Create binary distribution">
+        
+        
+        <copy todir="${build.home}/app">
+	       <fileset dir="${basedir}/app"/>
+        </copy>
+
+    	<copy todir="${build.home}/conf">
+    	   <fileset dir="${basedir}/conf"/>
+    	</copy>
+    	
+        <copy todir="${build.home}/src/scripts">
+	           <fileset dir="${basedir}/src/scripts"/>
+	        </copy>
+	        
+    	
+        
+        <copy todir="${build.home}/etc">
+            <fileset dir="${etc.home}">
+                <include name="**/*.xml"/>
+            	<exclude name="**/repos/**"/>
+            </fileset>
+        </copy>
+        
+        <copy todir="${build.home}" file="${docs.home}/LICENSE" />
+    	<copy todir="${build.home}" file="${basedir}/install" />
+    	<copy todir="${build.home}" file="${basedir}/svninfo.txt" />
+    	<chmod file="${build.home}/install" perm="ugo+rx"/>
+   
+    	<tar destfile="${build.home}/${app.name}-${app.version}.tar">
+            <tarfileset dir="${build.home}/"
+                prefix="${app.name}-${app.version}"
+                preserveLeadingSlashes="true"
+                excludes="docs/api/**/*">
+            </tarfileset>
+        </tar>
+        
+        <zip destfile="${build.home}/${app.name}-${app.version}.zip">
+            <zipfileset  dir="${build.home}/" prefix="${app.name}-${app.version}" > 
+            </zipfileset>
+        </zip>
+        
+        <gzip zipfile="${build.home}/${app.name}-${app.version}.tar.gz"
+                src="${build.home}/${app.name}-${app.version}.tar"/>
+        <delete file="${build.home}/${app.name}-${app.version}.tar"/>
+    	<delete file="${build.home}/${app.name}-${app.version}.zip"/>
+    	                
+    </target>
+	
+	
+    <target name="prepare">
+        <!-- Create build directories as needed -->
+    	<mkdir dir="${build.home}" />
+    	
+    </target>
+
+	<target name="svninfo" description="svn info">
+	   <exec executable="svn" output="svninfo.txt" outputproperty="svnrev">      
+	        <arg value="log"/>
+	        <arg value="--username"/>
+	   	    <arg value="anonymous"/>
+	        <arg value="--password"/>
+	   	    <arg value="no"/>
+	   	   	<arg value="-rHEAD"/>
+	        <arg value="-q"/>
+	   </exec>
+	   <echo>${svnrev}</echo>	
+	</target>
+	    
+	
+</project>
