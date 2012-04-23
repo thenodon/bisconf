@@ -5,6 +5,8 @@ username=Username
 email=Email
 password=Password
 
+secure.title=BisWeb
+
 validation.cronsrequiered=Required 
 validation.cronseconds=Allowed values: 0-59 and special characters , - * /
 validation.cronminutes=Allowed values: 0-59 and special characters , - * /
