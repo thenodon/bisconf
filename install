@@ -1,0 +1,406 @@
+#!/bin/bash
+###########################################################
+#
+# Copyright (C) 2010 Anders Håål, Ingenjorsbyn AB
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# 
+###########################################################
+
+
+
+trap 'aborted' INT KILL HUP
+
+PATH=/sbin:/usr/sbin:$PATH
+
+function getinstalldir() {
+  curdir=`pwd`
+  installpath=`dirname $1`
+  # Check if the path is absolut or relative
+  echo $installpath | grep "^/" > /dev/null
+
+  if [ $? -eq 0 ] ; then
+    insdir=$installpath
+  else
+    insdir=$curdir/$installpath
+  fi
+  echo $insdir
+}
+
+function setifsnewline {
+  CURIFS=$IFS
+  IFS='
+'
+}
+
+function unsetifs {
+  IFS=$CURIFS
+}
+
+function postinstall () {
+  postcount=`expr $postcount + 1`
+  echo -e "$postcount) $1" >> $POST_INSTALL
+}
+
+function beginnew () {
+  echo $1
+}
+
+function begin () {
+  echo -n $1
+}
+
+function end () {
+  echo  ".... Done " $1
+}
+
+function getout {
+  echo "Fix your installation errors and re-run $0"
+  #cleanup
+  exit
+}
+
+function errormsg () {
+  echo $1 "... Error"
+}
+
+function warnmsg () {
+  echo " $1" "... Warning"
+}
+
+function progress () {
+  echo $1 "... OK"
+}
+
+function headline() {
+  echo
+  echo -en "\\033[1;34m"
+  echo $@
+  str=`echo $@ |  sed -e "s/ /_/g"`
+  len=`expr length $str `  
+  while [ $len -ne 0 ]
+  do 
+    echo -n = 
+    len=`expr $len - 1 ` 
+  done
+  echo -en "\\033[0;39m"
+  echo
+}
+
+function getdate() {
+  date +'%Y%m%d%H%M'
+}
+
+function checkpackage() {
+  rpm -q $1 >/dev/null
+  if [ $? -ne 0 ] ; then
+    echo "Package $1 is missing - exiting"
+    exit 1
+  fi 
+}
+
+function distrocheck() {
+DISTRIBUTION=$(lsb_release -i | cut -f2 -d: | sed -e "s/\t//" | tr A-Z a-z)
+if [ "$DISTRIBUTION" != "unknown" ] ; then 
+    VERSION=$(lsb_release -r | cut -f2 -d: | sed -e "s/\t//" | tr A-Z a-z)
+    echo ${DISTRIBUTION}:${VERSION}
+fi
+
+}
+
+
+function usage {
+  echo "Usage: $0: -U user -I directory -J java_home "
+  echo "-u show usage"
+  echo "-U the user name to install bischeck as and run the daemon as - default nagios"
+  echo "-J java home directory - default is none"
+  echo "-P play! home directory - default /opt/play-1.2.4"
+  echo "-I installation directory for bischeck - default /opt/socbox/addons/bischeck"
+  echo "-R unistall - permanently remove the installation" 
+  echo "-X upgrade from current version - if possible"
+}
+
+
+scriptname=`basename $0`
+tempdir=`mktemp -d`
+
+#
+# Setup environment
+#
+
+
+#
+# Read command line options
+#
+# Default - do nothing
+#
+
+USERINIT=nagios
+NAGIOSHOST=localhost
+BISCONFHOME="/opt/socbox/addons/bisconf"
+BISHOME="/opt/socbox/addons/bischeck"
+
+JAVA_HOME=""
+unistall=false
+upgrade=false
+DISTRO=""
+DISTROVERS=""
+
+VERSION=$(basename `pwd` | sed -e "s/^.*-//")
+
+
+echo "Welcome to bisconf $VERSION installer"
+echo "====================================="
+echo "Copyright Anders Håål, Ingenjörsbyn AB 2011"
+echo "Licensed under GPL version 2"
+echo 
+
+while getopts U:I:J:uRXd:P:B: name
+do
+  case $name in
+    U)  USERINIT="$OPTARG";;
+    I)  BISCONFHOME="$OPTARG";;
+    B)  BISHOME="$OPTARG";;
+    P)  PLAYHOME="$OPTARG";;
+    J)  JAVA_HOME="$OPTARG";;
+    X)  upgrade=true;;
+    R)  uninstall=true;;
+    d)  DISTRO="$OPTARG";;
+    u)  usage; exit 0;;
+  esac
+done
+
+shift $(($OPTIND - 1))
+
+
+#########################
+## Check distribution
+#########################
+# Need to find a way to determine and pass on.
+if [ "x$DISTRO" = "x" ] ; then
+  DISTRO=$(distrocheck | cut -f1 -d:)
+  DISTROVERS=$(distrocheck | cut -f2 -d:)
+  if [ "x$DISTRO" = "x" ] ; then
+    echo "Can not determine distribution - please try set distribution name with -d"
+    exit 1
+  fi 
+else
+  DISTRO=$(echo $DISTRO | tr A-Z a-z)
+fi
+
+case ${DISTRO} in
+  rh|rhel|centos|debian|ubuntu)
+      echo "Supported distribution - $DISTRO $DISTROVERS" 
+      ;;
+  *)
+      echo "Linux distribution $DISTRO is not supported"
+      echo "Supported distributions are rh, rhel, centos and debian" 
+      exit 1
+      ;;
+esac;
+
+
+
+
+#########################
+## Uninstall
+#########################
+if [ "x$uninstall" = "xtrue" ] ; then
+  echo "Uninstall bischeck"
+  echo "Remove $BISCONFHOME"
+  rm -rf $BISCONFHOME
+  echo "Remove bischeckd from /etc/init.d"
+  if [ "$DISTRO" = "rhel" -o "$DISTRO" = "rh" -o "$DISTRO" = "centos" ] ; then
+    chkconfig --del bisconfd
+  elif [ "$DISTRO" = "debian" -o "$DISTRO" = "ubuntu" ] ; then
+    update-rc.d bisconfd remove
+  fi
+  rm -f /etc/init.d/bisconfd
+  exit 0
+fi
+
+headline "Pre-installation verification"
+
+echo "Checking software dependencies"
+
+#if [ "x$upgrade" = "xtrue" ] ; then
+#  checkpackage sqlite
+#  checkpackage javasqlite
+#fi
+
+echo "All requiered software installed"
+
+
+id $USERINIT > /dev/null 2>&1
+if [ $? -ne 0 ] ; then
+  errormsg "User $USERINIT do not exists"
+  initerror=true
+else 
+  echo User "$USERINIT exists"
+fi
+
+#########################
+## Pre install 
+#########################
+if [ "$upgrade" = "false" ] ; then
+  if [ -d $BISCONFHOME ] ; then
+    errormsg "Directory $BISCONFHOME already exists"
+    initerror=true
+  else 
+    echo "Directory $BISCONFHOME do not exists, will be created"
+  fi
+fi
+
+if [ "x$JAVA_HOME" = "x" ] ; then
+  which java > /dev/null 2>&1
+  if [ $? != 0 ] ; then
+    errormsg "Java do not exists in path $PATH"
+    initerror=true
+  fi
+elif [ ! -f $JAVA_HOME/bin/java ] ; then
+  errormsg "Java do not exists in $JAVA_HOME/bin"
+  initerror=true
+else 
+  jver=$(java -version 2>&1 | awk '/version/ {print $3}' | awk -F . '{print $2}')
+  if [ $jver -qe 6 ] ; then 
+    echo "Java runtime exists"
+  else
+    errormsg "Java version is must be 6 or higher."
+    initerror=true
+  fi
+fi
+  
+
+#########################
+## Upgrade check
+#########################
+if [ "$upgrade" = "true" ] ; then
+
+  #Check if the current version can be upgraded
+  oldversion=$(head -1 $BISCONFHOME/version.txt)
+  newversion=$(basename `pwd` | cut -d"-" -f2)
+  
+  upgradedir=${BISCONFHOME}_$oldversion  
+  if [ -d $upgradedir ] ; then
+    errormsg "Copy directory $upgradedir exists, must be removed to upgrade bisconf"
+    initerror=true
+  fi
+    
+  migline=$(grep $oldversion:$newversion: migrationpath.txt 2>&1)
+  migoldver=$(echo $migline | cut -d":" -f1)
+  mignewver=$(echo $migline | cut -d":" -f2)
+
+  if [ "x$migoldver" = "x$oldversion" -a "x$mignewver" = "x$newversion" ] ; then
+    echo "Upgrading bischeck from $oldversion to $newversion"
+  else
+    errormsg "Upgrading bisconf from $oldversion to $newversion is not supported"
+    initerror=true
+  fi
+  migscript=$(echo $migline | cut -d":" -f3)
+fi
+
+
+#########################
+## Exit if any error was detected
+#########################
+if [ "$initerror" = "true" ] ; then
+  getout
+else 
+  echo "Pre-installation completed successful"
+fi
+
+
+#########################
+## Backup old install 
+#########################
+# Create a backup directory of old bischeck installation
+if [ "$upgrade" = "true" ] ; then
+  service bisconfd stop
+  echo "Moving old installation to $upgradedir"
+  mv $BISCONFHOME $upgradedir 
+fi
+
+
+#########################
+## Install
+#########################
+headline "Do installation of bischeck $newversion"
+if [ ! -d $BISCONFHOME ] ; then
+    echo "Create installation directory $BISCONFHOME"
+    mkdir -p $BISCONFHOME
+    mkdir $BISCONFHOME/etc
+    mkdir $BISCONFHOME/bin
+    
+    echo "Copy files to installation directory"
+    cp -a etc $BISCONFHOME
+    cp -a app $BISCONFHOME
+    cp -a conf $BISCONFHOME
+    cp svninfo.txt $BISCONFHOME
+    
+    echo $VERSION > $BISCONFHOME/version.txt
+    
+    echo "Parse all script files"
+    # Parse all shell scripts
+    for i in `ls src/scripts/*.template` ; do
+      cat  $i| sed -e "s#%BISCONFHOME%#$BISCONFHOME#g" \
+        -e "s#%VERSION%#$VERSION#g" \
+        -e "s#%USERINIT%#$USERINIT#g" \
+        -e "s#%JAVA_HOME%#$JAVA_HOME#g" \
+        -e "s#%BISHOME%#$BISHOME#g" \
+        -e "s#%BISCONFHOME%#$BISCONFHOME#g" \
+        -e "s#%PLAYHOME%#$PLAYHOME#g" \
+        -e "s#%DISTRO%#$DISTRO#g" > $BISCONFHOME/bin/`basename ${i%\.template}`
+    done
+    chmod 750 $BISCONFHOME/bin/* 
+
+    echo "Install init.d script bisconfd in /etc/init.d"
+    cp $BISCONFHOME/bin/bisconfd /etc/init.d
+    chmod 755 /etc/init.d/bisconfd
+  
+    if [ "$DISTRO" = "rhel" -o "$DISTRO" = "rh" -o "$DISTRO" = "centos" ] ; then
+        chkconfig --add bisconfd
+    elif [ "$DISTRO" = "debian" -o "$DISTRO" = "ubuntu" ] ; then
+        update-rc.d bisconfd defaults
+    fi
+    
+    echo "Change ownership and permissions to install user $USERINIT"
+    chown -R $USERINIT:`id -gn $USERINIT` $BISCONFHOME
+    echo "Installations complete"
+else
+   errormsg "Directory $BISCONFHOME already exists"
+   initerror=true
+   getout
+fi
+
+
+#########################
+## Upgrade
+#########################
+if [ "$upgrade" = "true" ] ; then
+  headline "Upgrade of bischeck $newversion with $oldversion"
+  echo "Copy customlib jars"
+  cp -a $upgradedir/customlib/* $BISCONFHOME/customlib/
+  echo "Running migrations scripts"    
+  sh ./migscripts/$migscript $BISCONFHOME $upgradedir
+fi
+
+
+#########################
+## Always set permission
+#########################
+if [ ! -d $BISCONFHOME ] ; then
+  echo "Set permission of the installation"
+  chmod -R o-rwx $BISCONFHOME/etc
+fi
