@@ -39,7 +39,7 @@ else
     exit 0
 fi
 
-
+#BISCONFHOME=%BISCONFHOME%
 BISCONFHOME=/home/andersh/development/bisconf
 
 #user=%USERINIT%
@@ -79,7 +79,6 @@ isrunning() {
 unset TMPDIR
 RETVAL=0
 
-#java -classpath $CLASSPATH  -Dbisconfhome=$BISCONFHOME -Dbishome=/opt/socbox/addons/bischeck -Dplay.id= -Dapplication.path=$BISCONFHOME -Djava.endorsed.dirs="$PLAYHOME/framework/endorsed" -javaagent:"$PLAYHOME/framework/play-1.2.4.jar" -Dfile.encoding=UTF-8  play.server.Server
 
 start() {
     echo -n "bisconf startup"
