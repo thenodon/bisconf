@@ -246,12 +246,12 @@ public class Bischeck extends BasicController {
 							service.setDesc(params.get("desc"));
 							service.setDriver(params.get("driver"));
 							service.setUrl(params.get("url"));
-							if (!Bootstrap.getBischeckVersion().equals("0.3.0")) {
+							//if (!Bootstrap.getBischeckVersion().equals("0.3.3")) {
 								if (params.get("sendserver").equalsIgnoreCase("true"))
 									service.setSendserver(true);
 								else
 									service.setSendserver(false);
-							}
+							//}
 							flash.success(Messages.get("SaveServiceSuccess"));
 							editservice(params.get("hostname"),params.get("name"));
 						}
@@ -275,7 +275,9 @@ public class Bischeck extends BasicController {
 		service.setDesc(params.get("desc"));
 		service.setUrl(params.get("url"));
 		service.setDriver(params.get("driver"));
-		service.setSendserver(Boolean.valueOf(params.get("sendserver")));
+		//if (!Bootstrap.getBischeckVersion().equals("0.3.3")) {
+			service.setSendserver(Boolean.valueOf(params.get("sendserver")));
+		//}
 		service.getSchedule().add("5M");
 		hosts = config.getHost().iterator();
 		while (hosts.hasNext()){
