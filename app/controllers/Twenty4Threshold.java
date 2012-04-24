@@ -7,6 +7,7 @@ import play.libs.XML;
 import play.mvc.*;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import com.ingby.socbox.bischeck.ConfigFileManager;
 import com.ingby.socbox.bischeck.ConfigXMLInf;
@@ -185,14 +186,28 @@ public class Twenty4Threshold extends BasicController {
 					&& servicedef.getServiceitemname().equals(serviceitemname)) {
 
 				List<XMLPeriod> periodlist = servicedef.getPeriod();
-
+				
 				// Get all hour def existing for the periods
 				Map<Integer, List<String>> hours = getHoursByPeriod(periodlist);
-
+				
 				Map<Integer, XMLPeriod> hashperiod = createIndexPeriodMap(periodlist);
-
+				
+				Iterator<Entry<Integer, XMLPeriod>> iter = hashperiod.entrySet().iterator();
+				/*
+				while (iter.hasNext()) {
+					Entry<Integer, XMLPeriod> xml = iter.next();
+					System.out.println("id:" + xml.getKey() +" : " +xml.getValue().getMonths().size());
+					System.out.println(hashperiod.get(xml.getKey()).toString());
+				}
+				*/
+				
 				List<Integer> allhourids = getAllConfiguredHourID();
-
+				/*
+				while (iter1.hasNext()) {
+					System.out.println("id" + iter1.next());
+				}
+				*/
+				
 				render(servicedef, hashperiod, hours, allhourids, anchor);
 			}
 		}
@@ -207,6 +222,7 @@ public class Twenty4Threshold extends BasicController {
 
 		render(servicedef);
 	}
+
 
 	private static Map<Integer, List<String>> getHoursByPeriod(
 			List<XMLPeriod> periods) {
@@ -249,23 +265,61 @@ public class Twenty4Threshold extends BasicController {
 	private static Map<Integer, XMLPeriod> createIndexPeriodMap(
 			List<XMLPeriod> periodlist) {
 		Iterator<XMLPeriod> perioditer = periodlist.iterator();
-
+		//System.out.println("crete - periodlist:" + periodlist.size());
 		Map<Integer, XMLPeriod> hashperiod = new HashMap<Integer, XMLPeriod>();
 		int count = 0;
 		while (perioditer.hasNext()) {
 			count++;
 			XMLPeriod period = perioditer.next();
 			hashperiod.put(period.hashCode(), period);
+			//System.out.println("HASHcode: " + period.hashCode() + "Period obj: " + period.toString());
 		}
-
-		// Sort the list of XMLPeriods based on the XMLPeriodComparator
-		XMLPeriodComparator bvc = new XMLPeriodComparator(hashperiod);
-		TreeMap<Integer, XMLPeriod> sorted_map = new TreeMap(bvc);
-		sorted_map.putAll(hashperiod);
-
+		
+		
+		Map<Integer, XMLPeriod> sorted_map = sortHashMapByValues(hashperiod, true);
+		
+		/*
+		Iterator<Integer> iter = sorted_map.keySet().iterator();
+		while (iter.hasNext()) {
+			
+			Integer myp = iter.next();
+			System.out.println("HASHcode: " + myp + "Period obj: " + sorted_map.get(myp).toString());
+		}
+		*/
 		return sorted_map;
 	}
 
+
+	public static LinkedHashMap<Integer,XMLPeriod>  sortHashMapByValues(Map<Integer,XMLPeriod>  passedMap, boolean ascending) {
+
+		List mapKeys = new ArrayList(passedMap.keySet());
+		List mapValues = new ArrayList(passedMap.values());
+		Collections.sort(mapValues, new XMLPeriodComparator(mapValues));	
+		Collections.sort(mapKeys);	
+
+		//if (!ascending)
+		//Collections.reverse(mapValues);
+
+		LinkedHashMap someMap = new LinkedHashMap();
+		Iterator valueIt = mapValues.iterator();    
+		while (valueIt.hasNext()) {
+			Object val = valueIt.next();
+			Iterator keyIt = mapKeys.iterator();
+			while (keyIt.hasNext()) {
+				Object key = keyIt.next();
+				if (passedMap.get(key).toString().equals(val.toString())) {
+					passedMap.remove(key);
+					mapKeys.remove(key);
+					someMap.put(key, val);
+					break;
+				}
+			}
+		}
+		return someMap;
+	}
+
+
+	
 	public static void deletePeriod(String hostname, String servicename,
 			String serviceitemname, int period) {
 		XMLTwenty4Threshold config = getCache();
@@ -280,7 +334,7 @@ public class Twenty4Threshold extends BasicController {
 			if (servicedef.getHostname().equals(hostname)
 					&& servicedef.getServicename().equals(servicename)
 					&& servicedef.getServiceitemname().equals(serviceitemname)) {
-				System.out.println("Match");
+				
 				List<XMLPeriod> periodlist = servicedef.getPeriod();
 
 				Map<Integer, XMLPeriod> hashperiod = createIndexPeriodMap(periodlist);
