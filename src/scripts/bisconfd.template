@@ -81,9 +81,9 @@ start() {
     echo -n "bisconf startup"
     status=`isrunning` 
     if [ "x$status" = "x" ] ; then
-        echo "SUNE"
-        su $user -c " $BISCONFHOME/etc/bisconf > /dev/null 2>&1" &
-        echo "KALLE"
+        
+        su $user -c " $BISCONFHOME/bin/bisconf > /dev/null 2>&1" &
+       
         sleep 5
         status=`isrunning`
         
