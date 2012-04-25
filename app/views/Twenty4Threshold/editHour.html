@@ -14,20 +14,11 @@
 
 <table class="listtable">
     <caption>&{'UsedBy'}</caption>
-    <thead>
-            <tr>
-                <th>&{'Host'}</th>
-                <th>&{'Service'}</th>
-                <th>&{'ServiceItem'}</th>
-            </tr>
-        </thead>
     <tbody>
     #{list hour2def, as:'servicedef'}
         
         <tr>
-            <td>${servicedef.hostname} </td>
-            <td>${servicedef.servicename}</td> 
-            <td>${servicedef.serviceitemname}</td>
+            <td><a href="@{editServiceDefs(servicedef.hostname,servicedef.servicename,servicedef.serviceitemname)}">${servicedef.hostname} &#8658; ${servicedef.servicename} &#8658; ${servicedef.serviceitemname}</a></td>
         </tr> 
                            
     #{/list}
