@@ -1,0 +1,103 @@
+bisconf - Bischeck configuration WebUI
+======================================
+
+2012-04-25
+
+Release 0.1.0_RC1 
+
+This release should be regarded as a alpha release and should not be used for
+bischeck systems in production. 
+
+Overview
+========
+
+The bisconf WebUI is a configuration web interface to the configuration of the
+bischeck configuration files. 
+Features:
+- Web configuration of all bischeck xml based configuration files.
+- Manage versions of the configuration files
+- Support deployment of new configuration version directly from the Web UI. 
+This will restart the bischeck server with new configuration files.
+- Display the status of the bischeck process. All operations with the bischeck
+server is done over JMX, from version bischeck 0.4.0.
+- Support authentication to access the system. The admin role has permission to
+add additional users.
+
+
+System requirements
+===================
+- Java Play! framework version 1.2.4 (not 2.0)
+- Support for bischeck from version 0.3.3, but system running 0.3.3 requires  
+some additional setup. 
+
+Installation
+============
+Download bisconf from http://gforge.ingby.com/gf/project/bischeck/frs/ or 
+check out the bisconf trunk or tag (0.1.0_RC1) if you want to hack it.
+
+If code is checkout by svn you can build a distribution by:
+$ export PLAY_PATH=<play home dir>
+$ ant dist 
+
+If you check out the code and like to use eclipse you can run bisconf directly
+from the eclipse. Check out the home page of play! for more info,
+http://www.playframework.org/documentation/1.2.4/
+
+To install the distribution extract the tar file downloaded or built by ant 
+(located in the target directory). From the distribution directory run:
+$ chmod 755 install
+$ sudo ./install -u
+
+This will present the installation options. Sudo is required since init scripts
+are installed in /etc/init.d.
+
+
+Running bisconf against bischeck 0.3.3
+======================================
+Bisconf is targeted bischeck version 0.4.0 and later but its possible to run 
+against bischeck version 0.3.3, but with some additional setups.
+1 - Check out or down load the the bischeck version 0.4.0 and build it.
+2 - Backup your bischeck installation directory. 
+3 - Copy the servers.xml file in the 0.4.0 etc directory to the etc of the 
+running 0.3.3 version
+4 - Copy the bischeck.xsd file from target/resources to the resources directory 
+of the running 0.3.3 installation
+5 - Un-tar the bischeck-0.4.0.tar.gz and copy the bischeck-0.4.0.jar and 
+quartz-2.0.1.jar to the lib directory of bisconf
+
+
+Running bisconf from eclipse
+============================
+The following steps must be done to run bisconf from eclipse.
+
+1 - Add bischeck 0.4.0 (current trunk) target/classes and target/resources to 
+the build path. Make sure to run ant dist in bischeck directory first.
+
+2 - Add system properties in the eclipse "Run configurations"->"Arguments" in
+the field "VM arguments", 
+-Dbishome=<bischeck source dir>
+-Dbisconfhome=<bisconf source dir>
+
+
+Start bisconf
+=============
+Simple start bisconf by
+$ sudo /etc/init.d/bisconfd start
+or 
+$ <bisconf home directory>/bin/bisconf
+
+Point your webbrowser to http://<bisconf IP>:9000. Inital login is admin/admin.
+
+If you like to run bisconf behind apache or some other server please see the 
+Play! home page for more info.
+
+
+Feedback
+========
+Please send any feedback to anders.haal@ingby.com or register on 
+gforge.ingby.com to submit bug and/or feature request.
+ 
+
+
+
+Inital access is admin/admin   
