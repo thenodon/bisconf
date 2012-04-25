@@ -9,7 +9,7 @@
     <!-- ==== File and Directory Names =================================== -->
     <property name="app.name" value="bisconf" />
     <property name="app.path" value="/${app.name}" />
-    <property name="app.version" value="0.1.0" />
+    <property name="app.version" value="0.1.0-RC1" />
     <property name="build.home" value="${basedir}/target" />
     <property name="etc.home" value="${basedir}/etc" />
 	<property name="src.home" value="${basedir}/src" />
@@ -30,7 +30,7 @@
     </target>
 
 
-     <target name="dist" depends="clean,  svninfo " description="Create binary distribution">
+     <target name="dist" depends="clean, precompile, svninfo " description="Create binary distribution">
         
         
         <copy todir="${build.home}/app">
@@ -40,7 +40,11 @@
     	<copy todir="${build.home}/conf">
     	   <fileset dir="${basedir}/conf"/>
     	</copy>
-    	
+	
+     	<copy todir="${build.home}/public">
+           <fileset dir="${basedir}/public"/>
+        </copy>
+     	        
         <copy todir="${build.home}/src/scripts">
 	           <fileset dir="${basedir}/src/scripts"/>
 	        </copy>
