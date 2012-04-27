@@ -39,7 +39,7 @@ ${host.name} &#8658; ${service.name} &#8658; ${serviceitem.name}
     <textarea id="execstatement" name="execstatement">${serviceitem.execstatement}</textarea>
     <br />
     
-    <label for="serviceitemclass">&{'ServiceItemclass'}</label> 
+    <label for="serviceitemclass">&{'ServiceItemClass'}</label> 
     <select id="serviceitemclass" name="serviceitemclass">
         <option value="${serviceitem.serviceitemclass}" >${serviceitem.serviceitemclass}</option>
         #{list serviceitemclasses, as: 'clazz'}
@@ -50,7 +50,7 @@ ${host.name} &#8658; ${service.name} &#8658; ${serviceitem.name}
     
     
         
-    <label for="thresholdclass">&{'ServiceItemThresholdclass'}"</label> 
+    <label for="thresholdclass">&{'ServiceItemThresholdclass'}</label> 
     <select id="thresholdclass" name="thresholdclass">
         <option value="${serviceitem.thresholdclass}" >${serviceitem.thresholdclass}</option>
         #{list thresholdclasses, as: 'clazz'}

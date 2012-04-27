@@ -61,7 +61,7 @@ ${host.name} &#8658; ${service.name}
     <br />
     
     
-    <label for="dayofmonth">&{'Dayofmonth'}</label>
+    <label for="dayofmonth">&{'DayofMonth'}</label>
     #{if cronschedule}
     <input id="dayofmonth" type="text" name="dayofmonth" value="${cronschedule.dayofmonth}"/>
     <span class="error">#{error 'crondayofmonth' /}</span>
@@ -83,7 +83,7 @@ ${host.name} &#8658; ${service.name}
     #{/else}        
     <br />
     
-    <label for="dayofweek">&{'Dayofweek'}</label>
+    <label for="dayofweek">&{'DayofWeek'}</label>
     #{if cronschedule}
     <input id="dayofweek" type="text" name="dayofweek" value="${cronschedule.dayofweek}"/>
     <span class="error">#{error 'crondayofweek' /}</span>
