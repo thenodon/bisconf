@@ -9,7 +9,7 @@
     <!-- ==== File and Directory Names =================================== -->
     <property name="app.name" value="bisconf" />
     <property name="app.path" value="/${app.name}" />
-    <property name="app.version" value="0.1.0_RC1" />
+    <property name="app.version" value="0.1.0_RC2" />
     <property name="build.home" value="${basedir}/target" />
     <property name="etc.home" value="${basedir}/etc" />
 	<property name="src.home" value="${basedir}/src" />
