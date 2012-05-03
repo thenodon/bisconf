@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>JMX bischeck connection properties</comment>
+<entry key="host">localhost</entry>
+<entry key="port">3333</entry>
+</properties>

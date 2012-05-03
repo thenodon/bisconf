@@ -336,11 +336,13 @@ public class Version extends BasicController{
 				Process p = pb.start();
 				try {
 					status = p.waitFor();
+					if (status != 0) {
+						Logger.error("Restarting bischeck failed with return status " + status);
+					}
 				} catch (InterruptedException ignore) {}
 
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Logger.error("Restarting bischeck failed with exception: " + e.getMessage());
 			}
 		} else {
 			// Use jmx reload
@@ -348,8 +350,8 @@ public class Version extends BasicController{
 				MBeanServerConnection mbsc = createMBeanServerConnection();
 				ObjectName mbeanName;
 				mbeanName = null;
-				mbeanName = new ObjectName("com.ingby.socbox.bischeck:name=Execute");
-
+				//mbeanName = new ObjectName("com.ingby.socbox.bischeck:name=Execute");
+				mbeanName = new ObjectName(ExecuteMBean.BEANNAME);
 
 				ExecuteMBean mbeanProxy = JMX.newMBeanProxy(mbsc, mbeanName, 
 						ExecuteMBean.class, true);
@@ -357,7 +359,7 @@ public class Version extends BasicController{
 
 			}
 			catch (Exception ioe) {
-				// Not started
+				Logger.error("Restarting bischeck failed with exception: " + ioe.getMessage());
 			}
 		}		
 
@@ -595,6 +597,9 @@ public class Version extends BasicController{
 			System.out.println();
 			try {
 				status = p.waitFor();
+				if (status != 0) {
+					Logger.error("Getting bischeck pid failed with return status " + status);
+				}
 			} catch (InterruptedException ignore) {}
 		} finally {
 			try {
@@ -650,12 +655,35 @@ public class Version extends BasicController{
 		JMXConnector c = null;
 		MBeanServerConnection mbsc = null;
 
-		u = new JMXServiceURL(
-				"service:jmx:rmi:///jndi/rmi://" + "localhost" + ":" + "3333" +  "/jmxrmi");
+		
+		try {
 
-		c = JMXConnectorFactory.connect(u);
+			u = new JMXServiceURL(
+				"service:jmx:rmi:///jndi/rmi://" + 
+				Bootstrap.getJMXProperties().getProperty("host") + 
+				":" + 
+				Bootstrap.getJMXProperties().getProperty("port") +  
+				"/jmxrmi");
 
-		mbsc = c.getMBeanServerConnection();
+		} catch (MalformedURLException e1) {
+			Logger.error("JMX service url is malformed: "+ e1.getMessage());
+			throw e1;
+		}
+
+		try {
+			c = JMXConnectorFactory.connect(u);
+		} catch (IOException e) {
+			Logger.error("JMX connection failed: " + e.getMessage());
+			throw e;
+		}
+
+		
+		try {
+			mbsc = c.getMBeanServerConnection();
+		} catch (IOException e) {
+			Logger.error("JMX server connection failed: " + e.getMessage());
+			throw e;
+		}
 
 		return mbsc;
 	}
