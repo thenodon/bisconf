@@ -192,21 +192,7 @@ public class Twenty4Threshold extends BasicController {
 				
 				Map<Integer, XMLPeriod> hashperiod = createIndexPeriodMap(periodlist);
 				
-				Iterator<Entry<Integer, XMLPeriod>> iter = hashperiod.entrySet().iterator();
-				/*
-				while (iter.hasNext()) {
-					Entry<Integer, XMLPeriod> xml = iter.next();
-					System.out.println("id:" + xml.getKey() +" : " +xml.getValue().getMonths().size());
-					System.out.println(hashperiod.get(xml.getKey()).toString());
-				}
-				*/
-				
 				List<Integer> allhourids = getAllConfiguredHourID();
-				/*
-				while (iter1.hasNext()) {
-					System.out.println("id" + iter1.next());
-				}
-				*/
 				
 				render(servicedef, hashperiod, hours, allhourids, anchor);
 			}
