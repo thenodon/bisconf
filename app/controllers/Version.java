@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.InvalidPropertiesFormatException;
 import java.util.List;
 import java.util.Map;
@@ -548,7 +549,7 @@ public class Version extends BasicController{
 		}
 	}
 
-	public static void status() throws Exception {
+	public static void status()  {
 
 		Map<String,String> bisprop = new HashMap<String, String>();
 		bisprop.put("bischeckversion",Bootstrap.getBischeckVersion());
@@ -566,8 +567,8 @@ public class Version extends BasicController{
 				getJVMAttributes(bisprop,mbsc);
 				getBischeckAttributes(bisprop, mbsc);
 			}
-			catch (IOException ioe) {
-				bisprop.put("pid", "Not started");
+			catch (Exception ioe) {
+				bisprop.put("pid", "not running or no JMX connection");
 			}
 
 
@@ -577,7 +578,7 @@ public class Version extends BasicController{
 	}
 
 
-	private static void getNativeAttributes(Map<String, String> bisprop) throws IOException {
+	private static void getNativeAttributes(Map<String, String> bisprop) {
 		Integer status;
 		ProcessBuilder pb = new ProcessBuilder("sudo", "/etc/init.d/bischeckd", "pidstatus");
 		InputStream is = null;
@@ -601,7 +602,9 @@ public class Version extends BasicController{
 					Logger.error("Getting bischeck pid failed with return status " + status);
 				}
 			} catch (InterruptedException ignore) {}
-		} finally {
+		} catch (IOException ioe) {
+			bisprop.put("pid","not running");
+		}finally {
 			try {
 				br.close();
 			} catch (IOException ignore) {}
@@ -630,8 +633,8 @@ public class Version extends BasicController{
 				try {
 					status = p.waitFor();
 				} catch (InterruptedException ignore) {}
-
-
+			} catch (IOException ioe) {
+				bisprop.put("uptime","N/A");
 			} finally {
 				try {
 					br.close();
@@ -669,9 +672,18 @@ public class Version extends BasicController{
 			Logger.error("JMX service url is malformed: "+ e1.getMessage());
 			throw e1;
 		}
-
+		
+		Map<String, String[]> env = new Hashtable<String, String[]>();
+		// If user and password is defined
+		if (Bootstrap.getJMXProperties().getProperty("user") != null &&
+			Bootstrap.getJMXProperties().getProperty("password") != null) {
+			String[] credentials = new String[] {Bootstrap.getJMXProperties().getProperty("user"),
+					Bootstrap.getJMXProperties().getProperty("password")};
+			env.put(JMXConnector.CREDENTIALS, credentials);
+		}
+		
 		try {
-			c = JMXConnectorFactory.connect(u);
+			c = JMXConnectorFactory.connect(u,env);
 		} catch (IOException e) {
 			Logger.error("JMX connection failed: " + e.getMessage());
 			throw e;

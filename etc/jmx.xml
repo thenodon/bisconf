@@ -4,4 +4,6 @@
 <comment>JMX bischeck connection properties</comment>
 <entry key="host">localhost</entry>
 <entry key="port">3333</entry>
+<entry key="user">bischeckmonitor</entry>
+<entry key="password">bisit</entry>
 </properties>
