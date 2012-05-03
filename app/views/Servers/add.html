@@ -19,12 +19,20 @@
     
     <label for="servername">&{'Servername'}</label>
     <input id="servername" type="text" name="servername" />
-    <br />
+    <span class="error">#{error 'servername' /}</span>
     
+    <br />
+
     <label for="classname">&{'Classname'}</label>
-    <input id="classname" type="text" name="classname"/>
+
+    <select id="classname" name="classname">
+        
+        #{list serverclasses, as: 'clazz'}
+            <option value="${clazz}">${clazz}</option>
+        #{/list}
+    </select>
     <br />
-    
+       
     <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" />
 
 #{/form}

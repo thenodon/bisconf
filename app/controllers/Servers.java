@@ -5,6 +5,7 @@ import play.cache.Cache;
 import play.i18n.Messages;
 import play.mvc.*;
 
+import java.lang.reflect.Method;
 import java.util.*;
 
 import com.ingby.socbox.bischeck.ConfigFileManager;
@@ -38,7 +39,8 @@ public class Servers extends BasicController {
     
     
     public static void add() {
-    	render();
+    	List<String> serverclasses = Populate.getServerClasses();
+    	render(serverclasses);
     }
     
     
@@ -70,12 +72,27 @@ public class Servers extends BasicController {
         	XMLServer server = servers.next();
         	
         	if (server.getName().equals(servername)) {
-        		server.setClazz(classname);
-        		flash.success(Messages.get("SaveServerSuccess"));
+        		if (!params.get("classname").equals(params.get("oldclassname"))) {
+        			server.setClazz(classname);
+        			/////////////////
+        			// Replace server properties
+        			replaceServerProperties(server);
+        			
+            		/////////////////
+        			flash.success(Messages.get("SaveServerSuccess"));
+        		}
         		edit(servername);
         	}
         }
     	// New 
+    	validation.required(servername);
+			
+    	if (validation.hasErrors()) {
+    		// Used to identify the period that had the error
+    		validation.keep();
+    		add();
+    	}
+    	
     	XMLServer server = new XMLServer();
     	server.setName(servername);
     	server.setClazz(classname);
@@ -84,7 +101,66 @@ public class Servers extends BasicController {
     	edit(servername);
     }
     
+    private static boolean replaceServerProperties(XMLServer server) {
+    	Class<?> serverclazz; 
+		
+    	try {
+    		serverclazz = Class.forName(server.getClazz());
+    	} catch (ClassNotFoundException e) {
+    		try {
+    			serverclazz = Class.forName("com.ingby.socbox.bischeck.servers." + 
+    					server.getClazz());
+    		} catch (Exception ret) {
+    			return false;
+    		}
+    	}
 
+    	java.util.Properties defaultproperties = null;
+    	Method method;
+    	try {
+    		method = serverclazz.getMethod("getServerProperties");
+    		defaultproperties  = (java.util.Properties) method.invoke(null);
+    	} catch (Exception ret) {
+    		return false;
+    	}
+
+
+
+    	Iterator<XMLProperty> iter = server.getProperty().iterator();
+    	// Update the default properties with what is currently set 
+    	// in the server property
+    	while (iter.hasNext()){
+    		XMLProperty xmlprop = iter.next();
+    		if(defaultproperties.containsKey(xmlprop.getKey()))
+    			defaultproperties.setProperty(xmlprop.getKey(), xmlprop.getValue());
+    	}
+
+    	// Create a new server property list
+    	List<XMLProperty>serverproperty = new ArrayList<XMLProperty>();
+    	Iterator<Object> keyiter = defaultproperties.keySet().iterator();
+
+    	while (keyiter.hasNext()){
+    		String key = (String) keyiter.next();
+    		XMLProperty xmlprop = new XMLProperty();
+    		xmlprop.setKey(key);
+    		xmlprop.setValue((String) defaultproperties.get(key));
+    		serverproperty.add(xmlprop);
+    	}
+
+    	server.getProperty().clear();
+    	server.getProperty().addAll(serverproperty);
+    	
+    	return true;
+    }
+
+    /**
+     * If the server class has a static method called gerServerProperties 
+     * the default properties will be used to create the list with default 
+     * values. If this is the case the gui will not allow deletion of properties 
+     * or allowing to add additional properties.
+     * If the server class do not have any  
+     * @param servername
+     */
     public static void edit(String servername) {
     	XMLServers serversconfig = getCache();
     	Iterator<XMLServer> servers = serversconfig.getServer().iterator();
@@ -93,10 +169,66 @@ public class Servers extends BasicController {
         	XMLServer server = servers.next();
         	
         	if (server.getName().equals(servername)) {
+        		
         		List<String> serverclasses = Populate.getServerClasses();
-        		render(server, serverclasses);
+        		
+        		boolean hasdefaultproperties = replaceServerProperties(server);
+        		/*
+        		java.util.Properties defaultproperties = null;
+        		boolean hasdefaultproperties = false;
+        		List<XMLProperty> serverproperty = null;
+        		
+        		Class<?> serverclazz; 
+        		try {
+        			try {
+        				serverclazz = Class.forName(server.getClazz());
+        			} catch (ClassNotFoundException e) {
+        				serverclazz = Class.forName("com.ingby.socbox.bischeck.servers." + 
+        						server.getClazz());
+        			}
+        		
+        			Method method = serverclazz.getMethod("getServerProperties");
+        			
+        			defaultproperties  = (java.util.Properties) method.invoke(null);
+        			
+        			
+        			Iterator<XMLProperty> iter = server.getProperty().iterator();
+            		// Update the default properties with what is currently set 
+        			// in the server property
+        			while (iter.hasNext()){
+            			XMLProperty xmlprop = iter.next();
+            			if(defaultproperties.containsKey(xmlprop.getKey()))
+            				defaultproperties.setProperty(xmlprop.getKey(), xmlprop.getValue());
+            		}
+        			
+        			// Create a new server property list
+        			serverproperty = new ArrayList<XMLProperty>();
+        			Iterator<Object> keyiter = defaultproperties.keySet().iterator();
+        			
+        			while (keyiter.hasNext()){
+        				String key = (String) keyiter.next();
+        				XMLProperty xmlprop = new XMLProperty();
+        				xmlprop.setKey(key);
+        				xmlprop.setValue((String) defaultproperties.get(key));
+        				serverproperty.add(xmlprop);
+        			}
+        			
+        			hasdefaultproperties = true;
+        		
+        		} catch (Exception e) {
+        		
+        			// If the server class do not have default properties
+        			hasdefaultproperties = false;
+        			serverproperty = server.getProperty();
+        		}
+        		*/
+        
+        		List<XMLProperty> serverproperty = server.getProperty();
+                
+        		render(server, serverproperty,serverclasses, hasdefaultproperties);        		
+        		//render(server, serverclasses, defaultproperties);
         	}
-        }
+    	}
     	render();
     }
     

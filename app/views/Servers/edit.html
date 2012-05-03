@@ -12,9 +12,11 @@ ${server.name}
 
 <div class="downlink">
 <ul>
+#{ifnot hasdefaultproperties }
 <li>
 <a href="@{Servers.addProperty(server.name)}">&{'AddProperty'}</a>
 </li>
+#{/ifnot}
 <li>
 <a href="@{Servers.list()}">&{'ListServers'}</a>
 </li>
@@ -36,6 +38,7 @@ ${server.name}
     <br />
     
     <input type="hidden" name="servername" value="${server.name}">
+    <input type="hidden" name="oldclassname" value="${server.clazz}">
     
     <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" />
 
@@ -51,13 +54,15 @@ ${server.name}
             </tr>
         </thead>
         <tbody>
-            #{list server.property, as:'property'}
+            #{list serverproperty, as:'property'}
                 <tr>
                     <td>${property.key}</td>
                     <td>${property.value}</td>
                     <td>
                         <a href="@{editProperty(server.name,property.key,property.value)}">&{'Edit'}</a>
-                        <a href="@{deleteProperty(server.name,property.key)}">&{'Delete'}</a>
+                        #{ifnot hasdefaultproperties}
+                            <a href="@{deleteProperty(server.name,property.key)}">&{'Delete'}</a>
+                        #{/ifnot}
                     </td>
                 </tr>
             #{/list}
