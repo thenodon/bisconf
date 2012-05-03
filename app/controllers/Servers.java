@@ -173,60 +173,8 @@ public class Servers extends BasicController {
         		List<String> serverclasses = Populate.getServerClasses();
         		
         		boolean hasdefaultproperties = replaceServerProperties(server);
-        		/*
-        		java.util.Properties defaultproperties = null;
-        		boolean hasdefaultproperties = false;
-        		List<XMLProperty> serverproperty = null;
-        		
-        		Class<?> serverclazz; 
-        		try {
-        			try {
-        				serverclazz = Class.forName(server.getClazz());
-        			} catch (ClassNotFoundException e) {
-        				serverclazz = Class.forName("com.ingby.socbox.bischeck.servers." + 
-        						server.getClazz());
-        			}
-        		
-        			Method method = serverclazz.getMethod("getServerProperties");
-        			
-        			defaultproperties  = (java.util.Properties) method.invoke(null);
-        			
-        			
-        			Iterator<XMLProperty> iter = server.getProperty().iterator();
-            		// Update the default properties with what is currently set 
-        			// in the server property
-        			while (iter.hasNext()){
-            			XMLProperty xmlprop = iter.next();
-            			if(defaultproperties.containsKey(xmlprop.getKey()))
-            				defaultproperties.setProperty(xmlprop.getKey(), xmlprop.getValue());
-            		}
-        			
-        			// Create a new server property list
-        			serverproperty = new ArrayList<XMLProperty>();
-        			Iterator<Object> keyiter = defaultproperties.keySet().iterator();
-        			
-        			while (keyiter.hasNext()){
-        				String key = (String) keyiter.next();
-        				XMLProperty xmlprop = new XMLProperty();
-        				xmlprop.setKey(key);
-        				xmlprop.setValue((String) defaultproperties.get(key));
-        				serverproperty.add(xmlprop);
-        			}
-        			
-        			hasdefaultproperties = true;
-        		
-        		} catch (Exception e) {
-        		
-        			// If the server class do not have default properties
-        			hasdefaultproperties = false;
-        			serverproperty = server.getProperty();
-        		}
-        		*/
-        
-        		List<XMLProperty> serverproperty = server.getProperty();
-                
-        		render(server, serverproperty,serverclasses, hasdefaultproperties);        		
-        		//render(server, serverclasses, defaultproperties);
+               		
+        		render(server, serverclasses, hasdefaultproperties);
         	}
     	}
     	render();
