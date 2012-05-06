@@ -126,7 +126,7 @@ function usage {
   echo "-u show usage"
   echo "-U the user name to install bisconf as and run the daemon as - default $USERINIT"
   echo "-J java home directory - default is none"
-  echo "-P play! home directory - default $PLAYHOME"
+  echo "-P play! home directory - default is none"
   echo "-I installation directory for bisconf - default $BISCONFHOME"
   echo "-B current installation directory for bischeck - default $BISHOME"
   echo "-R unistall - permanently remove the installation" 
@@ -270,7 +270,7 @@ if [ "x$JAVA_HOME" = "x" ] ; then
     errormsg "Java do not exists in path $PATH"
     initerror=true
   fi
-elif [ ! -f $JAVA_HOME/bin/java ] ; then
+elif [ ! -x $JAVA_HOME/bin/java ] ; then
   errormsg "Java do not exists in $JAVA_HOME/bin"
   initerror=true
 else 
@@ -279,6 +279,16 @@ else
     echo "Java runtime exists"
   else
     errormsg "Java version is must be 6 or higher."
+    initerror=true
+  fi
+fi
+
+if [ "x$PLAYHOME" = "x" ] ; then
+    errormsg "play! home must be set"
+    initerror=true
+else
+  if [ ! -x $PLAYHOME/play ] ; then
+    errormsg "play! home directory $PLAYHOME do not include a play executable"
     initerror=true
   fi
 fi
