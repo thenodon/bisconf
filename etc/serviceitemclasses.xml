@@ -4,4 +4,5 @@
 <comment>ServiceItem classes</comment>
 <entry key="SQLServiceItem">SQL select statement</entry>
 <entry key="CalculateOnCache">Retrive values from bischeck cache</entry>
+<entry key="LivestatusServiceItem">Livestatus against Nagios server</entry>
 </properties>
