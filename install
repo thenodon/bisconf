@@ -387,6 +387,8 @@ if [ ! -d $BISCONFHOME ] ; then
         update-rc.d bisconfd defaults
     fi
     
+    $PLAYHOME/play dependencies
+
     echo "Change ownership and permissions to install user $USERINIT"
     chown -R $USERINIT:`id -gn $USERINIT` $BISCONFHOME
     echo "Installations complete"
