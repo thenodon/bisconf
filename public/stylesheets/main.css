@@ -415,8 +415,12 @@ tr.separator {
     color: #000000;
     //background-color: #FFD062;
     background-color: #009980;
-    padding: 3px;
-    margin-bottom: 25px;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-bottom-right-radius:5px;
+    border-bottom-left-radius:5px;
+    
+    
     }
 
 .header ul {
