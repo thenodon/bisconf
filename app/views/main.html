@@ -42,6 +42,8 @@
         <a href="@{Application.resetAll()}">&{'ResetAll'}</a>
     </li><li>
         <a href="@{Secure.logout()}">&{'Logout'}</a>
+    </li><li>
+        <a href="@{Application.about()}">&{'About'}</a>
     </li>
     
         #{if user.isAdmin}
@@ -52,11 +54,11 @@
     <li>
         Welcome <a href="@{Application.editUser()}">${user.username}!</a> 
     </li>
+    #{if flash.success}  
     <li>
-        #{if flash.success}             
-            <strong>${flash.success}</strong>
-        #{/if}
+        <strong>${flash.success}</strong>
     </li>
+    #{/if}
     
     </ul>
     </div> 
