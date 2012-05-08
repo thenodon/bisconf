@@ -208,8 +208,10 @@ a:hover {
     font-size: 14px;
     font-weight: normal;
 
-	color: #ccc;
-	background-color: #FFD062;
+	//color: #ccc;
+	color: #B77070;
+    background-color: #009980;
+	//background-color: #FFD062;
 	padding: 3px;
 	margin-bottom: 0px;
 	}
@@ -370,7 +372,8 @@ font-family: verdana,arial,sans-serif;
     margin-left: 75px;
     width: 75px;
     color: #000;
-    background: #ffa20f;
+    //background: #ffa20f;
+    background: #669900;
     border: 2px outset #d7b9c9
     
 
@@ -410,7 +413,8 @@ tr.separator {
     font-weight: normal;
 
     color: #000000;
-    background-color: #FFD062;
+    //background-color: #FFD062;
+    background-color: #009980;
     padding: 3px;
     margin-bottom: 25px;
     }
@@ -541,7 +545,8 @@ table.hour td
     //margin-left: 75px;
     //width: 75px;
     color: #000;
-    background: #ffa20f;
+    //background: #ffa20f;
+    background: #669900;
     border: 2px outset #d7b9c9
     
 
@@ -626,7 +631,8 @@ table.hour td
     margin-left: 30px;
     width: 60px;
     color: #000;
-    background: #ffa20f;
+    //background: #ffa20f;
+    background: #669900;
     border: 2px outset #d7b9c9
     
 
@@ -678,7 +684,8 @@ table.hour td
     margin-left: 20px;
     width: 50px;
     color: #000;
-    background: #ffa20f;
+    //background: #ffa20f;
+    background: #669900;
     border: 2px outset #d7b9c9
 }
 
@@ -717,7 +724,7 @@ table.hour td
     margin-left: 30px;
     width: 60px;
     color: #000;
-    background: #ffa20f;
+    background: #669900;
     border: 2px outset #d7b9c9
     
 
@@ -807,7 +814,7 @@ table.hour td
     margin-left: 75px;
     width: 75px;
     color: #000;
-    background: #ffa20f;
+    background: #669900;
     border: 2px outset #d7b9c9
     
 
