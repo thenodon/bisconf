@@ -1,9 +1,9 @@
 bisconf - Bischeck configuration WebUI
 ======================================
 
-2012-04-25
+2012-05-08
 
-Release 0.1.0_RC1 
+Release 0.1.0_RC2 
 
 This release should be regarded as a alpha release and should not be used for
 bischeck systems in production. 
@@ -37,6 +37,7 @@ check out the bisconf trunk or tag (0.1.0_RC1) if you want to hack it.
 
 If code is checkout by svn you can build a distribution by:
 $ export PLAY_PATH=<play home dir>
+$ <play home dir>/play dependencies
 $ ant dist 
 
 If you check out the code and like to use eclipse you can run bisconf directly
@@ -91,6 +92,26 @@ Point your webbrowser to http://<bisconf IP>:9000. Inital login is admin/admin.
 If you like to run bisconf behind apache or some other server please see the 
 Play! home page for more info.
 
+The initial login access is admin/admin.
+   
+
+Running bisconf with apache
+===========================
+If you like to run bisconf behind apache please follow the instructions:
+1 - Uncomment the below line in the play! application.conf file 
+http.path=/bisconf
+
+2 - Setup a apache config file with at lest the following lines. This can be in 
+virtual host config file or not. 
+
+## Add the following to your apache conf file
+ProxyPreserveHost On 
+ProxyRequests  On
+ProxyPass /bisconf http://localhost:9000/bisconf
+ProxyPassReverse /bisconf http://localhost:9000/bisconf
+
+3 - Restart apache and bisconf 
+
 
 Feedback
 ========
@@ -98,6 +119,3 @@ Please send any feedback to anders.haal@ingby.com or register on
 gforge.ingby.com to submit bug and/or feature request.
  
 
-
-
-Inital access is admin/admin   
