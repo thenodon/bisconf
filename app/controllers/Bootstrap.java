@@ -18,10 +18,12 @@ import play.jobs.*;
 public class Bootstrap extends Job {
     
 	private static String bischeckversion = null;
-    private static Properties jmxproperties = null;
+	private static String bisconfversion = null;
+	private static Properties jmxproperties = null;
     
 	public void doJob() {
 		bischeckversion = readBischeckVersion();
+		bisconfversion = readBisconfVersion();
 		jmxproperties = readJMXProperties();	
     }
 
@@ -45,6 +47,7 @@ public class Bootstrap extends Job {
 			bischeckversion = br.readLine();
 			Logger.info("Bisheck version is " + bischeckversion);
 		} catch (Exception ioe) {
+			bischeckversion = "N/A";
 			Logger.error("Can not determine the bischeck version");
 		}
 		finally {
@@ -61,6 +64,45 @@ public class Bootstrap extends Job {
 		return bischeckversion;
 	}
     
+	private static String readBisconfVersion() {
+		
+		FileInputStream fstream = null;
+		DataInputStream in = null;
+		BufferedReader br = null;
+		String path = null;
+		
+		if (System.getProperty("bisconfhome") != null)
+			path=System.getProperty("bisconfhome");
+		else {
+			Logger.error("System property bisconfhome must be set");
+		}
+
+		try {
+			fstream = new FileInputStream(path + File.separator + "version.txt");
+
+			in = new DataInputStream(fstream);
+			br = new BufferedReader(new InputStreamReader(in));
+			bisconfversion = br.readLine();
+			Logger.info("Bisheck version is " + bisconfversion);
+		} catch (Exception ioe) {
+			bisconfversion = "N/A";
+			Logger.error("Can not determine the bischeck version");
+		}
+		finally {
+			try {
+				br.close();
+			} catch (Exception ignore) {}
+			try {
+				in.close();
+			} catch (Exception ignore) {}
+			try {
+				fstream.close();
+			} catch (Exception ignore) {}	
+		}
+		return bisconfversion;
+	}
+
+	
 	private static Properties readJMXProperties() {
 		String path = null;
     	if (System.getProperty("bisconfhome") != null)
@@ -87,6 +129,10 @@ public class Bootstrap extends Job {
 	
 	public static String getBischeckVersion() {
 		return bischeckversion;
+	}
+	
+	public static String getBisconfVersion() {
+		return bisconfversion;
 	}
 	
 	public static Properties getJMXProperties() {

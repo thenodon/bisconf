@@ -56,4 +56,9 @@ public class Application extends BasicController {
 		}
 		index();
 	}
+	
+	public static void about() {
+		String bisconfversion = Bootstrap.getBisconfVersion();
+		render(bisconfversion);
+	}
 }
