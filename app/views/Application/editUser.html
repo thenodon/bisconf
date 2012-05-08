@@ -4,15 +4,17 @@
 
 
 
-#{if host}
-    <h1>
-    &{'EditUser'}    
-    </h1>
+
+<h1>
+&{'EditUser'}    
+</h1>
    
-    <h2>
-    ${user.username}
-    </h2>
-#{/if}
+<h2>
+${user.username} 
+</h2>
+<p>
+&{'CurrentRights'}: &{'IsDeploy'}:(${user.isDeploy}) &{'IsAdmin'}:(${user.isAdmin}) 
+</p>
 
 <div class="downlink">
 <ul>

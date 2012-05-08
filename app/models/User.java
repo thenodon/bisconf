@@ -20,8 +20,11 @@ public class User extends Model {
 	
 	@Required
 	public String username;
+	
 	public boolean isAdmin;
 
+	public boolean isDeploy;
+	
 	public User(String password, String username, String email) {
 		this.username = username;
 		this.password = password;
