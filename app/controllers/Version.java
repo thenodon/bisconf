@@ -50,6 +50,7 @@ import play.i18n.Messages;
 import sun.management.HotspotRuntimeMBean;
 
 import models.ConfigMeta;
+import models.User;
 
 
 
@@ -326,24 +327,14 @@ public class Version extends BasicController{
 		}
 
 		/*
-		 * REstart 
+		 * Reload 
 		 */
-		Integer status = null;
+		
 		if (Bootstrap.getBischeckVersion().equals("0.3.3")) {
-			// Use script restart
-			ProcessBuilder pb = new ProcessBuilder("sudo", "/etc/init.d/bischeckd", "restart");
-
 			try {
-				Process p = pb.start();
-				try {
-					status = p.waitFor();
-					if (status != 0) {
-						Logger.error("Restarting bischeck failed with return status " + status);
-					}
-				} catch (InterruptedException ignore) {}
-
-			} catch (IOException e) {
-				Logger.error("Restarting bischeck failed with exception: " + e.getMessage());
+				manageBischeckd("restart");
+			} catch (Exception ex) {
+				flash.error(Messages.get("ReloadFailed"));
 			}
 		} else {
 			// Use jmx reload
@@ -357,9 +348,10 @@ public class Version extends BasicController{
 				ExecuteMBean mbeanProxy = JMX.newMBeanProxy(mbsc, mbeanName, 
 						ExecuteMBean.class, true);
 				mbeanProxy.reload();
-
+				flash.success(Messages.get("ReloadSuccess"));
 			}
 			catch (Exception ioe) {
+				flash.error(Messages.get("ReloadFailed"));
 				Logger.error("Restarting bischeck failed with exception: " + ioe.getMessage());
 			}
 		}		
@@ -367,7 +359,84 @@ public class Version extends BasicController{
 		list();
 	}
 
+	public static void startBischeckd() {
+		try {
+			manageBischeckd("start");
+			flash.success(Messages.get("StartSucess"));
+		} catch (Exception ex) {
+			flash.error(Messages.get("StartFailed"), ex.getMessage());
+		}
+		status();
+	}
+	
+	
 
+	public static void restartBischeckd() {
+	
+		try {
+			manageBischeckd("restart");
+			flash.success(Messages.get("RestartSucess"));
+		} catch (Exception ex) {
+			flash.error(Messages.get("RestartFailed"), ex.getMessage());
+		}
+
+		status();
+		
+	}
+
+	
+	public static void stopBischeckd() {
+		try {
+			manageBischeckd("stop");
+			flash.success(Messages.get("StopSucess"));
+		} catch (Exception ex) {
+			flash.error(Messages.get("StopFailed"), ex.getMessage());
+		}
+		status();
+	}
+
+
+	private static void manageBischeckd(String operation) throws Exception {
+
+		String username =  session.get("username");
+		User user = User.find("byUsername", username).first();
+		if (user.isAdmin) {
+
+			if (operation.equals("start") ||
+					operation.equals("stop") ||
+					operation.equals("restart") ) {
+				Integer status = null;
+
+				ProcessBuilder pb = new ProcessBuilder("sudo", "/etc/init.d/bischeckd", operation);
+
+				try {
+					Process p = pb.start();
+					try {
+						status = p.waitFor();
+						if (status != 0) {
+							Logger.error(operation +" " + Messages.get("BischeckFailded", String.valueOf(status)));
+							throw new Exception(operation +" " + Messages.get("BischeckFailded", String.valueOf(status)));
+						}
+					} catch (InterruptedException ignore) {}
+
+				} catch (IOException e) {
+					Logger.error(operation + " " + Messages.get("BischeckFailded", e.getMessage()));
+					throw new Exception(operation +" " + Messages.get("BischeckFailded", e.getMessage()));
+				}
+
+			}
+			else {
+				Logger.error(operation +" " + Messages.get("BischeckNotOperation"));
+				throw new Exception(operation +" " + Messages.get("BischeckNotOperation"));
+			}
+		}
+		else {
+			throw new Exception(Messages.get("UserIsNotAuthorized"));
+		}
+	}
+
+	
+	
 	/**
 	 * Save the current working version
 	 */
