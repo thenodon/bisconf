@@ -4,8 +4,30 @@
 <h1>
 Information of process bischeck 
 </h1>
-#{if bisprop.get('bischeckversion') == "0.3.3"}
 
+
+<div class="downlink">
+<ul>
+#{if user.isAdmin }
+<li>
+ <a href="@{restartBischeckd()}">&{'Restart'}</a>
+</li>
+<li>
+ <a href="@{startBischeckd()}">&{'Start'}</a>
+</li>
+<li>
+ <a href="@{stopBischeckd()}">&{'Stop'}</a>
+</li>
+#{/if}
+#{else}
+<li>
+  &nbsp;
+</li>
+#{/else}
+<ul>
+</div>
+
+#{if bisprop.get('bischeckversion') == "0.3.3"}
 <table class="listtable">
   <tr>
     <td>&{'BischeckVersion'}</td><td>${bisprop.get('bischeckversion')}</td>
