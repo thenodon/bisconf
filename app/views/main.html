@@ -62,6 +62,14 @@
     </li>
     #{/if}
     
+    #{if flash.error}  
+    <li>
+        
+        <span class="error"><strong>${flash.error}</strong></span>
+        
+    </li>
+    #{/if}
+    
     </ul>
     </div> 
     <body onload="jump(${anchor})">
@@ -70,7 +78,7 @@
     </body>
     #{/if}
     #{else}
-        <a href="@{Secure.logout()}">Please login again</a>
+        <a href="@{Secure.logout()}">&{'PleaseLoginAgain'}</a>
     #{/else}
     
 </html>
