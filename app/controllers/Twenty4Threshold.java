@@ -365,7 +365,11 @@ public class Twenty4Threshold extends BasicController {
 		servicedef.setHostname(hostname);
 		servicedef.setServicename(servicename);
 		servicedef.setServiceitemname(serviceitemname);
-		servicedef.getPeriod().add(new XMLPeriod());
+		XMLPeriod period = new XMLPeriod();
+		period.setCalcmethod(">");
+		period.setCritical(0);
+		period.setWarning(0);
+		servicedef.getPeriod().add(period);
 
 		config.getServicedef().add(servicedef);
 		flash.success(Messages.get("SaveServiceDefSuccess"));
