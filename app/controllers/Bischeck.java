@@ -204,7 +204,6 @@ public class Bischeck extends BasicController {
 					XMLService service = services.next();
 					if (service.getName().equals(servicename)) {
 						host.getService().remove(service);
-						//render(host,service,serviceitem);
 						flash.success(Messages.get("DeleteServiceSuccess"));
 						edithost(hostname);
 					}
@@ -543,6 +542,18 @@ public class Bischeck extends BasicController {
 						if(error != null) 
 							validation.addError("cronyear","validation.cronyear");
 						
+						if (params.get("dayofweek").equals("*") && 
+								params.get("dayofmonth").equals("*")) {
+							validation.addError("crondayofweek", "validation.cronstar");
+							validation.addError("crondayofmonth", "validation.cronstar");
+						}
+						
+						if (params.get("dayofweek").equals("?") && 
+								params.get("dayofmonth").equals("?")) {
+							validation.addError("crondayofweek", "validation.cronquestion");
+							validation.addError("crondayofmonth", "validation.cronquestion");
+						}
+						
 						if (validation.hasErrors()) {
 							// Used to identify the period that had the error
 							validation.keep();
@@ -584,7 +595,9 @@ public class Bischeck extends BasicController {
 		serviceitem.setExecstatement("");
 		serviceitem.setServiceitemclass("");
 		serviceitem.setThresholdclass("");
-		render(hostname,servicename,serviceitem);
+		List<String> serviceitemclasses = Populate.getServiceItemClasses();
+		List<String> thresholdclasses = Populate.getThresholdClasses();
+		render(hostname,servicename,serviceitem,serviceitemclasses,thresholdclasses);
 	}
 	
 	
