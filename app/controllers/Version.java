@@ -296,66 +296,72 @@ public class Version extends BasicController{
 
 	public static void deploy(String reposdir) {
 
-		File oldcurrent = new File(reposPath().getAbsolutePath()+File.separator + getCurrentVersion());
-		File newcurrent = new File(reposPath().getAbsolutePath()+File.separator + reposdir);
+		String username =  session.get("username");
+		User user = User.find("byUsername", username).first();
+		if (user.isAdmin || user.isDeploy) {
 
-		ConfigMeta metadata = readMeta(oldcurrent);
-		metadata.current = false;
-		writeAndCreateMeta(oldcurrent, metadata);
+			File oldcurrent = new File(reposPath().getAbsolutePath()+File.separator + getCurrentVersion());
+			File newcurrent = new File(reposPath().getAbsolutePath()+File.separator + reposdir);
 
-		copyAllXML(newcurrent, configPath());
+			ConfigMeta metadata = readMeta(oldcurrent);
+			metadata.current = false;
+			writeAndCreateMeta(oldcurrent, metadata);
+
+			copyAllXML(newcurrent, configPath());
 
 
-		metadata = readMeta(newcurrent);
-		metadata.current = true;
-		writeAndCreateMeta(newcurrent, metadata);
+			metadata = readMeta(newcurrent);
+			metadata.current = true;
+			writeAndCreateMeta(newcurrent, metadata);
 
-		// Update the current file to with the new directory
-		BufferedWriter metabuffer = null;
+			// Update the current file to with the new directory
+			BufferedWriter metabuffer = null;
 
-		try {
-			metabuffer = new BufferedWriter(new FileWriter(configPath().getAbsolutePath()+File.separator + "current"));
-			metabuffer.write(metadata.directory + "\n");
-
-		} catch (Exception e) {
-			Logger.error("Could not write ne current file");
-		} 
-		finally {
 			try {
-				metabuffer.close();
-			} catch (IOException ignore) {}
-		}
+				metabuffer = new BufferedWriter(new FileWriter(configPath().getAbsolutePath()+File.separator + "current"));
+				metabuffer.write(metadata.directory + "\n");
 
-		/*
-		 * Reload 
-		 */
-		
-		if (Bootstrap.getBischeckVersion().equals("0.3.3")) {
-			try {
-				manageBischeckd("restart");
-			} catch (Exception ex) {
-				flash.error(Messages.get("ReloadFailed"));
+			} catch (Exception e) {
+				Logger.error("Could not write ne current file");
+			} 
+			finally {
+				try {
+					metabuffer.close();
+				} catch (IOException ignore) {}
 			}
+
+			/*
+			 * Reload 
+			 */
+
+			if (Bootstrap.getBischeckVersion().equals("0.3.3")) {
+				try {
+					manageBischeckd("restart");
+				} catch (Exception ex) {
+					flash.error(Messages.get("ReloadFailed"));
+				}
+			} else {
+				// Use jmx reload
+				try {
+					MBeanServerConnection mbsc = createMBeanServerConnection();
+					ObjectName mbeanName;
+					mbeanName = null;
+					//mbeanName = new ObjectName("com.ingby.socbox.bischeck:name=Execute");
+					mbeanName = new ObjectName(ExecuteMBean.BEANNAME);
+
+					ExecuteMBean mbeanProxy = JMX.newMBeanProxy(mbsc, mbeanName, 
+							ExecuteMBean.class, true);
+					mbeanProxy.reload();
+					flash.success(Messages.get("ReloadSuccess"));
+				}
+				catch (Exception ioe) {
+					flash.error(Messages.get("ReloadFailed"));
+					Logger.error("Restarting bischeck failed with exception: " + ioe.getMessage());
+				}
+			}		
 		} else {
-			// Use jmx reload
-			try {
-				MBeanServerConnection mbsc = createMBeanServerConnection();
-				ObjectName mbeanName;
-				mbeanName = null;
-				//mbeanName = new ObjectName("com.ingby.socbox.bischeck:name=Execute");
-				mbeanName = new ObjectName(ExecuteMBean.BEANNAME);
-
-				ExecuteMBean mbeanProxy = JMX.newMBeanProxy(mbsc, mbeanName, 
-						ExecuteMBean.class, true);
-				mbeanProxy.reload();
-				flash.success(Messages.get("ReloadSuccess"));
-			}
-			catch (Exception ioe) {
-				flash.error(Messages.get("ReloadFailed"));
-				Logger.error("Restarting bischeck failed with exception: " + ioe.getMessage());
-			}
-		}		
-
+			flash.error(Messages.get("UserIsNotAuthorized"));
+		}
 		list();
 	}
 
