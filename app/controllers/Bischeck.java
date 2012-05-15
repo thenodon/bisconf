@@ -21,6 +21,8 @@ import com.ingby.socbox.bischeck.xsd.bischeck.XMLService;
 import com.ingby.socbox.bischeck.xsd.bischeck.XMLServiceitem;
 import com.ingby.socbox.bischeck.xsd.properties.XMLProperties;
 import com.ingby.socbox.bischeck.xsd.properties.XMLProperty;
+import com.ingby.socbox.bischeck.xsd.twenty4threshold.XMLServicedef;
+import com.ingby.socbox.bischeck.xsd.twenty4threshold.XMLTwenty4Threshold;
 
 import models.*;
 
@@ -59,6 +61,16 @@ public class Bischeck extends BasicController {
 			XMLHost host = hosts.next();
 			if (host.getName().equals(hostname)) {
 				config.getHost().remove(host);
+				// when remove host remove all host in 24thresholds
+				XMLTwenty4Threshold config24 = Twenty4Threshold.getCache();
+				Iterator<XMLServicedef> servicedefs = config24.getServicedef().iterator();
+				while (servicedefs.hasNext()) {
+					XMLServicedef servicedef = servicedefs.next();
+					if(servicedef.getHostname().equals(hostname)) {
+						servicedefs.remove();
+					}
+				}
+				//
 				flash.success(Messages.get("DeleteHostSuccess"));
 				listhosts();
 			}
@@ -204,6 +216,16 @@ public class Bischeck extends BasicController {
 					XMLService service = services.next();
 					if (service.getName().equals(servicename)) {
 						host.getService().remove(service);
+						// remove in 24threshols
+						XMLTwenty4Threshold config24 = Twenty4Threshold.getCache();
+						Iterator<XMLServicedef> servicedefs = config24.getServicedef().iterator();
+						while (servicedefs.hasNext()) {
+							XMLServicedef servicedef = servicedefs.next();
+							if(servicedef.getHostname().equals(hostname) &&
+									servicedef.getServicename().equals(servicename)) {
+								servicedefs.remove();
+							}
+						}
 						flash.success(Messages.get("DeleteServiceSuccess"));
 						edithost(hostname);
 					}
@@ -749,6 +771,17 @@ public class Bischeck extends BasicController {
 							XMLServiceitem serviceitem = serviceitems.next();
 							if (serviceitem.getName().equals(serviceitemname)) {
 								service.getServiceitem().remove(serviceitem);
+								// remove servicedef 
+								XMLTwenty4Threshold config24 = Twenty4Threshold.getCache();
+								Iterator<XMLServicedef> servicedefs = config24.getServicedef().iterator();
+								while (servicedefs.hasNext()) {
+									XMLServicedef servicedef = servicedefs.next();
+									if(servicedef.getHostname().equals(hostname) &&
+											servicedef.getServicename().equals(servicename) &&
+											servicedef.getServiceitemname().equals(serviceitemname)) {
+										servicedefs.remove();
+									}
+								}
 								flash.success(Messages.get("DeleteServiceItemSuccess"));
 								editservice(hostname,servicename);
 							}
