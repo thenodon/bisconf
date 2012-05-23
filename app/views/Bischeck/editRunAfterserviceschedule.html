@@ -1,0 +1,46 @@
+#{extends 'main.html' /}
+#{set title:'Edit service schedule' /}
+
+<h1>
+&{'EditRunAfterServiceSchedule'}    
+</h1>
+
+<h2>
+${host.name} &#8658; ${service.name} 
+</h2>
+
+<div class="downlink">
+<ul>
+<a href="@{listserviceschedules(host.name,service.name)}">&{'ListServiceSchedules'}</a>
+</li><li>
+<a href="@{editservice(host.name,service.name)}">&{'BackToService'}</a>
+</li><li>
+<a href="@{listhosts()}">&{'BackToHosts'}</a>
+</li>
+<ul>
+</div>
+
+
+<div class="scheduleform">
+#{form @Bischeck.saveRunAfterServiceSchedule()}
+    
+    <label for="hostservice">&{'hostservice'}</label>
+    <select id="hostservice" name="hostservice">
+        #{if runafterschedule}
+        <option value="${runafterschedule.hostname}-${runafterschedule.servicename}">${runafterschedule.hostname}-${runafterschedule.servicename}</option>
+        #{/if}
+        
+        #{list runafterlist, as: 'afterhostservice'}
+            <option value="${afterhostservice.hostname}-${afterhostservice.servicename}">${afterhostservice.hostname}-${afterhostservice.servicename}</option>
+        #{/list}
+                            
+    </select>
+        
+    <input type="hidden" name="curschedule" value="${schedule}">
+    <input type="hidden" name="servicename" value="${service.name}">
+    <input type="hidden" name="hostname" value="${host.name}">
+    <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" />
+    
+#{/form}
+</div>
+
