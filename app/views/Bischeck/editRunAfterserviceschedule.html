@@ -24,7 +24,7 @@ ${host.name} &#8658; ${service.name}
 <div class="scheduleform">
 #{form @Bischeck.saveRunAfterServiceSchedule()}
     
-    <label for="hostservice">&{'hostservice'}</label>
+    <label for="hostservice">&{'RunAfter'}</label>
     <select id="hostservice" name="hostservice">
         #{if runafterschedule}
         <option value="${runafterschedule.hostname}-${runafterschedule.servicename}">${runafterschedule.hostname}-${runafterschedule.servicename}</option>
