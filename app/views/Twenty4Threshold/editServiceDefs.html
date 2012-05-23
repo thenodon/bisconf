@@ -6,7 +6,11 @@
 </h1>
 
 <h2>
-    ${servicedef.hostname} &#8658; ${servicedef.servicename} &#8658; ${servicedef.serviceitemname}
+     <a href="@{Bischeck.edithost(servicedef.hostname)}">${servicedef.hostname}</a>
+     &#8658; 
+     <a href="@{Bischeck.editservice(servicedef.hostname,servicedef.servicename)}">${servicedef.servicename}</a>
+     &#8658; 
+     <a href="@{Bischeck.editserviceitem(servicedef.hostname,servicedef.servicename,servicedef.serviceitemname)}">${servicedef.serviceitemname}</a>
 </h2>
     
 <div class="downlink">
