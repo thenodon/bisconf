@@ -8,13 +8,17 @@ import play.i18n.Messages;
 import play.mvc.*;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.quartz.CronExpression;
 
 import com.ingby.socbox.bischeck.ConfigFileManager;
 import com.ingby.socbox.bischeck.ConfigXMLInf;
 import com.ingby.socbox.bischeck.ConfigurationManager;
+import com.ingby.socbox.bischeck.Host;
 import com.ingby.socbox.bischeck.ConfigXMLInf.XMLCONFIG;
+import com.ingby.socbox.bischeck.service.Service;
 import com.ingby.socbox.bischeck.xsd.bischeck.XMLBischeck;
 import com.ingby.socbox.bischeck.xsd.bischeck.XMLHost;
 import com.ingby.socbox.bischeck.xsd.bischeck.XMLService;
@@ -70,6 +74,9 @@ public class Bischeck extends BasicController {
 						servicedefs.remove();
 					}
 				}
+				
+				// remove all dependencies in runAfter
+				//TODO
 				//
 				flash.success(Messages.get("DeleteHostSuccess"));
 				listhosts();
@@ -133,7 +140,11 @@ public class Bischeck extends BasicController {
 				edithost(params.get("name"));
 				}
 				
-			}		
+			} else if (host.getName().equals(params.get("name"))) {
+				// an add on existing host name
+				flash.error(Messages.get("HostExists"));
+				edithost(params.get("name"));
+			}
 		}
 		
 		// Must be a new host - send it to add service
@@ -276,6 +287,10 @@ public class Bischeck extends BasicController {
 							flash.success(Messages.get("SaveServiceSuccess"));
 							editservice(params.get("hostname"),params.get("name"));
 						}
+					} else if (service.getName().equals(params.get("name"))) {
+						// an add on existing host name
+						flash.error(Messages.get("ServiceExists"));
+						editservice(params.get("hostname"),params.get("name"));
 					}
 				}
 			}		
@@ -374,12 +389,51 @@ public class Bischeck extends BasicController {
 	 * @param servicename
 	 */
 	public static void editserviceschedule(String hostname, String servicename, String schedule) {
-		if (CronExpression.isValidExpression(schedule)) {
+		if (isCronTrigger(schedule)) {
 			editCronserviceschedule(hostname, servicename, schedule);
 		}
-		else {
+		else if (isIntervalTrigger(schedule)){
 			editIntervalserviceschedule(hostname, servicename, schedule);
-		}	
+		} else if (isRunAfterTrigger(schedule)){
+			editRunAfterserviceschedule(hostname, servicename, schedule);
+		}
+	}
+	
+	
+	public static void editRunAfterserviceschedule(String hostname, String servicename, String schedule) {
+		XMLBischeck config = getCache();
+		List<RunAfterSchedule> runafterlist = new LinkedList<RunAfterSchedule>();
+		
+		// Populate a list with all host and services 
+		Iterator<XMLHost> hosts = config.getHost().iterator();
+		while (hosts.hasNext()){
+			XMLHost host = hosts.next();
+			Iterator<XMLService> services = host.getService().iterator();
+			while (services.hasNext()) {
+				XMLService service = services.next();
+				if (!host.getName().equals(hostname) && !service.getName().equals(servicename))
+					runafterlist.add(new RunAfterSchedule(host.getName(),service.getName()));
+			}
+		}
+		
+		hosts = config.getHost().iterator();
+		while (hosts.hasNext()){
+			XMLHost host = hosts.next();
+			if (host.getName().equals(hostname)) {
+				Iterator<XMLService> services = host.getService().iterator();
+				while (services.hasNext()) {
+					XMLService service = services.next();
+					if (service.getName().equals(servicename)) {
+						RunAfterSchedule runafterschedule = null;
+						if (schedule != null)
+							runafterschedule = new RunAfterSchedule(schedule); 
+							
+						render(host,service,schedule, runafterschedule, runafterlist);
+					}
+				}
+			}
+		}
+		render();
 	}
 	
 	/**
@@ -458,7 +512,32 @@ public class Bischeck extends BasicController {
 		render();	
 	}
 
-
+	public static void saveRunAfterServiceSchedule() {
+		XMLBischeck config = getCache();
+		Iterator<XMLHost> hosts = config.getHost().iterator();
+		while (hosts.hasNext()){
+			XMLHost host = hosts.next();
+			if (host.getName().equals(params.get("hostname"))) {
+				Iterator<XMLService> services = host.getService().iterator();
+				while (services.hasNext()) {
+					XMLService service = services.next();
+					if (service.getName().equals(params.get("servicename"))) {
+						List<String> schedulelist = service.getSchedule();
+						String runafter = params.get("hostservice");
+						
+						schedulelist.remove(params.get("curschedule"));
+						schedulelist.add(runafter);
+						
+						flash.success(Messages.get("SaveScheduleSuccess"));
+						listserviceschedules(params.get("hostname"), params.get("servicename"));
+						
+					}
+				}
+			}
+		}
+		render();
+	}
+	
 	public static void saveIntervalServiceSchedule() {
 		
 		XMLBischeck config = getCache();
@@ -636,7 +715,6 @@ public class Bischeck extends BasicController {
 						
 						// Check if the serviceitem name already exists
 						Iterator<XMLServiceitem> serviceitems;
-						checkifserviceitemexists(service);
 						
 						serviceitems = service.getServiceitem().iterator();
 						while (serviceitems.hasNext()){
@@ -659,6 +737,10 @@ public class Bischeck extends BasicController {
 									flash.success(Messages.get("SaveServiceItemSuccess"));
 									editserviceitem(params.get("hostname"),params.get("servicename"),params.get("name"));
 								}
+							}else if (serviceitem.getName().equals(params.get("name"))) {
+								// an add on existing host name
+								flash.error(Messages.get("ServiceItemExists"));
+								editserviceitem(params.get("hostname"),params.get("servicename"),params.get("name"));
 							}
 						}
 					}
@@ -703,23 +785,6 @@ public class Bischeck extends BasicController {
 		render();
 	}
 
-
-	private static void checkifserviceitemexists(XMLService service) {
-		Iterator<XMLServiceitem> serviceitems = service.getServiceitem().iterator();
-		while (serviceitems.hasNext()){
-		
-			XMLServiceitem serviceitem = serviceitems.next();
-			if (serviceitem.getName().equals(params.get("name")) && 
-					!params.get("name").equals(params.get("oldname"))) {
-		
-				serviceitemexists(params.get("hostname"), 
-						params.get("servicename"), 
-						params.get("oldname"),
-						params.get("name"));
-			}
-		}
-	}
-	
 	
 	public static void serviceitemexists(String hostname, String servicename, String oldserviceitemname, String newserviceitemname) {
 		render(hostname, servicename, oldserviceitemname, newserviceitemname);
@@ -793,4 +858,30 @@ public class Bischeck extends BasicController {
 		}
 	}
 	
+	
+	private static boolean isCronTrigger(String schedule) { 
+        return CronExpression.isValidExpression(schedule);    
+    }
+    
+    
+    private static boolean isIntervalTrigger(String schedule) {
+    	Pattern pattern = Pattern.compile(ConfigurationManager.INTERVALSCHEDULEPATTERN);
+        Matcher matcher = pattern.matcher(schedule);
+        
+        if (matcher.matches()) {
+        	return true;
+        }
+    	
+        return false;
+    }
+    
+    
+    private static boolean isRunAfterTrigger(String schedule) {
+    	int index = schedule.indexOf("-");
+    	if (index == -1) {
+    		return false;
+    	}
+    	return true;
+    }
+    
 }
