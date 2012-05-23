@@ -19,6 +19,18 @@ import models.*;
 
 public class UrlProperties extends BasicController {
 	
+	@Before
+	static void setConnectedUser() {
+		if(Security.isConnected()) {
+			User user = User.find("byUsername", Security.connected()).first();
+			if (!user.isAdmin) {
+				flash.error(Messages.get("UserIsNotAuthorized"));
+				Application.index();
+				
+			}
+		}
+	}
+	
 	public static XMLUrlservices getCache(){
 		XMLUrlservices config = (XMLUrlservices) SessionData.getXMLConfig(ConfigXMLInf.XMLCONFIG.URL2SERVICES,XMLUrlservices.class);
 	

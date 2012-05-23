@@ -19,6 +19,19 @@ import models.*;
 
 public class Properties extends BasicController {
 	
+	@Before
+	static void setConnectedUser() {
+		if(Security.isConnected()) {
+			User user = User.find("byUsername", Security.connected()).first();
+			if (!user.isAdmin) {
+				flash.error(Messages.get("UserIsNotAuthorized"));
+				Application.index();
+				
+			}
+		}
+	}
+	
+	
 	public static XMLProperties getCache(){
 		XMLProperties config = (XMLProperties) SessionData.getXMLConfig(ConfigXMLInf.XMLCONFIG.PROPERTIES,XMLProperties.class);
 	

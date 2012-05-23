@@ -22,6 +22,18 @@ import models.*;
 
 public class Servers extends BasicController {
 
+	@Before
+	static void setConnectedUser() {
+		if(Security.isConnected()) {
+			User user = User.find("byUsername", Security.connected()).first();
+			if (!user.isAdmin) {
+				flash.error(Messages.get("UserIsNotAuthorized"));
+				Application.index();
+				
+			}
+		}
+	}
+	
 	
 	public static XMLServers getCache(){
 		XMLServers config = (XMLServers) SessionData.getXMLConfig(ConfigXMLInf.XMLCONFIG.SERVERS,XMLServers.class);
