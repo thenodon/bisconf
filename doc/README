@@ -113,6 +113,17 @@ ProxyPassReverse /bisconf http://localhost:9000/bisconf
 3 - Restart apache and bisconf 
 
 
+Allow bisconf user to manage bischeckd
+======================================
+To enable the user id executing bisconf, default nagios, to manage bischeck from
+the web ui /etc/sudoers needs to be configured in the following way:
+Defaults:username !requiretty
+nagios ALL= NOPASSWD: /etc/init.d/bischeckd restart
+nagios ALL= NOPASSWD: /etc/init.d/bischeckd start
+nagios ALL= NOPASSWD: /etc/init.d/bischeckd stop
+nagios ALL= NOPASSWD: /etc/init.d/bischeckd pidstatus
+ 
+ 
 Feedback
 ========
 Please send any feedback to anders.haal@ingby.com or register on 
