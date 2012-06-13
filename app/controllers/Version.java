@@ -333,32 +333,33 @@ public class Version extends BasicController{
 			/*
 			 * Reload 
 			 */
+			if (isBischeckRunning()) {
+				if (Bootstrap.getBischeckVersion().equals("0.3.3")) {
+					try {
+						manageBischeckd("restart");
+					} catch (Exception ex) {
+						flash.error(Messages.get("ReloadFailed"));
+					}
+				} else {
+					// Use jmx reload
+					try {
+						MBeanServerConnection mbsc = createMBeanServerConnection();
+						ObjectName mbeanName;
+						mbeanName = null;
+						//mbeanName = new ObjectName("com.ingby.socbox.bischeck:name=Execute");
+						mbeanName = new ObjectName(ExecuteMBean.BEANNAME);
 
-			if (Bootstrap.getBischeckVersion().equals("0.3.3")) {
-				try {
-					manageBischeckd("restart");
-				} catch (Exception ex) {
-					flash.error(Messages.get("ReloadFailed"));
-				}
-			} else {
-				// Use jmx reload
-				try {
-					MBeanServerConnection mbsc = createMBeanServerConnection();
-					ObjectName mbeanName;
-					mbeanName = null;
-					//mbeanName = new ObjectName("com.ingby.socbox.bischeck:name=Execute");
-					mbeanName = new ObjectName(ExecuteMBean.BEANNAME);
-
-					ExecuteMBean mbeanProxy = JMX.newMBeanProxy(mbsc, mbeanName, 
-							ExecuteMBean.class, true);
-					mbeanProxy.reload();
-					flash.success(Messages.get("ReloadSuccess"));
-				}
-				catch (Exception ioe) {
-					flash.error(Messages.get("ReloadFailed"));
-					Logger.error("Restarting bischeck failed with exception: " + ioe.getMessage());
-				}
-			}		
+						ExecuteMBean mbeanProxy = JMX.newMBeanProxy(mbsc, mbeanName, 
+								ExecuteMBean.class, true);
+						mbeanProxy.reload();
+						flash.success(Messages.get("ReloadSuccess"));
+					}
+					catch (Exception ioe) {
+						flash.error(Messages.get("ReloadFailed"));
+						Logger.error("Restarting bischeck failed with exception: " + ioe.getMessage());
+					}
+				}	
+			}
 		} else {
 			flash.error(Messages.get("UserIsNotAuthorized"));
 		}
