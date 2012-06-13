@@ -41,7 +41,7 @@
                         
                         #{if version.current == false}
                             <a href="@{delete(version.directory)}">&{'Delete'}</a>
-                            #{if started && ( user.isAdmin || user.isDeploy) }
+                            #{if user.isAdmin || user.isDeploy }
                                 <a href="@{deploy(version.directory)}">&{'Deploy'}</a>
                             #{/if}
                             
