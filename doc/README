@@ -112,6 +112,12 @@ ProxyPassReverse /bisconf http://localhost:9000/bisconf
 
 3 - Restart apache and bisconf 
 
+If you running SElinux you do need to run:
+# /usr/sbin/setsebool httpd_can_network_connect 1
+OR
+# /usr/sbin/setsebool httpd_can_network_connect true
+OR
+Change you selinux rules
 
 Allow bisconf user to manage bischeckd
 ======================================
