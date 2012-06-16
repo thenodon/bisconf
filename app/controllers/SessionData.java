@@ -12,6 +12,8 @@ import com.ingby.socbox.bischeck.xsd.properties.XMLProperties;
 import com.ingby.socbox.bischeck.xsd.servers.XMLServers;
 import com.ingby.socbox.bischeck.xsd.twenty4threshold.XMLTwenty4Threshold;
 import com.ingby.socbox.bischeck.xsd.urlservices.XMLUrlservices;
+import com.ingby.socbox.bischeck.ValidateConfiguration;
+
 
 public class SessionData extends BasicController {
 	
@@ -60,13 +62,16 @@ public class SessionData extends BasicController {
 	}
 	
 	@ByPass
-	public static void saveXMLConfigAll(String repospath) {
+	public static void saveXMLConfigAll(String repospath) throws Exception {
 		SessionData.saveXMLConfig(ConfigXMLInf.XMLCONFIG.BISCHECK,repospath);
 		SessionData.saveXMLConfig(ConfigXMLInf.XMLCONFIG.PROPERTIES,repospath);
 		SessionData.saveXMLConfig(ConfigXMLInf.XMLCONFIG.TWENTY4HOURTHRESHOLD,repospath);
 		SessionData.saveXMLConfig(ConfigXMLInf.XMLCONFIG.URL2SERVICES,repospath);
+		
 		if ( !("0.3.3").equals(Bootstrap.getBischeckVersion()))
 			SessionData.saveXMLConfig(ConfigXMLInf.XMLCONFIG.SERVERS,repospath);
+		
+		ValidateConfiguration.verifyByDirectory(repospath);
 	}
 	
 	
