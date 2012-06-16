@@ -215,9 +215,18 @@ public class Version extends BasicController{
 
 
 	public static void delete(String reposdir) {
+		
+		removeReposDir(reposPath()+File.separator+reposdir);
+		flash.success(Messages.get("DeleteVersionSuccess"));
+		list();
+	}
+
+
+	private static void removeReposDir(String repospath) {
 		File repos = null;
 		try {
-			repos = new File(reposPath(), reposdir);
+			//repos = new File(reposPath(), reposdir);
+			repos = new File(repospath);
 		} catch (Exception e) {
 			Logger.error("Could not get repos path");
 		}
@@ -228,11 +237,10 @@ public class Version extends BasicController{
 			files[i].delete();
 
 		repos.delete();
-		flash.success(Messages.get("DeleteVersionSuccess"));
-		list();
 	}
 
 
+	
 	private static ConfigMeta readMeta(File reposdir) {
 		Properties properties = null;
 		FileInputStream fileInput = null;
@@ -469,9 +477,16 @@ public class Version extends BasicController{
 
 		if ( !("0.3.3").equals(Bootstrap.getBischeckVersion()))
 			Servers.getCache();
-
-		SessionData.saveXMLConfigAll(metadir.getPath());
-		flash.success(Messages.get("SaveVersionSuccess"));
+		
+		try {
+			SessionData.saveXMLConfigAll(metadir.getPath());
+			flash.success(Messages.get("SaveVersionSuccess"));
+		} catch (Exception e) {
+			removeReposDir(metadir.getPath());
+			flash.error(e.getMessage());
+			
+		}
+		
 		list();
 	}
 
