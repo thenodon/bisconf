@@ -215,12 +215,30 @@ public class Version extends BasicController{
 
 
 	public static void delete(String reposdir) {
+
+		if (checkIfOwner(reposPath()+File.separator+reposdir)) {
+			removeReposDir(reposPath()+File.separator+reposdir);
+			flash.success(Messages.get("DeleteVersionSuccess"));
+		} else {
+			flash.error(Messages.get("DeleteVersionNotOwner"));
+		}
 		
-		removeReposDir(reposPath()+File.separator+reposdir);
-		flash.success(Messages.get("DeleteVersionSuccess"));
 		list();
 	}
 
+
+	private static boolean checkIfOwner(String repospath) {
+		ConfigMeta metaconf = readMeta(new File(repospath));
+		String username = session.get("username");
+		
+		User user = User.find("byUsername", username).first();
+		
+		if (username.equals(metaconf.username) || user.isAdmin) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	private static void removeReposDir(String repospath) {
 		File repos = null;
