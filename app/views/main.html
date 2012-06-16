@@ -46,7 +46,7 @@
     
         #{if user.isAdmin}
         <li>
-            <a href="/admin">&{'Admin'}</a>
+            <a href="${play.configuration['http.path']}/admin">&{'Admin'}</a>
         </li>
         #{/if}
     <li>
