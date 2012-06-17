@@ -500,9 +500,10 @@ public class Version extends BasicController{
 			SessionData.saveXMLConfigAll(metadir.getPath());
 			flash.success(Messages.get("SaveVersionSuccess"));
 		} catch (Exception e) {
+			// Remove the repos directory if the saveXMLConfigAll failed in the
+			// validation of any xml
 			removeReposDir(metadir.getPath());
 			flash.error(e.getMessage());
-			
 		}
 		
 		list();

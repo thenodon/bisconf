@@ -71,7 +71,7 @@ public class SessionData extends BasicController {
 		if ( !("0.3.3").equals(Bootstrap.getBischeckVersion()))
 			SessionData.saveXMLConfig(ConfigXMLInf.XMLCONFIG.SERVERS,repospath);
 		
-		ValidateConfiguration.verifyByDirectory(repospath);
+		//ValidateConfiguration.verifyByDirectory(repospath);
 	}
 	
 	
@@ -116,12 +116,13 @@ public class SessionData extends BasicController {
 
 	
 	@ByPass
-	private static void saveXMLConfig(ConfigXMLInf.XMLCONFIG xmlconfig, String directory) {
+	private static void saveXMLConfig(ConfigXMLInf.XMLCONFIG xmlconfig, String directory) throws Exception {
 		try {
 			xmlfilemgr.createXMLFile(Cache.get(xmlconfig.nametag() + "_work_"+session.getId()), 
 					xmlconfig, directory);
 		} catch (Exception e) {
 			Logger.error("Error creating xml configuration: "+ e.getMessage());
+			throw e; 
 		}
 	}
 	
