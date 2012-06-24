@@ -86,7 +86,7 @@ public class Bootstrap extends Job {
 			Logger.info("Bisheck version is " + bisconfversion);
 		} catch (Exception ioe) {
 			bisconfversion = "N/A";
-			Logger.error("Can not determine the bischeck version");
+			Logger.error("Can not determine the bisconf version");
 		}
 		finally {
 			try {
