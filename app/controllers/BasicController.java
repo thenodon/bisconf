@@ -25,11 +25,11 @@ public class BasicController extends Controller{
 	}
 
 	
-	@Before
-	static void getBischeckVersion() {
+	//@Before
+	/*static void getBischeckVersion() {
 		renderArgs.put("bischeckversion", Bootstrap.getBischeckVersion());
 	}
-
+*/
 	
 	@ByPass
 	@Catch (value = Throwable.class, priority = 1)

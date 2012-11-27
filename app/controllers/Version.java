@@ -62,13 +62,43 @@ public class Version extends BasicController{
 		String path = "";
 		String xmldir;
 
-		if (System.getProperty("bishome") != null)
+		Map<String,String> bisprop = new HashMap<String, String>();
+
+		MBeanServerConnection mbsc;
+		try {
+			mbsc = createMBeanServerConnection();
+			getBischeckAttributes(bisprop, mbsc);
+		} catch (Exception e) {
+			Logger.error("bishome catch - " + System.getProperty("bishome"));
+			if (System.getProperty("bishome") != null)
+				path=System.getProperty("bishome");
+			else {
+				Logger.error("System property bishome must be set");
+			}
+
+			if (System.getProperty("xmlconfigdir") != null) {
+				xmldir=System.getProperty("xmlconfigdir");
+			}else {
+				xmldir="etc";
+			}
+		}
+
+		Logger.error("bishome - " + bisprop.get("bishome"));
+
+
+		if (bisprop.get("bishome")!= null) {
+			path=bisprop.get("bishome");
+		}
+		else if (System.getProperty("bishome") != null) {
 			path=System.getProperty("bishome");
+		}
 		else {
 			Logger.error("System property bishome must be set");
 		}
 
-		if (System.getProperty("xmlconfigdir") != null) {
+		if (bisprop.get("xmlconfigdir") != null) {
+			xmldir=bisprop.get("xmlconfigdir");
+		} else if (System.getProperty("xmlconfigdir") != null) {
 			xmldir=System.getProperty("xmlconfigdir");
 		}else {
 			xmldir="etc";
@@ -143,58 +173,17 @@ public class Version extends BasicController{
 
 	private static boolean isBischeckRunning() {
 
-		if (Bootstrap.getBischeckVersion().equals("0.3.3")) {
 
-			ProcessBuilder pb = new ProcessBuilder("sudo", "/etc/init.d/bischeckd", "pidstatus");
-			InputStream is = null;
-			InputStreamReader isr = null;
-			BufferedReader br = null;
-			try {
-				Process p;
-				try {
-					p = pb.start();
-
-					is = p.getInputStream();
-					isr = new InputStreamReader(is);
-					br = new BufferedReader(isr);
-					
-					String line = br.readLine();
-					if (line == null)
-						return false;
-					
-					if (line.equals("not running")) 
-						return false;
-					else 
-						return true;
-
-				} catch (IOException e) {
-					return false;
-				}
-			} finally {
-				try {
-					br.close();
-				} catch (IOException ignore) {}
-				try {
-					isr.close();
-				} catch (IOException ignore) {}
-				try {
-					is.close();
-				} catch (IOException ignore) {}
-
-			}
+		try {
+			createMBeanServerConnection();
+			return true;
+		} catch (Exception e) {
+			return false;
 		}
-		else {
-			try {
-				createMBeanServerConnection();
-				return true;
-			} catch (Exception e) {
-				return false;
-			}
 
-		}
 	}
 
-	
+
 	public static void add(String username) {
 		render(username);
 	}
@@ -222,7 +211,7 @@ public class Version extends BasicController{
 		} else {
 			flash.error(Messages.get("DeleteVersionNotOwner"));
 		}
-		
+
 		list();
 	}
 
@@ -230,9 +219,9 @@ public class Version extends BasicController{
 	private static boolean checkIfOwner(String repospath) {
 		ConfigMeta metaconf = readMeta(new File(repospath));
 		String username = session.get("username");
-		
+
 		User user = User.find("byUsername", username).first();
-		
+
 		if (username.equals(metaconf.username) || user.isAdmin) {
 			return true;
 		} else {
@@ -258,7 +247,7 @@ public class Version extends BasicController{
 	}
 
 
-	
+
 	private static ConfigMeta readMeta(File reposdir) {
 		Properties properties = null;
 		FileInputStream fileInput = null;
@@ -360,32 +349,24 @@ public class Version extends BasicController{
 			 * Reload 
 			 */
 			if (isBischeckRunning()) {
-				if (Bootstrap.getBischeckVersion().equals("0.3.3")) {
-					try {
-						manageBischeckd("restart");
-					} catch (Exception ex) {
-						flash.error(Messages.get("ReloadFailed"));
-					}
-				} else {
-					// Use jmx reload
-					try {
-						MBeanServerConnection mbsc = createMBeanServerConnection();
-						ObjectName mbeanName;
-						mbeanName = null;
-						//mbeanName = new ObjectName("com.ingby.socbox.bischeck:name=Execute");
-						mbeanName = new ObjectName(ExecuteMBean.BEANNAME);
+				// Use jmx reload
+				try {
+					MBeanServerConnection mbsc = createMBeanServerConnection();
+					ObjectName mbeanName;
+					mbeanName = null;
+					//mbeanName = new ObjectName("com.ingby.socbox.bischeck:name=Execute");
+					mbeanName = new ObjectName(ExecuteMBean.BEANNAME);
 
-						ExecuteMBean mbeanProxy = JMX.newMBeanProxy(mbsc, mbeanName, 
-								ExecuteMBean.class, true);
-						mbeanProxy.reload();
-						flash.success(Messages.get("ReloadSuccess"));
-					}
-					catch (Exception ioe) {
-						flash.error(Messages.get("ReloadFailed"));
-						Logger.error("Restarting bischeck failed with exception: " + ioe.getMessage());
-					}
-				}	
-			}
+					ExecuteMBean mbeanProxy = JMX.newMBeanProxy(mbsc, mbeanName, 
+							ExecuteMBean.class, true);
+					mbeanProxy.reload();
+					flash.success(Messages.get("ReloadSuccess"));
+				}
+				catch (Exception ioe) {
+					flash.error(Messages.get("ReloadFailed"));
+					Logger.error("Restarting bischeck failed with exception: " + ioe.getMessage());
+				}
+			}	
 		} else {
 			flash.error(Messages.get("UserIsNotAuthorized"));
 		}
@@ -401,11 +382,11 @@ public class Version extends BasicController{
 		}
 		status();
 	}
-	
-	
+
+
 
 	public static void restartBischeckd() {
-	
+
 		try {
 			manageBischeckd("restart");
 			flash.success(Messages.get("RestartSucess"));
@@ -414,10 +395,10 @@ public class Version extends BasicController{
 		}
 
 		status();
-		
+
 	}
 
-	
+
 	public static void stopBischeckd() {
 		try {
 			manageBischeckd("stop");
@@ -468,17 +449,17 @@ public class Version extends BasicController{
 		}
 	}
 
-	
-	
+
+
 	/**
 	 * Save the current working version
 	 */
 	public static void save(String username) {
-		
+
 		initRepos("admin");
-		
+
 		Long stamp = System.currentTimeMillis();
-		
+
 		File metadir = new File (reposPath().getAbsolutePath()+File.separator + stamp);
 		ConfigMeta meta = new ConfigMeta();
 		meta.comment = params.get("comment");
@@ -492,10 +473,8 @@ public class Version extends BasicController{
 		controllers.Properties.getCache();
 		Twenty4Threshold.getCache();
 		UrlProperties.getCache();
+		Servers.getCache();
 
-		if ( !("0.3.3").equals(Bootstrap.getBischeckVersion()))
-			Servers.getCache();
-		
 		try {
 			SessionData.saveXMLConfigAll(metadir.getPath());
 			flash.success(Messages.get("SaveVersionSuccess"));
@@ -505,7 +484,7 @@ public class Version extends BasicController{
 			removeReposDir(metadir.getPath());
 			flash.error(e.getMessage());
 		}
-		
+
 		list();
 	}
 
@@ -662,104 +641,26 @@ public class Version extends BasicController{
 	public static void status()  {
 
 		Map<String,String> bisprop = new HashMap<String, String>();
-		bisprop.put("bischeckversion",Bootstrap.getBischeckVersion());
+
+		//Set default from system property
+		bisprop.put("bishome",System.getProperty("bishome"));
+		bisprop.put("xmlconfigdir",System.getProperty("xmlconfigdir",""));
 
 		//throw new Exception("TEST error");
 
-		if (Bootstrap.getBischeckVersion().equals("0.3.3")) {
-			// Use script restart
-			getNativeAttributes(bisprop);
-
-		} else {
-			// JMX based
-			try {
-				MBeanServerConnection mbsc = createMBeanServerConnection();
-				getJVMAttributes(bisprop,mbsc);
-				getBischeckAttributes(bisprop, mbsc);
-			}
-			catch (Exception ioe) {
-				bisprop.put("pid", "not running or no JMX connection");
-			}
-
-
+		// JMX based
+		try {
+			MBeanServerConnection mbsc = createMBeanServerConnection();
+			getJVMAttributes(bisprop,mbsc);
+			getBischeckAttributes(bisprop, mbsc);
 		}
+		catch (Exception ioe) {
+			bisprop.put("pid", "not running or no JMX connection");
+		}
+
+
 		render(bisprop);
 
-	}
-
-
-	private static void getNativeAttributes(Map<String, String> bisprop) {
-		Integer status;
-		ProcessBuilder pb = new ProcessBuilder("sudo", "/etc/init.d/bischeckd", "pidstatus");
-		InputStream is = null;
-		InputStreamReader isr = null;
-		BufferedReader br = null;
-		try {
-			Process p = pb.start();
-			is = p.getInputStream();
-			isr = new InputStreamReader(is);
-			br = new BufferedReader(isr);
-			
-			String pid = br.readLine();
-			if (pid != null)
-				bisprop.put("pid",pid);
-			else
-				bisprop.put("pid","not running");
-			System.out.println();
-			try {
-				status = p.waitFor();
-				if (status != 0) {
-					Logger.error("Getting bischeck pid failed with return status " + status);
-				}
-			} catch (InterruptedException ignore) {}
-		} catch (IOException ioe) {
-			bisprop.put("pid","not running");
-		}finally {
-			try {
-				br.close();
-			} catch (IOException ignore) {}
-			try {
-				isr.close();
-			} catch (IOException ignore) {}
-			try {
-				is.close();
-			} catch (IOException ignore) {}
-
-		}
-		
-		if (!bisprop.get("pid").equals("not running")) {
-			pb = new ProcessBuilder("ps", "--no-headers", "-ostime",bisprop.get("pid"));
-			try {
-				Process p = pb.start();
-				is = p.getInputStream();
-				isr = new InputStreamReader(is);
-				br = new BufferedReader(isr);
-
-				String uptime = br.readLine();
-				if (uptime != null)
-					bisprop.put("uptime",uptime);
-				else
-					bisprop.put("uptime","N/A");
-				try {
-					status = p.waitFor();
-				} catch (InterruptedException ignore) {}
-			} catch (IOException ioe) {
-				bisprop.put("uptime","N/A");
-			} finally {
-				try {
-					br.close();
-				} catch (IOException ignore) {}
-				try {
-					isr.close();
-				} catch (IOException ignore) {}
-				try {
-					is.close();
-				} catch (IOException ignore) {}
-
-			}
-		}
-		else
-			bisprop.put("uptime","N/A");
 	}
 
 
@@ -768,30 +669,30 @@ public class Version extends BasicController{
 		JMXConnector c = null;
 		MBeanServerConnection mbsc = null;
 
-		
+
 		try {
 
 			u = new JMXServiceURL(
-				"service:jmx:rmi:///jndi/rmi://" + 
-				Bootstrap.getJMXProperties().getProperty("host") + 
-				":" + 
-				Bootstrap.getJMXProperties().getProperty("port") +  
-				"/jmxrmi");
+					"service:jmx:rmi:///jndi/rmi://" + 
+					Bootstrap.getJMXProperties().getProperty("host") + 
+					":" + 
+					Bootstrap.getJMXProperties().getProperty("port") +  
+			"/jmxrmi");
 
 		} catch (MalformedURLException e1) {
 			Logger.error("JMX service url is malformed: "+ e1.getMessage());
 			throw e1;
 		}
-		
+
 		Map<String, String[]> env = new Hashtable<String, String[]>();
 		// If user and password is defined
 		if (Bootstrap.getJMXProperties().getProperty("user") != null &&
-			Bootstrap.getJMXProperties().getProperty("password") != null) {
+				Bootstrap.getJMXProperties().getProperty("password") != null) {
 			String[] credentials = new String[] {Bootstrap.getJMXProperties().getProperty("user"),
 					Bootstrap.getJMXProperties().getProperty("password")};
 			env.put(JMXConnector.CREDENTIALS, credentials);
 		}
-		
+
 		try {
 			c = JMXConnectorFactory.connect(u,env);
 		} catch (IOException e) {
@@ -799,7 +700,7 @@ public class Version extends BasicController{
 			throw e;
 		}
 
-		
+
 		try {
 			mbsc = c.getMBeanServerConnection();
 		} catch (IOException e) {
@@ -824,11 +725,11 @@ public class Version extends BasicController{
 
 
 	private static void getBischeckAttributes(Map<String, String> bisprop,
-			MBeanServerConnection mbsc) throws MalformedObjectNameException, NullPointerException {
+			MBeanServerConnection mbsc) throws MalformedObjectNameException {
+
 		ObjectName mbeanName;
 		mbeanName = null;
 		mbeanName = new ObjectName("com.ingby.socbox.bischeck:name=Execute");
-
 
 		ExecuteMBean mbeanProxy = JMX.newMBeanProxy(mbsc, mbeanName, 
 				ExecuteMBean.class, true);
@@ -837,6 +738,9 @@ public class Version extends BasicController{
 		else
 			bisprop.put("reloadtime",(new Date(mbeanProxy.getReloadTime()).toString()));
 		bisprop.put("reloadcount",mbeanProxy.getReloadCount().toString());
+		bisprop.put("bishome",mbeanProxy.getBischeckHome());
+		bisprop.put("xmlconfigdir",mbeanProxy.getXmlConfigDir());
+		bisprop.put("bischeckversion",mbeanProxy.getBischeckVersion());
 
 	}
 }

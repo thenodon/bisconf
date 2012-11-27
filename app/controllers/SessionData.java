@@ -45,8 +45,7 @@ public class SessionData extends BasicController {
 		SessionData.resetXMLConfig(ConfigXMLInf.XMLCONFIG.PROPERTIES,XMLProperties.class);
 		SessionData.resetXMLConfig(ConfigXMLInf.XMLCONFIG.TWENTY4HOURTHRESHOLD,XMLTwenty4Threshold.class);
 		SessionData.resetXMLConfig(ConfigXMLInf.XMLCONFIG.URL2SERVICES,XMLUrlservices.class);
-		if ( !("0.3.3").equals(Bootstrap.getBischeckVersion()))
-			SessionData.resetXMLConfig(ConfigXMLInf.XMLCONFIG.SERVERS,XMLServers.class);
+		SessionData.resetXMLConfig(ConfigXMLInf.XMLCONFIG.SERVERS,XMLServers.class);
 		
 	}
 	
@@ -56,8 +55,7 @@ public class SessionData extends BasicController {
 		SessionData.resetXMLConfig(ConfigXMLInf.XMLCONFIG.PROPERTIES,XMLProperties.class,repospath);
 		SessionData.resetXMLConfig(ConfigXMLInf.XMLCONFIG.TWENTY4HOURTHRESHOLD,XMLTwenty4Threshold.class,repospath);
 		SessionData.resetXMLConfig(ConfigXMLInf.XMLCONFIG.URL2SERVICES,XMLUrlservices.class,repospath);
-		if ( !("0.3.3").equals(Bootstrap.getBischeckVersion()))
-			SessionData.resetXMLConfig(ConfigXMLInf.XMLCONFIG.SERVERS,XMLServers.class,repospath);
+		SessionData.resetXMLConfig(ConfigXMLInf.XMLCONFIG.SERVERS,XMLServers.class,repospath);
 		
 	}
 	
@@ -67,9 +65,7 @@ public class SessionData extends BasicController {
 		SessionData.saveXMLConfig(ConfigXMLInf.XMLCONFIG.PROPERTIES,repospath);
 		SessionData.saveXMLConfig(ConfigXMLInf.XMLCONFIG.TWENTY4HOURTHRESHOLD,repospath);
 		SessionData.saveXMLConfig(ConfigXMLInf.XMLCONFIG.URL2SERVICES,repospath);
-		
-		if ( !("0.3.3").equals(Bootstrap.getBischeckVersion()))
-			SessionData.saveXMLConfig(ConfigXMLInf.XMLCONFIG.SERVERS,repospath);
+		SessionData.saveXMLConfig(ConfigXMLInf.XMLCONFIG.SERVERS,repospath);
 		
 		//ValidateConfiguration.verifyByDirectory(repospath);
 	}
