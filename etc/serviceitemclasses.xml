@@ -5,4 +5,5 @@
 <entry key="SQLServiceItem">SQL select statement</entry>
 <entry key="CalculateOnCache">Retrieve values from bischeck cache</entry>
 <entry key="LivestatusServiceItem">Livestatus against Nagios server</entry>
+<entry key="CheckCommandServiceItem">Nagios check command</entry>
 </properties>

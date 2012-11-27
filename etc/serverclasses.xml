@@ -4,4 +4,6 @@
 <comment>Server classes</comment>
 <entry key="NSCAServer">NSCA connection</entry>
 <entry key="OpenTSDBServer">OpenTSDB connection</entry>
+<entry key="NRDPServer">NRDP connection</entry>
+<entry key="GraphiteServer">Graphite connection</entry>
 </properties>
