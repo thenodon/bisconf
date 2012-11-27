@@ -105,8 +105,10 @@ public class Version extends BasicController{
 		}
 
 		File configDir = new File(path+File.separator+xmldir);
-		if (configDir.isDirectory() && configDir.canRead()) 
+		if (configDir.isDirectory() && configDir.canRead()) { 
+			Logger.info("Config directory is " + configDir.getAbsolutePath());
 			return configDir;    
+		}
 		else {
 			Logger.error("Configuration directory " + configDir.getPath() + " does not exist or is not readable.");
 		}
