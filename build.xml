@@ -14,7 +14,8 @@
     <property name="etc.home" value="${basedir}/etc" />
     <property name="src.home" value="${basedir}/src" />
     <property name="docs.home" value="${basedir}/doc" />
-    <property name="javac_target" value="6" />
+    <property name="migscriptsrc.home" value="${basedir}/src/migscripts" />
+	<property name="javac_target" value="6" />
     <property name="javac_src" value="6" />
     <property name="version.file" value="${basedir}/version.txt" />
 
@@ -49,7 +50,10 @@
 	           <fileset dir="${basedir}/src/scripts"/>
 	        </copy>
 	        
-    	
+        <copy todir="${build.home}/migscripts">
+            <fileset dir="${migscriptsrc.home}"/>
+         </copy>
+
         
         <copy todir="${build.home}/etc">
             <fileset dir="${etc.home}">
@@ -62,6 +66,7 @@
         <copy todir="${build.home}" file="${docs.home}/README" />
     	<copy todir="${build.home}" file="${basedir}/install" />
     	<copy todir="${build.home}" file="${basedir}/svninfo.txt" />
+     	<copy todir="${build.home}" file="${basedir}/migrationpath.txt" />
     	<chmod file="${build.home}/install" perm="ugo+rx"/>
    
     	<tar destfile="${build.home}/${app.name}-${app.version}.tar">

@@ -230,10 +230,10 @@ esac;
 ## Uninstall
 #########################
 if [ "x$uninstall" = "xtrue" ] ; then
-  echo "Uninstall bischeck"
+  echo "Uninstall bisconf"
   echo "Remove $BISCONFHOME"
   rm -rf $BISCONFHOME
-  echo "Remove bischeckd from /etc/init.d"
+  echo "Remove bisconfd from /etc/init.d"
   if [ "$DISTRO" = "rhel" -o "$DISTRO" = "rh" -o "$DISTRO" = "redhatenterpriseserver" -o "$DISTRO" = "centos" ] ; then
     chkconfig --del bisconfd
   elif [ "$DISTRO" = "debian" -o "$DISTRO" = "ubuntu" ] ; then
@@ -325,7 +325,7 @@ if [ "$upgrade" = "true" ] ; then
   mignewver=$(echo $migline | cut -d":" -f2)
 
   if [ "x$migoldver" = "x$oldversion" -a "x$mignewver" = "x$newversion" ] ; then
-    echo "Upgrading bischeck from $oldversion to $newversion"
+    echo "Upgrading bisconf from $oldversion to $newversion"
   else
     errormsg "Upgrading bisconf from $oldversion to $newversion is not supported"
     initerror=true
@@ -347,7 +347,7 @@ fi
 #########################
 ## Backup old install 
 #########################
-# Create a backup directory of old bischeck installation
+# Create a backup directory of old bisconf installation
 if [ "$upgrade" = "true" ] ; then
   service bisconfd stop
   echo "Moving old installation to $upgradedir"
@@ -358,7 +358,7 @@ fi
 #########################
 ## Install
 #########################
-headline "Do installation of bischeck $newversion"
+headline "Do installation of bisconf $newversion"
 if [ ! -d $BISCONFHOME ] ; then
     echo "Create installation directory $BISCONFHOME"
     mkdir -p $BISCONFHOME
@@ -417,11 +417,16 @@ fi
 ## Upgrade
 #########################
 if [ "$upgrade" = "true" ] ; then
-  headline "Upgrade of bischeck $newversion with $oldversion"
+  headline "Upgrade of bisconf $newversion with $oldversion"
   echo "Copy customlib jars"
   cp -a $upgradedir/customlib/* $BISCONFHOME/customlib/
   echo "Running migrations scripts"    
   sh ./migscripts/$migscript $BISCONFHOME $upgradedir
+  echo "Change ownership and permissions to install user $USERINIT after migsripts"
+  chown -R $USERINIT:`id -gn $USERINIT` $BISCONFHOME
+  echo "Upgrade complete"
+
+
 fi
 
 

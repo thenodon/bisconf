@@ -1,0 +1,4 @@
+#!/bin/sh
+
+mkdir -p $1/db/h2/
+cp -a $2/db/h2/play.h2.db  $1/db/h2/
