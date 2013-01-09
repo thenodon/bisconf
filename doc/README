@@ -32,7 +32,10 @@ some additional setup.
 Installation
 ============
 Download bisconf from http://gforge.ingby.com/gf/project/bischeck/frs/ or 
-check out the bisconf trunk or tag (0.1.0_RC1) if you want to hack it.
+check out the bisconf trunk or tag (0.2.0) if you want to hack it.
+
+Make sure you copy the bischeck-x.y.z.jar and the quartz-2.1.5.jar from the 
+bischeck lib to the the checked out bisconf lib directory.
 
 If code is checkout by svn you can build a distribution by:
 $ export PLAY_PATH=<play home dir>
