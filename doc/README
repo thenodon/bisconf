@@ -1,12 +1,11 @@
 bisconf - Bischeck configuration WebUI
 ======================================
 
-2012-05-08
+2013-01-13
 
-Release 0.1.0_RC2 
+Release 0.2.0
 
-This release should be regarded as a alpha release and should not be used for
-bischeck systems in production. 
+This release is compatiable with bischeck 0.4.2.
 
 Overview
 ========
@@ -53,25 +52,11 @@ This will present the installation options. Sudo is required since init scripts
 are installed in /etc/init.d.
 
 
-Running bisconf against bischeck 0.3.3
-======================================
-Bisconf is targeted bischeck version 0.4.0 and later but its possible to run 
-against bischeck version 0.3.3, but with some additional setups.
-1 - Check out or down load the the bischeck version 0.4.0 and build it.
-2 - Backup your bischeck installation directory. 
-3 - Copy the servers.xml file in the 0.4.0 etc directory to the etc of the 
-running 0.3.3 version
-4 - Copy the bischeck.xsd file from target/resources to the resources directory 
-of the running 0.3.3 installation
-5 - Un-tar the bischeck-0.4.0.tar.gz and copy the bischeck-0.4.0.jar and 
-quartz-2.0.1.jar to the lib directory of bisconf
-
-
 Running bisconf from eclipse
 ============================
 The following steps must be done to run bisconf from eclipse.
 
-1 - Add bischeck 0.4.0 (current trunk) target/classes and target/resources to 
+1 - Add bischeck 0.4.2 target/classes and target/resources to 
 the build path. Make sure to run ant dist in bischeck directory first.
 
 2 - Add system properties in the eclipse "Run configurations"->"Arguments" in
