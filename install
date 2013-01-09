@@ -112,7 +112,7 @@ function checkpackage() {
 }
 
 function distrocheck() {
-if [ -x lsb_release ] ; then
+if [ -x /usr/bin/lsb_release ] ; then
   DISTRIBUTION=$(lsb_release -i | cut -f2 -d: | sed -e "s/\t//" | tr A-Z a-z)
   if [ "$DISTRIBUTION" != "unknown" ] ; then
     VERSION=$(lsb_release -r | cut -f2 -d: | sed -e "s/\t//" | tr A-Z a-z)
@@ -213,7 +213,7 @@ else
 fi
 
 case ${DISTRO} in
-  rh|rhel|centos|debian|ubuntu)
+  rh|rhel|redhatenterpriseserver|centos|debian|ubuntu)
       echo "Supported distribution - $DISTRO $DISTROVERS" 
       ;;
   *)
@@ -234,7 +234,7 @@ if [ "x$uninstall" = "xtrue" ] ; then
   echo "Remove $BISCONFHOME"
   rm -rf $BISCONFHOME
   echo "Remove bischeckd from /etc/init.d"
-  if [ "$DISTRO" = "rhel" -o "$DISTRO" = "rh" -o "$DISTRO" = "centos" ] ; then
+  if [ "$DISTRO" = "rhel" -o "$DISTRO" = "rh" -o "$DISTRO" = "redhatenterpriseserver" -o "$DISTRO" = "centos" ] ; then
     chkconfig --del bisconfd
   elif [ "$DISTRO" = "debian" -o "$DISTRO" = "ubuntu" ] ; then
     update-rc.d bisconfd remove
