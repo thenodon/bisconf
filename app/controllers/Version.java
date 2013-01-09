@@ -64,10 +64,11 @@ public class Version extends BasicController{
 
 		Map<String,String> bisprop = new HashMap<String, String>();
 
-		MBeanServerConnection mbsc;
+		
+		JMXConnectionManagement jmxconnmgmt = null; 
 		try {
-			mbsc = createMBeanServerConnection();
-			getBischeckAttributes(bisprop, mbsc);
+			jmxconnmgmt = JMXConnectionManagement.createJMXConnection();
+			getBischeckAttributes(bisprop, jmxconnmgmt.getMbeanServerConection());
 		} catch (Exception e) {
 			Logger.error("bishome catch - " + System.getProperty("bishome"));
 			if (System.getProperty("bishome") != null)
@@ -81,6 +82,9 @@ public class Version extends BasicController{
 			}else {
 				xmldir="etc";
 			}
+		} finally {
+			if (jmxconnmgmt != null)
+				jmxconnmgmt.close();
 		}
 
 		Logger.error("bishome - " + bisprop.get("bishome"));
@@ -175,12 +179,15 @@ public class Version extends BasicController{
 
 	private static boolean isBischeckRunning() {
 
-
+		JMXConnectionManagement jmxconnmgmt = null;
 		try {
-			createMBeanServerConnection();
+			jmxconnmgmt = JMXConnectionManagement.createJMXConnection();
 			return true;
 		} catch (Exception e) {
 			return false;
+		} finally {
+			if(jmxconnmgmt != null)
+				jmxconnmgmt.close();
 		}
 
 	}
@@ -352,21 +359,29 @@ public class Version extends BasicController{
 			 */
 			if (isBischeckRunning()) {
 				// Use jmx reload
+				JMXConnectionManagement jmxconnmgmt = null;
 				try {
-					MBeanServerConnection mbsc = createMBeanServerConnection();
+					jmxconnmgmt = JMXConnectionManagement.createJMXConnection();
 					ObjectName mbeanName;
 					mbeanName = null;
-					//mbeanName = new ObjectName("com.ingby.socbox.bischeck:name=Execute");
+				
 					mbeanName = new ObjectName(ExecuteMBean.BEANNAME);
 
-					ExecuteMBean mbeanProxy = JMX.newMBeanProxy(mbsc, mbeanName, 
+					ExecuteMBean mbeanProxy = JMX.newMBeanProxy(jmxconnmgmt.getMbeanServerConection(), mbeanName, 
 							ExecuteMBean.class, true);
-					mbeanProxy.reload();
-					flash.success(Messages.get("ReloadSuccess"));
+					if (mbeanProxy.reload()) {
+						flash.success(Messages.get("ReloadSuccess"));
+					} else {
+						flash.success(Messages.get("ReloadFailed"));
+					}
 				}
 				catch (Exception ioe) {
 					flash.error(Messages.get("ReloadFailed"));
 					Logger.error("Restarting bischeck failed with exception: " + ioe.getMessage());
+				}
+				finally {
+					if(jmxconnmgmt != null)
+						jmxconnmgmt.close();
 				}
 			}	
 		} else {
@@ -651,13 +666,18 @@ public class Version extends BasicController{
 		//throw new Exception("TEST error");
 
 		// JMX based
+		JMXConnectionManagement jmxconnmgmt = null;
 		try {
-			MBeanServerConnection mbsc = createMBeanServerConnection();
-			getJVMAttributes(bisprop,mbsc);
-			getBischeckAttributes(bisprop, mbsc);
+			jmxconnmgmt = JMXConnectionManagement.createJMXConnection(); 
+			getJVMAttributes(bisprop,jmxconnmgmt.getMbeanServerConection());
+			getBischeckAttributes(bisprop, jmxconnmgmt.getMbeanServerConection());
 		}
 		catch (Exception ioe) {
 			bisprop.put("pid", "not running or no JMX connection");
+		}
+		finally {
+			if (jmxconnmgmt != null)
+				jmxconnmgmt.close();
 		}
 
 
@@ -665,7 +685,7 @@ public class Version extends BasicController{
 
 	}
 
-
+/*
 	private static MBeanServerConnection createMBeanServerConnection() throws Exception {
 		JMXServiceURL u = null;
 		JMXConnector c = null;
@@ -712,7 +732,7 @@ public class Version extends BasicController{
 
 		return mbsc;
 	}
-
+*/
 
 	private static void getJVMAttributes(Map<String, String> bisprop, MBeanServerConnection mbsc) throws MalformedObjectNameException, NullPointerException {
 		ObjectName mbeanName = null;
