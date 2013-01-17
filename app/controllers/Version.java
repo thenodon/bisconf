@@ -761,7 +761,12 @@ public class Version extends BasicController{
 			bisprop.put("reloadtime",(new Date(mbeanProxy.getReloadTime()).toString()));
 		bisprop.put("reloadcount",mbeanProxy.getReloadCount().toString());
 		bisprop.put("bishome",mbeanProxy.getBischeckHome());
-		bisprop.put("xmlconfigdir",mbeanProxy.getXmlConfigDir());
+		
+		if (mbeanProxy.getXmlConfigDir() == null)
+			bisprop.put("xmlconfigdir","etc");
+		else
+			bisprop.put("xmlconfigdir",mbeanProxy.getXmlConfigDir());
+		
 		bisprop.put("bischeckversion",mbeanProxy.getBischeckVersion());
 
 	}
