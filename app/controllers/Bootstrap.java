@@ -46,7 +46,7 @@ public class Bootstrap extends Job {
 			in = new DataInputStream(fstream);
 			br = new BufferedReader(new InputStreamReader(in));
 			bisconfversion = br.readLine();
-			Logger.info("Bisheck version is " + bisconfversion);
+			Logger.info("Bisconf version is " + bisconfversion);
 		} catch (Exception ioe) {
 			bisconfversion = "N/A";
 			Logger.error("Can not determine the bisconf version");
