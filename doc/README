@@ -5,7 +5,7 @@ bisconf - Bischeck configuration WebUI
 
 Release 0.2.0
 
-This release is compatiable with bischeck 0.4.2.
+This release is compatible with bischeck 0.4.2.
 
 Overview
 ========
@@ -109,13 +109,13 @@ Change you selinux rules
 
 Allow bisconf user to manage bischeckd
 ======================================
-To enable the user id executing bisconf, default nagios, to manage bischeck from
-the web ui /etc/sudoers needs to be configured in the following way:
+To enable the user id executing bisconf, default is nagios, to manage bischeck 
+through the web ui /etc/sudoers needs to be configured in the following way:
 Defaults:username !requiretty
-nagios ALL= NOPASSWD: /etc/init.d/bischeckd restart
-nagios ALL= NOPASSWD: /etc/init.d/bischeckd start
-nagios ALL= NOPASSWD: /etc/init.d/bischeckd stop
-nagios ALL= NOPASSWD: /etc/init.d/bischeckd pidstatus
+nagios ALL= NOPASSWD: /etc/init.d/bisconfd restart
+nagios ALL= NOPASSWD: /etc/init.d/bisconfd start
+nagios ALL= NOPASSWD: /etc/init.d/bisconfd stop
+nagios ALL= NOPASSWD: /etc/init.d/bisconfd pidstatus
  
  
 Feedback
