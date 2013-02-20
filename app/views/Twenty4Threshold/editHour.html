@@ -3,13 +3,13 @@
 
 
                 
-#{if hour24}
+#{if hourdef}
 <h1>
 &{'EditHours'}    
 </h1>
 
 <h2>
-&{'HourID'}: ${hour24.hoursID}
+&{'HourID'}: ${hourdef.ID}
 </h2>
 
 <table class="listtable">
@@ -25,6 +25,11 @@
     </tbody>
 </table>
 
+
+
+<!-- ${hourdef.getTypeOfHour().toString()} -->
+#{if hourdef.getTypeOfHour().toString() == 'HOUR24'}
+
 <div class="downlink">
 <ul>
 <li>
@@ -37,13 +42,12 @@
 </div>
 
 
-
 <div class="edithour">
 #{form @Twenty4Threshold.saveHour()}
     
     <!-- ${hourCounter=new Integer(0)} -->
 
-    #{list hour24.hour, as:'hour'}
+    #{list hourdef.getHour24(), as:'hour'}
         #{if hourCounter < 10}
             <a name="0${hourCounter}"/>
             0${hourCounter}: <input type="text" name="0${hourCounter++}" value="${hour}" /> <br />                            
@@ -53,11 +57,60 @@
             ${hourCounter}: <input type="text" name="${hourCounter++}" value="${hour}" /> <br />
         #{/else}
     #{/list}
-    <input type="hidden" name="hourid" value="${hour24.hoursID}" />
+    <input type="hidden" name="hourid" value="${hourdef.ID}" />
                     
     <input class="submitbutton" type="submit" value="&{'Save'}" /><br />
 
 #{/form}
 </div>
+#{/if}
+
+#{if hourdef.getTypeOfHour().toString() == 'HOURINTERVAL'}
+<div class="downlink">
+<ul>
+<li>
+<a href="@{addHourInterval(hourdef.ID)}">&{'AddHourinterval'}</a>
+</li>
+<li>
+<a href="@{listHours()}">&{'ListHours'}</a>
+</li>
+<li>
+<a href="@{index()}">&{'Back'}</a>
+</li>
+<ul>
+</div>
+
+<div class="edithour">
+
+
+    <table class="listtable">
+        <thead>
+            <tr>
+                <th>&{'From'}</th>
+                <th>&{'To'}</th>
+                <th>&{'Threshold'}</th>
+                <th>&{'Action'}</th>
+            </tr>
+        </thead>
+        <tbody>
+            #{list hourdef.getHourInterval(), as:'hour'}
+                <tr>
+                    <td>${hour.getFrom()}</td>
+                    <td>${hour.getTo()}</td>
+                    <td>${hour.getThreshold()}</td>
+                    <td>
+                        <a href="@{editHourInterval(hourdef.ID, hour)}">&{'Edit'}</a>
+                        <a href="@{deleteHourInterval(hourdef.ID, hour)}">&{'Delete'}</a>
+                    </td>
+                </tr>
+            #{/list}
+        </tbody>
+    </table>
+    
+
+
+</div>
+#{/if}
+
 #{/if}
 

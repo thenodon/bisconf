@@ -248,14 +248,18 @@
                     #{/form}
                     </div>
                     </td>
-                    
-                    
+        
+                            
+                    <!-- ${hours.get(hashperiod.get(period).hoursIDREF).getTypeOfHour().toString()} -->
+                    <!-- CHECK THE HOUR FORMAT -->    
                     <td>
                         <!-- ${hourCounter=new Integer(0)} -->
                         <a name="${period}"/>
                         
+                        #{if hours.get(hashperiod.get(period).hoursIDREF).getTypeOfHour().toString() == 'HOUR24'}
+                        
                         <table class="hour">
-                        #{list hours.get(hashperiod.get(period).hoursIDREF), as:'hour'}
+                        #{list hours.get(hashperiod.get(period).hoursIDREF).getHour24(), as:'hour'}
                             <tr>
                                 #{if hourCounter < 10}
                                     <td>0${hourCounter++}</td><td>${hour} </td>
@@ -266,6 +270,22 @@
                             <tr>
                         #{/list}
                         </table>
+                        
+                        #{/if}
+                        
+                        #{if hours.get(hashperiod.get(period).hoursIDREF).getTypeOfHour().toString() == 'HOURINTERVAL'}
+                        
+                        <table class="hour">
+                        #{list hours.get(hashperiod.get(period).hoursIDREF).getHourInterval(), as:'hour'}
+                            <tr>
+        
+                                    <td>${hour.getFrom()} - ${hour.getTo()}</td><td>${hour.getThreshold()} </td>
+                                
+                            <tr>
+                        #{/list}
+                        </table>
+                        
+                        #{/if}
                         
                         <div class="hourselect">
                         #{form @Twenty4Threshold.selectHourID()}

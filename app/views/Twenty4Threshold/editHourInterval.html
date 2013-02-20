@@ -1,0 +1,48 @@
+#{extends 'main.html' /}
+#{set title: 'Edit hour interval' /}                
+
+<h1>
+&{'EditHourInterval'}    
+</h1>
+
+<h2>
+&{'HourID'}: ${id}
+</h2>
+
+
+
+
+
+<div class="downlink">
+<ul>
+<li>
+<a href="@{listHours()}">&{'ListHours'}</a>
+</li>
+<li>
+<a href="@{index()}">&{'Back'}</a>
+</li>
+<ul>
+</div>
+
+
+<div class="edithourinterval">
+#{form @Twenty4Threshold.saveHourinterval()}
+   
+    From: <input  style="width: 70px" type="text" name="From" value="${hourinterval.getFrom()}" />                             
+    <span class="error">#{error 'from' /}</span><br />
+    
+    To: <input style="width: 70px" type="text" name="To" value="${hourinterval.getTo()}" />                             
+    <span class="error">#{error 'to' /}</span><br />
+    
+    Threshold: <input type="text" name="Threshold" value="${hourinterval.getThreshold()}" />                             
+    <span class="error">#{error 'threshold' /}</span><br />
+    
+    <input type="hidden" name="hourid" value="${id}" />
+    <input type="hidden" name="oldFrom" value="${hourinterval.getFrom()}" />
+    <input type="hidden" name="oldTo" value="${hourinterval.getTo()}" />
+    <input type="hidden" name="oldThreshold" value="${hourinterval.getThreshold()}" />
+                    
+    <input class="submitbutton" type="submit" value="&{'Save'}" /><br />
+
+#{/form}
+</div>

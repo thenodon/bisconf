@@ -6,6 +6,8 @@ import play.i18n.Messages;
 import play.libs.XML;
 import play.mvc.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -22,6 +24,7 @@ import com.ingby.socbox.bischeck.xsd.bischeck.XMLServiceitem;
 import com.ingby.socbox.bischeck.xsd.properties.XMLProperties;
 import com.ingby.socbox.bischeck.xsd.properties.XMLProperty;
 import com.ingby.socbox.bischeck.xsd.twenty4threshold.XMLHoliday;
+import com.ingby.socbox.bischeck.xsd.twenty4threshold.XMLHourinterval;
 import com.ingby.socbox.bischeck.xsd.twenty4threshold.XMLHours;
 import com.ingby.socbox.bischeck.xsd.twenty4threshold.XMLMonths;
 import com.ingby.socbox.bischeck.xsd.twenty4threshold.XMLPeriod;
@@ -49,7 +52,7 @@ public class Twenty4Threshold extends BasicController {
 	 * Check if the serviceitems threshold class is Twenty4HourThreshold
 	 */
 	private static Boolean isTwenty4ThresholdClass(XMLServiceitem serviceitem) {
-		
+
 		if (serviceitem.getThresholdclass() == null) {
 			return false;
 		}
@@ -82,15 +85,15 @@ public class Twenty4Threshold extends BasicController {
 		while (hosts.hasNext()) {
 			XMLHost host = hosts.next();
 			Iterator<XMLService> services = host.getService().iterator();
-			
+
 			while (services.hasNext()) {
 				XMLService service = services.next();
 				Iterator<XMLServiceitem> serviceitems;
 				serviceitems = service.getServiceitem().iterator();
-				
+
 				while (serviceitems.hasNext()) {
 					XMLServiceitem serviceitem = serviceitems.next();
-					
+
 					if (isTwenty4ThresholdClass(serviceitem)) {
 						ServiceDefs servicedef = new ServiceDefs();
 						servicedef.hostname = host.getName();
@@ -142,7 +145,7 @@ public class Twenty4Threshold extends BasicController {
 		XMLServicedef servicedef = null;
 		while (servicedefs.hasNext()) {
 			servicedef = servicedefs.next();
-			
+
 			/*
 			 * Get
 			 */
@@ -150,7 +153,7 @@ public class Twenty4Threshold extends BasicController {
 					&& servicedef.getServicename().equals(servicename)
 					&& servicedef.getServiceitemname().equals(serviceitemname)) {
 
-					break;
+				break;
 			}
 		}
 		if (servicedef != null) {
@@ -186,14 +189,15 @@ public class Twenty4Threshold extends BasicController {
 					&& servicedef.getServiceitemname().equals(serviceitemname)) {
 
 				List<XMLPeriod> periodlist = servicedef.getPeriod();
-				
+
 				// Get all hour def existing for the periods
-				Map<Integer, List<String>> hours = getHoursByPeriod(periodlist);
-				
+				//Map<Integer, List<String>> hours = getHoursByPeriod(periodlist);
+				Map<Integer, HourFormats> hours = getHoursByPeriod(periodlist);
+
 				Map<Integer, XMLPeriod> hashperiod = createIndexPeriodMap(periodlist);
-				
+
 				List<Integer> allhourids = getAllConfiguredHourID();
-				
+
 				render(servicedef, hashperiod, hours, allhourids, anchor);
 			}
 		}
@@ -209,7 +213,7 @@ public class Twenty4Threshold extends BasicController {
 		render(servicedef);
 	}
 
-
+	/*
 	private static Map<Integer, List<String>> getHoursByPeriod(
 			List<XMLPeriod> periods) {
 
@@ -231,6 +235,29 @@ public class Twenty4Threshold extends BasicController {
 		}
 		return hours;
 	}
+	 */
+	private static Map<Integer, HourFormats> getHoursByPeriod(
+			List<XMLPeriod> periods) {
+
+		XMLTwenty4Threshold config = getCache();
+
+		Map<Integer, HourFormats> hours = new HashMap<Integer, HourFormats>();
+
+		Iterator<XMLPeriod> perioditer = periods.iterator();
+		while (perioditer.hasNext()) {
+			XMLPeriod period = perioditer.next();
+			Iterator<XMLHours> hoursiter = config.getHours().iterator();
+
+			while (hoursiter.hasNext()) {
+				XMLHours hour = hoursiter.next();
+				if (hour.getHoursID() == period.getHoursIDREF()) {
+					hours.put(period.getHoursIDREF(), new HourFormats(hour));
+				}
+			}
+		}
+		return hours;
+	}
+
 
 	private static XMLPeriod getPeriodByIndex(XMLServicedef servicedef,
 			Integer index) {
@@ -260,18 +287,18 @@ public class Twenty4Threshold extends BasicController {
 			hashperiod.put(period.hashCode(), period);
 			//System.out.println("HASHcode: " + period.hashCode() + "Period obj: " + period.toString());
 		}
-		
-		
+
+
 		Map<Integer, XMLPeriod> sorted_map = sortHashMapByValues(hashperiod, true);
-		
+
 		/*
 		Iterator<Integer> iter = sorted_map.keySet().iterator();
 		while (iter.hasNext()) {
-			
+
 			Integer myp = iter.next();
 			System.out.println("HASHcode: " + myp + "Period obj: " + sorted_map.get(myp).toString());
 		}
-		*/
+		 */
 		return sorted_map;
 	}
 
@@ -305,7 +332,7 @@ public class Twenty4Threshold extends BasicController {
 	}
 
 
-	
+
 	public static void deletePeriod(String hostname, String servicename,
 			String serviceitemname, int period) {
 		XMLTwenty4Threshold config = getCache();
@@ -320,15 +347,15 @@ public class Twenty4Threshold extends BasicController {
 			if (servicedef.getHostname().equals(hostname)
 					&& servicedef.getServicename().equals(servicename)
 					&& servicedef.getServiceitemname().equals(serviceitemname)) {
-				
+
 				List<XMLPeriod> periodlist = servicedef.getPeriod();
 
 				Map<Integer, XMLPeriod> hashperiod = createIndexPeriodMap(periodlist);
 
 				XMLPeriod delperiod = hashperiod.get(period);
-				
+
 				periodlist.remove(delperiod);
-				
+
 				break;
 			}
 		}
@@ -385,8 +412,8 @@ public class Twenty4Threshold extends BasicController {
 			if (servicedef.getHostname().equals(params.get("hostname"))
 					&& servicedef.getServicename().equals(
 							params.get("servicename"))
-					&& servicedef.getServiceitemname().equals(
-							params.get("serviceitemname"))) {
+							&& servicedef.getServiceitemname().equals(
+									params.get("serviceitemname"))) {
 
 				XMLPeriod period = getPeriodByIndex(servicedef, Integer
 						.parseInt(params.get("periodindex")));
@@ -414,27 +441,27 @@ public class Twenty4Threshold extends BasicController {
 			if (servicedef.getHostname().equals(params.get("hostname"))
 					&& servicedef.getServicename().equals(
 							params.get("servicename"))
-					&& servicedef.getServiceitemname().equals(
-							params.get("serviceitemname"))) {
+							&& servicedef.getServiceitemname().equals(
+									params.get("serviceitemname"))) {
 
 				XMLPeriod period = getPeriodByIndex(servicedef, Integer
 						.parseInt(params.get("periodindex")));
 
-				
-				
+
+
 				if (validation.required(params.get("warning")).error != null) 
 					validation.addError("warningerror","validation.warningrequiered");
-				
+
 				if (validation.required(params.get("critical")).error != null) 
 					validation.addError("criticalerror","validation.criticalrequiered");
 
 				if (validation.match(params.get("warning"), "[0-9]+").error != null) 
 					validation.addError("warningerror","validation.criticalmatch");
-				
+
 				if (validation.match(params.get("critical"), "[0-9]+").error != null) 
 					validation.addError("criticalerror","validation.criticalmatch");
 
-				
+
 				if (validation.max(params.get("warning"), 100).error != null) 
 					validation.addError("warningerror","validation.warningmax");
 
@@ -479,8 +506,8 @@ public class Twenty4Threshold extends BasicController {
 			if (servicedef.getHostname().equals(params.get("hostname"))
 					&& servicedef.getServicename().equals(
 							params.get("servicename"))
-					&& servicedef.getServiceitemname().equals(
-							params.get("serviceitemname"))) {
+							&& servicedef.getServiceitemname().equals(
+									params.get("serviceitemname"))) {
 
 				XMLPeriod period = getPeriodByIndex(servicedef, Integer
 						.parseInt(params.get("periodindex")));
@@ -516,8 +543,8 @@ public class Twenty4Threshold extends BasicController {
 			if (servicedef.getHostname().equals(params.get("hostname"))
 					&& servicedef.getServicename().equals(
 							params.get("servicename"))
-					&& servicedef.getServiceitemname().equals(
-							params.get("serviceitemname"))) {
+							&& servicedef.getServiceitemname().equals(
+									params.get("serviceitemname"))) {
 
 				XMLPeriod period = getPeriodByIndex(servicedef, Integer
 						.parseInt(params.get("periodindex")));
@@ -550,8 +577,8 @@ public class Twenty4Threshold extends BasicController {
 			if (servicedef.getHostname().equals(params.get("hostname"))
 					&& servicedef.getServicename().equals(
 							params.get("servicename"))
-					&& servicedef.getServiceitemname().equals(
-							params.get("serviceitemname"))) {
+							&& servicedef.getServiceitemname().equals(
+									params.get("serviceitemname"))) {
 
 				XMLPeriod period = getPeriodByIndex(servicedef, Integer
 						.parseInt(params.get("periodindex")));
@@ -586,8 +613,8 @@ public class Twenty4Threshold extends BasicController {
 			if (servicedef.getHostname().equals(params.get("hostname"))
 					&& servicedef.getServicename().equals(
 							params.get("servicename"))
-					&& servicedef.getServiceitemname().equals(
-							params.get("serviceitemname"))) {
+							&& servicedef.getServiceitemname().equals(
+									params.get("serviceitemname"))) {
 
 				XMLPeriod period = getPeriodByIndex(servicedef, Integer
 						.parseInt(params.get("periodindex")));
@@ -797,8 +824,70 @@ public class Twenty4Threshold extends BasicController {
 		List<Integer> hourids = getAllConfiguredHourID();
 
 		int hourid = getNextValue(hourids);
+
+		XMLHours hour24 = new XMLHours();
+		hour24.setHoursID(hourid);
+		List<String> hourelements = hour24.getHour();
+
+		for (int i = 0; i < 24; i++) {
+			hourelements.add(i, "null");
+		}
+
+		XMLTwenty4Threshold config = getCache();
+
+		config.getHours().add(hour24);
+
+
 		editHour(hourid);
 	}
+
+	public static void newHourInterval() {
+		List<Integer> hourids = getAllConfiguredHourID();
+
+		int hourid = getNextValue(hourids);
+
+		XMLHours hours = new XMLHours();
+		hours.setHoursID(hourid);
+
+
+		XMLHourinterval hour = new XMLHourinterval();
+
+		hour.setFrom("");
+		hour.setTo("");
+		hour.setThreshold("");
+
+		hours.getHourinterval().add(hour);
+
+		XMLTwenty4Threshold config = getCache();
+
+		config.getHours().add(hours);
+
+
+
+		editHour(hourid);
+	}
+
+	public static void addHourInterval(int id) {
+
+		XMLTwenty4Threshold config = getCache();
+		XMLHourinterval hour = new XMLHourinterval();
+		for (XMLHours hours: config.getHours()) {
+			if(hours.getHoursID() == id) {
+
+
+				hour.setFrom("");
+				hour.setTo("");
+				hour.setThreshold("");
+
+				hours.getHourinterval().add(hour);
+
+				break;
+			}
+		}
+
+		editHour(id);
+	}
+
 
 	@SuppressWarnings("unused")
 	private static Integer getMaxValue(List<Integer> numbers) {
@@ -874,6 +963,130 @@ public class Twenty4Threshold extends BasicController {
 		editHour(Integer.parseInt(params.get("hourid")));
 	}
 
+
+	public static void saveHourInterval() {
+		XMLTwenty4Threshold config = getCache();
+		Iterator<XMLHours> hours = config.getHours().iterator();
+
+		// If an update
+		while (hours.hasNext()) {
+			XMLHours xmlhours = hours.next();
+
+			if (xmlhours.getHoursID() == Integer.parseInt(params.get("hourid"))) {
+				//Logger.info(params.get("hourid"));
+				XMLHourinterval found = null;
+				for (XMLHourinterval hourinterval:xmlhours.getHourinterval()) {
+					//Logger.info("OLD==> " + params.get("oldFrom") +" " +params.get("oldTo")+" " +params.get("oldThreshold"));
+					if (params.get("oldFrom").equals(hourinterval.getFrom()) &&
+							params.get("oldTo").equals(hourinterval.getTo()) &&
+							params.get("oldThreshold").equals(hourinterval.getThreshold())) {
+
+						// Check data
+						if (params.get("Threshold").length()<1) {
+							validation.addError("threshold", "validation.thresholdlen");
+						}
+						
+						checkHour(params.get("From"),"from");
+						checkHour(params.get("To"),"to");
+						checkFromTo(params.get("From"),"from",params.get("To"),"to");
+						
+						if (validation.hasErrors()) {
+							// Used to identify the period that had the error
+							validation.keep();
+							params.flash();
+							editHourInterval(Integer.parseInt(params.get("hourid")), hourinterval);
+						}
+
+
+						found = hourinterval;
+						break;
+					}
+				}
+
+
+
+				if (found != null) {
+					//Logger.info("NEW==> " + params.get("From") +" " +params.get("To")+" " +params.get("Threshold"));
+
+					found.setFrom(params.get("From"));
+					found.setTo(params.get("To"));
+					found.setThreshold(params.get("Threshold"));
+
+					flash.success(Messages.get("SaveHourSuccess"));
+
+				}
+				editHour(Integer.parseInt(params.get("hourid")));
+			}
+		}
+
+		// If hour id is new
+
+		List<XMLHours> hourlist = config.getHours();
+		XMLHours hour24 = new XMLHours();
+		hour24.setHoursID(Integer.parseInt(params.get("hourid")));
+
+		for (int i = 0; i < 24; i++) {
+
+			if (i < 10) {
+				hour24.getHour().add(i, params.get("0" + i));
+			} else {
+				hour24.getHour().add(i, params.get("" + i));
+			}
+		}
+
+		hourlist.add(hour24);
+		flash.success(Messages.get("SaveHourSuccess"));
+
+		editHour(Integer.parseInt(params.get("hourid")));
+	}
+
+	private static void checkFromTo(String from, String fromtag, String to, String totag) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm"); //HH = 24h format
+		dateFormat.setLenient(false); //this will not enable 25:67 for example
+		Date datefrom = null;
+		try {
+			datefrom = dateFormat.parse(from);
+		} catch (ParseException e) {
+			validation.addError(fromtag, "validation.notacorrecttime");
+		}
+		Date dateto = null;
+		try {
+			dateto = dateFormat.parse(to);
+		} catch (ParseException e) {
+			validation.addError(totag, "validation.notacorrecttime");
+		}
+		
+		if (datefrom != null && dateto != null) {
+			
+			if(dateto.getTime() < datefrom.getTime()) {
+				validation.addError(totag, "validation.tolowerthenfrom");
+			}
+		}
+	}
+
+	
+	private static void checkHour(String hourminute,String tag) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm"); //HH = 24h format
+		dateFormat.setLenient(false); //this will not enable 25:67 for example
+		Date date = null;
+		try {
+			date = dateFormat.parse(hourminute);
+		} catch (ParseException e) {
+			validation.addError(tag, "validation.notacorrecttime");
+		}
+		
+		if (date != null) {
+			Calendar cal = Calendar.getInstance();
+
+			cal.setTime(date);
+			if (cal.get(Calendar.MINUTE) != 0) {
+				validation.addError(tag, "validation.notzerominute");
+			}
+		}
+	}
+
+	
+	/*
 	public static void editHour(int id) {
 		XMLTwenty4Threshold config = getCache();
 
@@ -903,6 +1116,48 @@ public class Twenty4Threshold extends BasicController {
 
 		render(hour24, hour2def);
 	}
+	 */
+
+	public static void editHour(int id) {
+		XMLTwenty4Threshold config = getCache();
+		//Logger.info("------> " + id);
+		Map<Integer, Set<XMLServicedef>> hourrel = getHourRealtions();
+		List<XMLServicedef> hour2def = null;
+		if (hourrel.get(id) != null) {
+			hour2def = new ArrayList<XMLServicedef>(hourrel.get(id));
+		}
+
+		Iterator<XMLHours> hours = config.getHours().iterator();
+		while (hours.hasNext()) {
+			XMLHours hour24 = hours.next();
+
+			if (hour24.getHoursID() == id) {
+				//Logger.info("-1-----> " + hour24.getHoursID());
+				HourFormats hourdef = new HourFormats(hour24);
+				//Logger.info("-2-----> " + hour24.getHoursID());
+				render(hourdef, hour2def);
+			}
+		}
+		//Logger.info("------> end");
+		/*
+		// Do not exists
+		XMLHours hour24 = new XMLHours();
+		hour24.setHoursID(id);
+		List<String> hourelements = hour24.getHour();
+
+		for (int i = 0; i < 24; i++) {
+			hourelements.add(i, "null");
+		}
+
+		render(hour24, hour2def);
+		 */
+	}
+
+
+	public static void editHourInterval(int id, XMLHourinterval hourinterval) {
+		render(id,hourinterval);
+	}
+
 
 	public static void deleteHour(int id) {
 		XMLTwenty4Threshold config = getCache();
@@ -916,10 +1171,43 @@ public class Twenty4Threshold extends BasicController {
 
 			if (hour24.getHoursID() == id && hourrel.get(id).size() == 0) {
 				config.getHours().remove(hour24);
+				flash.success(Messages.get("DeleteHourSuccess"));
 				break;
 			}
 		}
-		flash.success(Messages.get("DeleteHourSuccess"));
+
 		listHours();
+	}
+
+
+	public static void deleteHourInterval(int id, XMLHourinterval hourinterval) {
+		XMLTwenty4Threshold config = getCache();
+
+		Map<Integer, Set<XMLServicedef>> hourrel = getHourRealtions();
+
+		Iterator<XMLHours> hours = config.getHours().iterator();
+
+		while (hours.hasNext()) {
+			XMLHours hour24 = hours.next();
+
+			if (hour24.getHoursID() == id ) {
+
+				for (XMLHourinterval hourint: hour24.getHourinterval()) {
+
+					if (hourint.getFrom().equals(hourinterval.getFrom()) &&
+							hourint.getTo().equals(hourinterval.getTo()) &&
+							hourint.getThreshold().equals(hourinterval.getThreshold())) {
+
+
+						hour24.getHourinterval().remove(hourint);
+						flash.success(Messages.get("DeleteHourSuccess"));
+
+						break;
+					}
+				}
+			}
+		}
+
+		editHour(id);
 	}
 }
