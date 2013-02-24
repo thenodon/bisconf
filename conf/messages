@@ -27,6 +27,10 @@ validation.criticalmin=Min 0
 
 validation.cronstar=Not more then one field of these can have *, change one to ?
 validation.cronquestion=Not more then one field of these can have ?, change one to * 
+validation.thresholdlen=Threshold can not be empty
+validation.notacorrecttime=Time must be between 00:00 and 23:00
+validation.notzerominute=Minutes must be 00
+
 About=About
 Action=Action
 Add=Add
@@ -90,7 +94,7 @@ EditServiceItem=Edit service item
 EditUser=Edit user
 Email=Email
 Error=Error
-ForMoreVisit=For more information about bischeck visit
+ForMoreVisit=For more information about bisconf and bischeck visit
 Friday=Friday
 Hash=Hash
 Holidays=Holidays
