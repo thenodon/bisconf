@@ -18,6 +18,7 @@ import com.ingby.socbox.bischeck.ConfigXMLInf;
 import com.ingby.socbox.bischeck.ConfigurationManager;
 import com.ingby.socbox.bischeck.Host;
 import com.ingby.socbox.bischeck.ConfigXMLInf.XMLCONFIG;
+import com.ingby.socbox.bischeck.ObjectDefinitions;
 import com.ingby.socbox.bischeck.service.Service;
 import com.ingby.socbox.bischeck.xsd.bischeck.XMLBischeck;
 import com.ingby.socbox.bischeck.xsd.bischeck.XMLHost;
@@ -33,9 +34,6 @@ import models.*;
 @With(Secure.class)
 public class Bischeck extends BasicController {
 	
-	
-	private static final String VALIDNAMEREGEX = "[a-zA-Z0-9]+";
-
 
 	public static XMLBischeck getCache(){
 		XMLBischeck config = (XMLBischeck) SessionData.getXMLConfig(ConfigXMLInf.XMLCONFIG.BISCHECK,XMLBischeck.class);
@@ -127,7 +125,7 @@ public class Bischeck extends BasicController {
 			if (host.getName().equals(params.get("oldname"))) {
 				String name = params.get("name");
 				validation.required(name);
-				validation.match(name,VALIDNAMEREGEX);
+				validation.match(name, ObjectDefinitions.VALID_HOSTNAME_REGEXP);
 				if (validation.hasErrors()) {
 					// Used to identify the period that had the error
 					validation.keep();
@@ -150,7 +148,7 @@ public class Bischeck extends BasicController {
 		// Must be a new host - send it to add service
 		String name = params.get("name");
 		validation.required(name);
-		validation.match(name,VALIDNAMEREGEX);
+		validation.match(name,ObjectDefinitions.VALID_HOSTNAME_REGEXP);
 		if (validation.hasErrors()) {
 			// Used to identify the period that had the error
 			validation.keep();
@@ -267,7 +265,7 @@ public class Bischeck extends BasicController {
 						validation.required(name);
 						validation.required(url);
 						
-						validation.match(name,VALIDNAMEREGEX);
+						validation.match(name, ObjectDefinitions.VALID_SERVICE_REGEXP);
 						if (validation.hasErrors()) {
 							// Used to identify the period that had the error
 							validation.keep();
@@ -297,7 +295,7 @@ public class Bischeck extends BasicController {
 		// Must be a new service - send it to add serviceitem
 		String name = params.get("name");
 		validation.required(name);
-		validation.match(name,VALIDNAMEREGEX);
+		validation.match(name,ObjectDefinitions.VALID_SERVICE_REGEXP);
 		if (validation.hasErrors()) {
 			// Used to identify the period that had the error
 			validation.keep();
@@ -719,7 +717,7 @@ public class Bischeck extends BasicController {
 							if (serviceitem.getName().equals(params.get("oldname"))) {
 								String name = params.get("name");
 								validation.required(name);
-								validation.match(name,VALIDNAMEREGEX);
+								validation.match(name,ObjectDefinitions.VALID_SERVICEITEM_REGEXP);
 								if (validation.hasErrors()) {
 									// Used to identify the period that had the error
 									validation.keep();
@@ -747,7 +745,7 @@ public class Bischeck extends BasicController {
 		// Must be a new serviceitem
 		String name = params.get("name");
 		validation.required(name);
-		validation.match(name,VALIDNAMEREGEX);
+		validation.match(name,ObjectDefinitions.VALID_SERVICEITEM_REGEXP);
 		if (validation.hasErrors()) {
 			// Used to identify the period that had the error
 			validation.keep();
