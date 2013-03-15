@@ -1,5 +1,9 @@
 package controllers;
 
+import java.io.File;
+
+import models.User;
+
 import play.Logger;
 import play.cache.Cache;
 import play.classloading.enhancers.ControllersEnhancer.ByPass;
@@ -46,7 +50,9 @@ public class SessionData extends BasicController {
 		SessionData.resetXMLConfig(ConfigXMLInf.XMLCONFIG.TWENTY4HOURTHRESHOLD,XMLTwenty4Threshold.class);
 		SessionData.resetXMLConfig(ConfigXMLInf.XMLCONFIG.URL2SERVICES,XMLUrlservices.class);
 		SessionData.resetXMLConfig(ConfigXMLInf.XMLCONFIG.SERVERS,XMLServers.class);
-		
+		session.put("versionId", Version.getCurrentVersionId());
+		session.put("lastVersionId", Cache.get("lastVersionId"));
+		session.put("lastUserId", Cache.get("lastUserId"));
 	}
 	
 	@ByPass
@@ -56,7 +62,9 @@ public class SessionData extends BasicController {
 		SessionData.resetXMLConfig(ConfigXMLInf.XMLCONFIG.TWENTY4HOURTHRESHOLD,XMLTwenty4Threshold.class,repospath);
 		SessionData.resetXMLConfig(ConfigXMLInf.XMLCONFIG.URL2SERVICES,XMLUrlservices.class,repospath);
 		SessionData.resetXMLConfig(ConfigXMLInf.XMLCONFIG.SERVERS,XMLServers.class,repospath);
-		
+		session.put("versionId", repospath.substring(repospath.lastIndexOf(File.separator)+1));
+		session.put("lastVersionId", Cache.get("lastVersionId"));
+		session.put("lastUserId", Cache.get("lastUserId"));
 	}
 	
 	@ByPass
@@ -67,7 +75,23 @@ public class SessionData extends BasicController {
 		SessionData.saveXMLConfig(ConfigXMLInf.XMLCONFIG.URL2SERVICES,repospath);
 		SessionData.saveXMLConfig(ConfigXMLInf.XMLCONFIG.SERVERS,repospath);
 		
-		//ValidateConfiguration.verifyByDirectory(repospath);
+		String newRepos = repospath.substring(repospath.lastIndexOf(File.separator)+1);
+		
+		session.put("versionId", newRepos);
+		session.put("lastVersionId", newRepos);
+		
+		String theUser = Version.getUserByDirectory(repospath);
+		session.put("lastUserId", theUser);
+		
+		Cache.delete("lastVersionId");
+		Cache.delete("lastUserId");
+		Cache.set("lastVersionId", newRepos);
+		Cache.set("lastUserId", theUser);
+		
+		Logger.debug("Save - Session - versionId " + session.get("versionId"));
+		Logger.debug("Save - session - lastVersionId " + session.get("lastVersionId"));
+		Logger.debug("Save - Cache - lastVersionId" + Cache.get("lastVersionId"));
+	
 	}
 	
 	

@@ -11,6 +11,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import play.Logger;
+import play.cache.Cache;
 import play.classloading.enhancers.ControllersEnhancer.ByPass;
 import play.jobs.*;
 
@@ -23,7 +24,9 @@ public class Bootstrap extends Job {
 	public void doJob() {
 		
 		bisconfversion = readBisconfVersion();
-		jmxproperties = readJMXProperties();	
+		jmxproperties = readJMXProperties();
+		Cache.set("lastVersionId",Version.getCurrentVersionId());
+		Logger.debug("Inital running config version is " + Version.getCurrentVersionId());
     }
 
 	    

@@ -38,26 +38,31 @@
     <ul>
     <li>
         <a href="@{Application.index()}">&{'Home'}</a>
-    </li><li>
+    </li>
+    <li>
         <a href="@{Application.resetAll()}">&{'ResetAll'}</a>
-    </li><li>
+    </li>
+    <li>
         <a href="@{Application.about()}">&{'About'}</a>
     </li>
-    
-        #{if user.isAdmin}
-        <li>
-            <a href="${play.configuration['http.path']}/admin">&{'Admin'}</a>
-        </li>
-        #{/if}
+    #{if user.isAdmin}
+    <li>
+        <a href="${play.configuration['http.path']}/admin">&{'Admin'}</a>
+    </li>
+    #{/if}
     <li>
         Welcome <a href="@{Application.editUser()}">${user.username}!</a> 
     </li>
-    </li>
+    <li>
         <a href="@{Secure.logout()}">&{'Logout'}</a>
     </li>
-    
-    #{if flash.success}  
+    <!--
     <li>
+        ${session.versionId}
+    </li>
+    -->
+    #{if flash.success}  
+    <li>       
         <strong>${flash.success}</strong>
     </li>
     #{/if}
@@ -67,6 +72,12 @@
         
         <span class="error"><strong>${flash.error}</strong></span>
         
+    </li>
+    
+    #{/if}
+    <li>
+    #{if newVersion }
+        <span class="error"><strong>&{'NewVersionExistCreatedBy'} ${newVersionUser}</strong></span>
     </li>
     #{/if}
     

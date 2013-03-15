@@ -87,7 +87,7 @@ public class Version extends BasicController{
 				jmxconnmgmt.close();
 		}
 
-		Logger.error("bishome - " + bisprop.get("bishome"));
+		Logger.debug("bishome - " + bisprop.get("bishome"));
 
 
 		if (bisprop.get("bishome")!= null) {
@@ -110,7 +110,7 @@ public class Version extends BasicController{
 
 		File configDir = new File(path+File.separator+xmldir);
 		if (configDir.isDirectory() && configDir.canRead()) { 
-			Logger.info("Config directory is " + configDir.getAbsolutePath());
+			Logger.debug("Config directory is " + configDir.getAbsolutePath());
 			return configDir;    
 		}
 		else {
@@ -225,6 +225,13 @@ public class Version extends BasicController{
 	}
 
 
+	public static String getUserByDirectory(String repospath) {
+		ConfigMeta metaconf = readMeta(new File(repospath));
+		
+		return  metaconf.username;
+	}
+	
+	
 	private static boolean checkIfOwner(String repospath) {
 		ConfigMeta metaconf = readMeta(new File(repospath));
 		String username = session.get("username");
@@ -317,7 +324,13 @@ public class Version extends BasicController{
 		}
 	}
 
-
+	
+	public static String getCurrentVersionId() {
+		File current = new File(reposPath().getAbsolutePath()+File.separator + getCurrentVersion());
+		ConfigMeta metadata = readMeta(current);
+		return metadata.directory; 
+	}
+	
 	public static void deploy(String reposdir) {
 
 		String username =  session.get("username");
@@ -485,13 +498,13 @@ public class Version extends BasicController{
 		meta.directory = ""+stamp;
 
 		writeAndCreateMeta(metadir, meta);
-
+/*
 		Bischeck.getCache();
 		controllers.Properties.getCache();
 		Twenty4Threshold.getCache();
 		UrlProperties.getCache();
 		Servers.getCache();
-
+*/
 		try {
 			SessionData.saveXMLConfigAll(metadir.getPath());
 			flash.success(Messages.get("SaveVersionSuccess"));
@@ -755,7 +768,7 @@ public class Version extends BasicController{
 
 		ExecuteMBean mbeanProxy = JMX.newMBeanProxy(mbsc, mbeanName, 
 				ExecuteMBean.class, true);
-		if (mbeanProxy.getReloadTime() == null)
+		if (mbeanProxy.getReloadTime()  == null)
 			bisprop.put("reloadtime","NA");
 		else
 			bisprop.put("reloadtime",(new Date(mbeanProxy.getReloadTime()).toString()));
@@ -770,4 +783,7 @@ public class Version extends BasicController{
 		bisprop.put("bischeckversion",mbeanProxy.getBischeckVersion());
 
 	}
+
+
+	
 }
