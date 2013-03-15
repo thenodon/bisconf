@@ -125,6 +125,7 @@ Monday=Monday
 Month=Month
 NewDay=Add day
 NewSchedule=Add schedule
+NewVersionExistCreatedBy=New version created by
 None=None
 Password=Password
 PasswordDoNotMatch=Password do not match
