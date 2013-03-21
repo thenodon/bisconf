@@ -168,9 +168,9 @@ username is admin with a default password of admin. The admin user can create
 additional users through the web interface. A user can be assigned  3 types of 
 roles. The default role that every user has is the permission to add, update, 
 delete and save configuration. The second role isDeploy that enable a user to 
-deploy a configuration version to Bischeck. The third role isAdmin that rant 
-the user the right to manage users and to start, stop and restart the Bischeck 
-process.   
+deploy a configuration version to Bischeck. The third role isAdmin that grant 
+the user the right configure Bischeck properties and server integration  to 
+manage users and to start, stop and restart the Bischeck process.  
 
 
 Releases
