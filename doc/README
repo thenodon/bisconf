@@ -67,6 +67,22 @@ This will present the installation options. Sudo is required since init scripts
 are installed in /etc/init.d.
 
 
+Bischeck JMX integration
+========================
+Bisconf communicate with the Bischeck daemon over JMX using the RMI protocol. 
+This means that Bischeck must have been installed with the option that define 
+hostname or IP and a RMI port. If the installation was done without these 
+options it can simply be altered by editing the bischeck script in the Bischeck 
+installation bin directory. For more information please read the Bischeck 
+documentation.
+
+To configure the Bischeck JMX service for Bisconf please edit the file jmx.xml 
+located in the etc directory of the Bisconf installation. Default hostname is 
+localhost and port is 3333.
+
+Currently Bisconf and Bischeck must run on the same server.
+
+
 Running bisconf from eclipse
 ============================
 The following steps must be done to run Bisconf from eclipse.
@@ -143,6 +159,18 @@ nagios ALL= NOPASSWD: /etc/init.d/bisconfd start
 nagios ALL= NOPASSWD: /etc/init.d/bisconfd stop
 
 nagios ALL= NOPASSWD: /etc/init.d/bisconfd pidstatus
+
+
+User management
+===============
+When Bisconf is installed a administration user is automatically created. The 
+username is admin with a default password of admin. The admin user can create 
+additional users through the web interface. A user can be assigned  3 types of 
+roles. The default role that every user has is the permission to add, update, 
+delete and save configuration. The second role isDeploy that enable a user to 
+deploy a configuration version to Bischeck. The third role isAdmin that rant 
+the user the right to manage users and to start, stop and restart the Bischeck 
+process.   
 
 
 Releases
