@@ -21,10 +21,13 @@ public class Bootstrap extends Job {
 	private static String bisconfversion = null;
 	private static Properties jmxproperties = null;
     
+	
 	public void doJob() {
 		
 		bisconfversion = readBisconfVersion();
 		jmxproperties = readJMXProperties();
+		// Check if a repo needs to be created
+		Version.initRepos("admin");
 		Cache.set("lastVersionId",Version.getCurrentVersionId());
 		Logger.debug("Inital running config version is " + Version.getCurrentVersionId());
     }

@@ -148,7 +148,7 @@ public class Version extends BasicController{
 
 		File[] files = null;
 
-		initRepos("admin");
+		//initRepos("admin");
 
 		try {
 			files = reposPath().listFiles();
@@ -486,7 +486,7 @@ public class Version extends BasicController{
 	 */
 	public static void save(String username) {
 
-		initRepos("admin");
+		//initRepos("admin");
 
 		Long stamp = System.currentTimeMillis();
 
@@ -518,7 +518,7 @@ public class Version extends BasicController{
 		list();
 	}
 
-	private static void initRepos(String username) {
+	protected static void initRepos(String username) {
 		File[] files = null;
 		try {
 			files = reposPath().listFiles();
