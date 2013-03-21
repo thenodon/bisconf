@@ -6,4 +6,5 @@
 <entry key="OpenTSDBServer">OpenTSDB connection</entry>
 <entry key="NRDPServer">NRDP connection</entry>
 <entry key="GraphiteServer">Graphite connection</entry>
+<entry key="LiveStatusServer</entry>
 </properties>
