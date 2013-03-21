@@ -733,6 +733,50 @@ table.hour td
     
 
 }
+
+
+.edithourinterval form {
+
+    font-family: verdana,arial,sans-serif;
+    font-size: 14px;
+    //
+    margin: 30px;
+    padding: 20px;
+    background: #9ba6b3;
+    //background: -webkit-gradient(linear, left top, left 60%, from(#9ba6b3), to(#9ba6b3));
+    border-bottom-right-radius:10px;
+    border-bottom-left-radius:10px;
+}
+
+.edithourinterval br{
+    //clear: left;
+    margin: 3px;
+}
+
+
+.edithourinterval  form input, form textarea, form select {
+    //font-family: verdana,arial,sans-serif;
+    font-size: 14px;
+    width: 700px;
+
+    color: #781351;
+    background: #fee3ad;
+    border: 1px solid #781351
+    margin: 1px 0 0 0;
+}
+
+.edithourinterval form .submitbutton {
+    
+    margin-left: 30px;
+    width: 60px;
+    color: #000;
+    background: #669900;
+    border: 2px outset #d7b9c9
+    
+
+}
+
+
 #passwordMatch {
     margin-left: 70px;
 }
