@@ -163,13 +163,13 @@ through the web ui /etc/sudoers needs to be configured in the following way:
 
 Defaults:username !requiretty
 
-nagios ALL= NOPASSWD: /etc/init.d/bisconfd restart
+nagios ALL= NOPASSWD: /etc/init.d/bischeckd restart
 
-nagios ALL= NOPASSWD: /etc/init.d/bisconfd start
+nagios ALL= NOPASSWD: /etc/init.d/bischeckd start
 
-nagios ALL= NOPASSWD: /etc/init.d/bisconfd stop
+nagios ALL= NOPASSWD: /etc/init.d/bischeckd stop
 
-nagios ALL= NOPASSWD: /etc/init.d/bisconfd pidstatus
+nagios ALL= NOPASSWD: /etc/init.d/bischeckd pidstatus
 
 
 User management
