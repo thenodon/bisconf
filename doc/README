@@ -85,19 +85,30 @@ Currently Bisconf and Bischeck must run on the same server.
 
 Running bisconf from eclipse
 ============================
+
 The following steps must be done to run Bisconf from eclipse.
 
-1 - Add Bischeck 0.4.3 target/classes and target/resources to the build path. 
-Make sure to run ant dist in bischeck directory first.
+1 - Check out the source as described above.
 
-2 - Add system properties in the eclipse "Run configurations"->"Arguments" in 
-the field "VM arguments",
+2 - Add the bischeck classes or the bischeck-0.4.3.jar and quartz-2.1.5.jar to 
+the eclipse build path.
+
+3 - Run from the command line
+
+$ play dependencies
+
+$ play eclipsify
+
+4 - Add system properties in the eclipse "Run configurations"->"Arguments" in 
+the field "VM arguments" and set them according to your environment:
 
 -Dbishome=
 
 -Dbisconfhome=
 
+
 Start bisconf
+=============
 
 Simply start Bisconf by
 
