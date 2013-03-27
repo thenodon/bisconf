@@ -126,6 +126,7 @@
                                     ${week.week}
                                 </td>
                                 <td>
+                                 #{if week.dayofweek}
                                     #{if week.dayofweek-1 == 0}
                                         &{'Sunday'}
                                     #{/if}
@@ -147,6 +148,7 @@
                                     #{if week.dayofweek-1 == 6}
                                         &{'Saturday'}
                                     #{/if}
+                                  #{/if}
                                 </td>
                                 <td> 
                                 <a href="@{deletePeriodWeek(servicedef.hostname,servicedef.servicename,servicedef.serviceitemname,period,week.week,week.dayofweek)}">&{'Delete'}</a>
