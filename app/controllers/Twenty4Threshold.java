@@ -281,9 +281,8 @@ public class Twenty4Threshold extends BasicController {
 		Iterator<XMLPeriod> perioditer = periodlist.iterator();
 		//System.out.println("crete - periodlist:" + periodlist.size());
 		Map<Integer, XMLPeriod> hashperiod = new HashMap<Integer, XMLPeriod>();
-		int count = 0;
+		
 		while (perioditer.hasNext()) {
-			count++;
 			XMLPeriod period = perioditer.next();
 			hashperiod.put(period.hashCode(), period);
 			//System.out.println("HASHcode: " + period.hashCode() + "Period obj: " + period.toString());
