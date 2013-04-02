@@ -1,25 +1,22 @@
-#{extends 'main.html' /}
-#{set title:'Edit Url property' /}
+#{extends 'main.html' /} #{set title:'Edit Url property' /}
 
-<h1>
-&{'EditProperties'}
-</h1>
-<div class="downlink">
-<ul>
-<li>
-<a href="@{UrlProperties.list()}">&{'ListUrlProperties'}</a>
-</li>
-<ul>
+<h3>&{'EditProperties'}</h3>
+
+<div class="navbar">
+	<div class="navbar-inner">
+		<ul class="nav">
+			<li><a href="@{UrlProperties.list()}"><i class="icon-list icon-white"></i> &{'ListUrlProperties'}</a>
+			</li>
+		<ul>
+	</div>
 </div>
 
-<div class="saveedit">
+<div class="form-inline">
 #{form @UrlProperties.save()}
-    
     <label for="value">${key}</label> 
-    <input id="value" type="text" name="value" value="${value}" />
-    <br />
-    <input type="hidden" name="key" value="${key}" />
-    <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" />
+    <input id="value" type="text" name="value" value="${value}" /> 
+    <input type="hidden" name="key" value="${key}" /> 
+    <input onClick="saved()" class="btn" type="submit" value="&{'Save'}" /> 
     
 #{/form}
 </div>
