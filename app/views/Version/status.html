@@ -1,69 +1,55 @@
-#{extends 'main.html' /}
-#{set title: 'Bischeck status' /}
+#{extends 'main.html' /} #{set title: 'Bischeck status' /}
 
-<h1>
-Information of process bischeck 
-</h1>
+<h3>Information of process bischeck</h3>
 
-
-<div class="downlink">
-<ul>
-#{if user.isAdmin }
-<li>
- <a href="@{restartBischeckd()}">&{'Restart'}</a>
-</li>
-<li>
- <a href="@{startBischeckd()}">&{'Start'}</a>
-</li>
-<li>
- <a href="@{stopBischeckd()}">&{'Stop'}</a>
-</li>
-#{/if}
-#{else}
-<li>
-  &nbsp;
-</li>
-#{/else}
-<ul>
+<div class="navbar">
+	<div class="navbar-inner">
+		<ul class="nav">
+			#{if user.isAdmin }
+			<li><a href="@{restartBischeckd()}"><i class="icon-refresh icon-white"></i> &{'Restart'}</a></li>
+			<li><a href="@{startBischeckd()}"><i class="icon-play icon-white"></i> &{'Start'}</a></li>
+			<li><a href="@{stopBischeckd()}"><i class="icon-stop icon-white"></i> &{'Stop'}</a></li> #{/if} #{else}
+			<li>&nbsp;</li> #{/else}
+			<ul>
+	</div>
 </div>
 
-#{if bisprop.get('bischeckversion') == "0.3.3"}
-<table class="listtable">
-  <tr>
-    <td>&{'BischeckVersion'}</td><td>${bisprop.get('bischeckversion')}</td>
-  </tr>
-  <tr>
-    <td>&{'BischeckPid'}</td><td>${bisprop.get('pid')}</td>
-  </tr>
-  <tr>
-    <td>&{'BischeckUptime'}</td><td>${bisprop.get('uptime')}</td>
-  </tr>
-</table>
-#{/if}
-#{else}
-<table class="listtable">
-  <tr>
-    <td>&{'BischeckVersion'}</td><td>${bisprop.get('bischeckversion')}</td>
-  </tr>
-  <tr>
-    <td>&{'BischeckPid'}</td><td>${bisprop.get('pid')}</td>
-  </tr>
-  <tr>
-    <td>&{'BischeckHome'}</td><td>${bisprop.get('bishome')}</td>
-  </tr>
-  <tr>
-    <td>&{'BischeckConfigDir'}</td><td>${bisprop.get('xmlconfigdir')}</td>
-  </tr>
-  
-  <tr>
-    <td>&{'BischeckUptime'}</td><td>${bisprop.get('uptime')}</td>
-  </tr>
-  <tr>
-    <td>&{'BischeckReloadTime'}</td><td>${bisprop.get('reloadtime')}</td>
-  </tr>
-  <tr>
-    <td>&{'BischeckReloadCount'}</td><td>${bisprop.get('reloadcount')}</td>
-  </tr>
-</table>  
-#{/else}
+<table class="table">
 
+	<thead>
+		<tr>
+			<th style="width: 20%"></th>
+			<th style="width: 80%"></th>
+		</tr>
+	</thead>
+
+	<tr>
+		<td><strong>&{'BischeckVersion'}</strong></td>
+		<td>${bisprop.get('bischeckversion')}</td>
+	</tr>
+	<tr>
+		<td><strong>&{'BischeckPid'}</strong></td>
+		<td>${bisprop.get('pid')}</td>
+	</tr>
+	<tr>
+		<td><strong>&{'BischeckHome'}</strong></td>
+		<td>${bisprop.get('bishome')}</td>
+	</tr>
+	<tr>
+		<td><strong>&{'BischeckConfigDir'}</strong></td>
+		<td>${bisprop.get('xmlconfigdir')}</td>
+	</tr>
+
+	<tr>
+		<td><strong>&{'BischeckUptime'}</strong></td>
+		<td>${bisprop.get('uptime')}</td>
+	</tr>
+	<tr>
+		<td><strong>&{'BischeckReloadTime'}</strong></td>
+		<td>${bisprop.get('reloadtime')}</td>
+	</tr>
+	<tr>
+		<td><strong>&{'BischeckReloadCount'}</strong></td>
+		<td>${bisprop.get('reloadcount')}</td>
+	</tr>
+</table>

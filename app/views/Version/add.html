@@ -1,27 +1,31 @@
 #{extends 'main.html' /}
 #{set title:'Add version' /}
-<h1>
+<h3>
 &{'AddVersion'}
-</h1>
+</h3>
 
-<div class="downlink">
-<ul>
-<li>
- &nbsp;
-</li>
-<ul>
+<div class="navbar">
+    <div class="navbar-inner">
+        <ul class="nav"> 
+            <li>&nbsp;</li>
+        <ul>
+    </div>
 </div>
 
-<div class="saveedit">
+<div class="form-horizontal">
 #{form @Version.save()}
+    <div class="control-group">
+        <label class="control-label" for="comment">&{'Comment'}</label>
+        <div class="controls">
+            <textarea id="comment" name="comment"></textarea>
+        </div>
+    </div>
     
-    <label for="comment">&{'Comment'}</label>
-    <textarea id="comment" name="comment"></textarea>
-    <br />
-    
-    <input type="hidden" name="username" value="${username}">
-    
-    <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" /><br />
-
+    <div class="control-group">
+        <div class="controls">
+            <input type="hidden" name="username" value="${username}">
+            <input onClick="saved()" class="btn" type="submit" value="&{'Save'}" />
+        </div>
+    </div>
 #{/form}
-
+</div>

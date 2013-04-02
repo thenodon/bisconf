@@ -1,41 +1,42 @@
 #{extends 'main.html' /}
 #{set title: 'List versions' /}
-<h1>
-&{'ListVersions'}
-</h1>
+<h3>&{'ListVersions'}</h3>
 
 #{if !started}
-<h2>
-&{'BischeckNotStarted'}
-</h2>    
+<h4>&{'BischeckNotStarted'}</h4>
 #{/if}
-<div class="downlink">
-<ul>
-<li>
- &nbsp;
-</li>
-<ul>
+
+<div class="navbar">
+    <div class="navbar-inner">
+        <ul class="nav"> 
+            <li> &nbsp;</li>    
+        <ul>
+    </div>
 </div>
 #{if versions}
-    <table class="listtable">
+    <table class="table">
         <thead>
             <tr>
-                <th>&{'Date'}</th>
-                <th>&{'Username'}</th>
-                <th>&{'Comment'}</th>
-                <th>&{'CurrentVersion'}</th>
-                
-                <th>&{'Action'}</th>
+                <th style="width: 5%" >&{'Active'}</th>
+                <th style="width: 15%">&{'Date'}</th>
+                <th style="width: 10%">&{'Username'}</th>
+                <th style="width: 45%" >&{'Comment'}</th>
+                <th style="width: 15%">&{'Action'}</th>
             </tr>
         </thead>
         <tbody>
             #{list versions, as:'version'}
                 <tr>
+                    <td>
+                        <center>
+                        #{if version.current == true}
+                        <i class=" icon-play-circle"></i>
+                        #{/if}
+                        </center>
+                    </td>
                     <td>${version.created}</td>
                     <td>${version.username}</td>
                     <td>${version.comment}</td>
-                    <td>${version.current}</td>
-                    
                     <td>
                         <a href="@{select(version.directory)}">&{'Select'}</a>
                         
