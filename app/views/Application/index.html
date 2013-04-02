@@ -1,42 +1,4 @@
 #{extends 'main.html' /}
 #{set title:'Home' /}
 
-<div class="indexlist">
-<ul>
-    <li>
-        <a href="@{Bischeck.listhosts()}">&{'ListHosts'}</a>
-    </li>
-    
-    #{if user.isAdmin}
-    <li>
-        <a href="@{Properties.list()}">&{'ListProperties'}</a>
-    </li>
-    #{/if}
-    <li>
-        <a href="@{Thresholds.index()}">&{'ThresholdMgmt'}</a>
-    </li>
-
-    #{if user.isAdmin}
-    #{ifnot bischeckversion == "0.3.3"} 
-        <li>
-            <a href="@{Servers.list()}">&{'ListServers'}</a>
-        </li>
-    #{/ifnot}
-    #{/if}
-    
-    #{if user.isAdmin}
-    <li>
-        <a href="@{UrlProperties.list()}">&{'ListUrlProperties'}</a>
-    </li>
-    #{/if}
-    <li>
-        <a href="@{Version.list()}">&{'ListVersions'}</a>
-    </li>    
-    <li>
-        <a href="@{Version.add(user.username)}">&{'SaveAllConfig'}</a>
-    </li>
-    <li>
-        <a href="@{Version.status()}">&{'BischeckStatus'}</a>
-    </li>
-</ul>
-<div>
+Welcome to bisconf

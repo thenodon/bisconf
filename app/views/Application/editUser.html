@@ -5,45 +5,63 @@
 
 
 
-<h1>
+<h3>
 &{'EditUser'}    
-</h1>
+</h3>
    
-<h2>
+<h4>
 ${user.username} 
-</h2>
-<p>
-&{'CurrentRights'}: &{'IsDeploy'}:(${user.isDeploy}) &{'IsAdmin'}:(${user.isAdmin}) 
-</p>
+</h4>
 
-<div class="downlink">
-<ul>
-<li>
-<a href="@{index()}">&{'Home'}</a>
-</li>
-</ul>
-</div>
+<dl class="dl-horizontal">
+	<dt><u>&{'Grants'}</u></dt>
+    <dd><u>${'Enabled'}</u></dd>
+	<dt>&{'IsDeploy'}</dt>
+	<dd>${user.isDeploy}</dd>
+	<dt>&{'IsAdmin'}</dt>
+	<dd>${user.isAdmin}</dd>
+</dl>
 
-<div class="saveedit">
-#{form @Application.saveUser(), NAME:"password_form" }
+<div class="form-horizontal">
+    #{form @Application.saveUser(), NAME:"password_form" }
+
+
+    <div class="control-group">
+        <label class="control-label" for="email">&{'Email'}</label>
+        <div class="controls">
+            <input id="email" type="text" name="email" value="${user.email}" />
+        </div>
+    </div>
+
     
-    <label for="email">&{'Email'}</label> 
-    <input id="email" type="text" name="email" value="${user.email}" />
-    <br />
+    <div class="control-group">
+        <label class="control-label" for="pasword1">&{'Password'}</label>
+        <div class="controls">
+            <input id="password1" type="password" name="password1" value="${user.password}" onKeyUp="verify.check()" />
+            <span class="error">#{error 'password' /}</span>
+        </div>
+    </div>
     
-    <label for="pasword1">&{'Password'}</label>
-    <input id="password1" type="password" name="password1" onKeyUp="verify.check()" />
-    <br />
+    <div class="control-group">
+        <label class="control-label" for="pasword2">&{'RePassword'}</label>
+        <div class="controls">
+            <input id="password2" type="password" name="password2" value="${user.password}" onKeyUp="verify.check()" />
+            <span class="error">#{error 'password' /}</span>
+        </div>
+    </div>
     
-    <label for="pasword2">&{'RePassword'}</label>
-    <input id="password2" type="password" name="repassword2" onKeyUp="verify.check()" />
-    <br />
+    <div class="control-group">
+        <div class="controls">
+            <input type="hidden" name="username" value="${user.username}">
+            <input onClick="saved()" class="btn" type="submit" value="&{'Save'}" />
+        </div>
+    </div>    
+    <div class="control-group">
+        <div class="controls">
     
-    <input type="hidden" name="username" value="${user.username}">
-    <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" />
-    
-    <div id="passwordMatch"></div>
-    <br />
+        <div id="passwordMatch"></div>
+        </div>
+    </div>    
     
 #{/form}
 </div>
