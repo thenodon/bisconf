@@ -1,34 +1,36 @@
 #{extends 'main.html' /}
 #{set title: 'Add day' /}
 
-<h1>
-&{'AddDay'}    
-</h1>
+<h3>&{'AddDay'}</h3>
 
-<h2>
-&{'Year'}: ${year}
-</h2>
+<h4>&{'Year'}: ${year}</h4>
 
-<div class="downlink">
-<ul>
-<li>
-<a href="@{listYear(year)}">&{'ListYear'}</a>
-</li>
-<li>
-<a href="@{listHolidays()}">&{'Back'}</a>
-</li>
-<ul>
+<div class="navbar">
+	<div class="navbar-inner">
+		<ul class="nav">
+			<li><a href="@{listYear(year)}"><i class="icon-step-backward icon-white"></i> &{'ListYear'}</a></li>
+			<li><a href="@{listHolidays()}">&{'Back'}</a></li>
+		<ul>
+	</div>
 </div>
 
-<div class="saveedit">
+<div class="form-horizontal">   
 #{form @saveDay()}
-    <label for="day">&{'Day'}</label>
-    <input id="day" type="text" name="day"  />
-    <span class="error">#{error 'day' /}</span>
-    <br />
+
+    <div class="control-group">
+        <label class="control-label" for="day">&{'Day'}</label>
+        <div class="controls">    
+            <input id="day" type="text" name="day"  />
+            <span class="error">#{error 'day' /}</span>
+        </div>
+    </div> 
     
-     <input type="hidden" name="year" value="${year}">
-    <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" /><br />
+    <div class="control-group">
+        <div class="controls">
+            <input type="hidden" name="year" value="${year}">
+            <input onClick="saved()" class="btn" type="submit" value="&{'Save'}" />
+        </div>
+    </div>
 
 #{/form}
 </div>

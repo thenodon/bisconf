@@ -1,27 +1,36 @@
 #{extends 'main.html' /}
 #{set title: 'Add Year' /}
 
-<h1>
-&{'Addyear'}    
-</h1>
+<h3>&{'Addyear'}</h3>
 
 
-<div class="downlink">
-<ul>
-<li>
-<a href="@{listHolidays()}">&{'ListHolidays'}</a>
-</li>
-<ul>
+
+<div class="navbar">
+	<div class="navbar-inner">
+		<ul class="nav">
+			<li><a href="@{listHolidays()}"><i class="icon-list icon-white"></i> &{'ListHolidays'}</a></li>
+		<ul>
+	</div>
 </div>
 
-<div class="saveedit">
 
+<div class="form-horizontal">   
 #{form @saveYear()}
-    <label for="year">&{'Year'}</label>
-    <input id="year" type="text" name="year"  />
-    <span class="error">#{error 'year' /}</span>
-    <br />
-    <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" /><br />
 
+
+    <div class="control-group">
+        <label class="control-label" for="year">&{'Year'}</label>
+        <div class="controls">    
+            <input id="year" type="text" name="year"  placeholder="&{''}"/>
+            <span class="error">#{error 'year' /}</span>
+        </div>
+    </div> 
+    
+    <div class="control-group">
+        <div class="controls">
+            <input onClick="saved()" class="btn" type="submit" value="&{'Save'}" />
+        </div>
+    </div>
+    
 #{/form}
 </div>

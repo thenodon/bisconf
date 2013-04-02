@@ -1,23 +1,19 @@
 #{extends 'main.html' /}
 #{set title: 'Holidays' /}
 
-<h1>
-&{'ListHolidays'}    
-</h1>
+<h3>&{'ListHolidays'}</h3>
 
-<div class="downlink">
-<ul>
-<li>
-<a href="@{addYear()}">&{'Add'}</a>
-</li>
-<li>
-<a href="@{index()}">&{'Back'}</a>
-</li>
-<ul>
+<div class="navbar">
+	<div class="navbar-inner">
+		<ul class="nav">
+			<li><a href="@{addYear()}"><i class="icon-plus icon-white"></i> &{'AddYear'}</a></li>
+			<li><a href="@{index()}">&{'Back'}</a></li>
+        <ul>
+	</div>
 </div>
 
 #{if holidays}
-    <table class="listtable">
+    <table class="table">
         <thead>
             <tr>
                 <th>&{'Year'}</th>

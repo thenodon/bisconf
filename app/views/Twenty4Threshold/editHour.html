@@ -3,16 +3,15 @@
 
 
                 
-#{if hourdef}
-<h1>
+<h3>
 &{'EditHours'}    
-</h1>
+</h3>
 
-<h2>
+<h4>
 &{'HourID'}: ${hourdef.ID}
-</h2>
+</h4>
 
-<table class="listtable">
+<table class="table">
     <caption>&{'UsedIn'}</caption>
     <tbody>
     #{list hour2def, as:'servicedef'}
@@ -30,60 +29,67 @@
 <!-- ${hourdef.getTypeOfHour().toString()} -->
 #{if hourdef.getTypeOfHour().toString() == 'HOUR24'}
 
-<div class="downlink">
-<ul>
-<li>
-<a href="@{listHours()}">&{'ListHours'}</a>
-</li>
-<li>
-<a href="@{index()}">&{'Back'}</a>
-</li>
-<ul>
-</div>
+<div class="navbar">
+	<div class="navbar-inner">
+		<ul class="nav">
+			<li><a href="@{listHours()}"><i class="icon-list icon-white"></i> &{'ListHours'}</a></li>
+			<li><a href="@{index()}">&{'Back'}</a></li>
+		<ul>
+	</div>
+<div>
+<br>
 
-
-<div class="edithour">
+<div class="form-horizontal">	
 #{form @Twenty4Threshold.saveHour()}
-    
+
     <!-- ${hourCounter=new Integer(0)} -->
-
-    #{list hourdef.getHour24(), as:'hour'}
-        #{if hourCounter < 10}
-            <a name="0${hourCounter}"/>
-            0${hourCounter}: <input type="text" name="0${hourCounter++}" value="${hour}" /> <br />                            
-        #{/if}
-        #{else}                                
-            <a name="0${hourCounter}"/>
-            ${hourCounter}: <input type="text" name="${hourCounter++}" value="${hour}" /> <br />
-        #{/else}
-    #{/list}
-    <input type="hidden" name="hourid" value="${hourdef.ID}" />
-                    
-    <input class="submitbutton" type="submit" value="&{'Save'}" /><br />
-
+    #{list hourdef.getHour24(), as:'hour'} 
+	   #{if hourCounter < 10} 
+            <div class="control-group">
+            <label class="control-label" for="0${hourCounter}">0${hourCounter}</label>
+                <div class="controls">	  
+		          <input type="text" name="0${hourCounter++}" value="${hour}" />
+		        </div>
+            </div> 
+	   #{/if} 
+	   #{else} 
+	       <div class="control-group">
+           <label class="control-label" for="${hourCounter}">${hourCounter}</label>
+                <div class="controls">    
+                    <input type="text" name="${hourCounter++}" value="${hour}" />
+                </div>
+            </div>  
+	   #{/else} 
+	#{/list}
+		
+		
+    <div class="control-group">
+        <div class="controls">
+            <input type="hidden" name="hourid" value="${hourdef.ID}" /> 
+            <input onClick="saved()" class="btn" type="submit" value="&{'Save'}" />
+        </div>
+    </div>                
+    
 #{/form}
 </div>
-#{/if}
+#{/if} 
+
 
 #{if hourdef.getTypeOfHour().toString() == 'HOURINTERVAL'}
-<div class="downlink">
-<ul>
-<li>
-<a href="@{addHourInterval(hourdef.ID)}">&{'AddHourinterval'}</a>
-</li>
-<li>
-<a href="@{listHours()}">&{'ListHours'}</a>
-</li>
-<li>
-<a href="@{index()}">&{'Back'}</a>
-</li>
-<ul>
+<div class="navbar">
+	<div class="navbar-inner">
+		<ul class="nav">
+			<li><a href="@{addHourInterval(hourdef.ID)}">&{'AddHourinterval'}</a>
+			</li>
+			<li><a href="@{listHours()}">&{'ListHours'}</a></li>
+			<li><a href="@{index()}">&{'Back'}</a></li>
+		<ul>
+	</div>
 </div>
 
-<div class="edithour">
 
 
-    <table class="listtable">
+    <table class="table">
         <thead>
             <tr>
                 <th>&{'From'}</th>
@@ -109,8 +115,6 @@
     
 
 
-</div>
 #{/if}
 
-#{/if}
 

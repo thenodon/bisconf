@@ -1,27 +1,20 @@
 #{extends 'main.html' /}
 #{set title: 'Hours' /}
 
-<h1>
-&{'ListHours'}    
-</h1>
+<h3>&{'ListHours'}</h3>
 
-<div class="downlink">
-<ul>
-<li>
-<a href="@{addHour()}">&{'Add'}</a>
-</li>
-<li>
-<a href="@{newHourInterval()}">&{'AddInterval'}</a>
-</li>
-
-<li>
-<a href="@{index()}">&{'Back'}</a>
-</li>
-<ul>
+<div class="navbar">
+	<div class="navbar-inner">
+		<ul class="nav">
+			<li><a href="@{addHour()}"><i class="icon-plus icon-white"></i> &{'Add'}</a></li>
+			<li><a href="@{newHourInterval()}"><i class="icon-plus icon-white"></i> &{'AddInterval'}</a></li>
+			<li><a href="@{index()}"><i class="icon-step-backward icon-white"></i> &{'Back'}</a></li>
+			<ul>
+	</div>
 </div>
 
 #{if hour2def}
-    <table class="listtable" frame="hsides" border="1">
+    <table class="table" >
         <thead>
             <tr>
                 <th>&{'HourID'}</th>

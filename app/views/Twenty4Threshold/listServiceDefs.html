@@ -1,21 +1,20 @@
 #{extends 'main.html' /}
 #{set title: 'List hosts' /}
 
-<h1>
+<h3>
 &{'ListServiceDefs'}    
-</h1>
+</h3>
 
-<div class="downlink">
-<ul>
-<li>
-<a href="@{index()}">&{'Twenty4Threshold'}</a>
-</li>
-<ul>
+<div class="navbar">
+    <div class="navbar-inner">
+        <ul class="nav">
+            <li><a href="@{index()}">&{'Twenty4Threshold'}</a></li>
+        <ul>
+    </div>
 </div>
 
-
 #{if servicedefs}
-    <table class="listtable">
+    <table class="table">
         <thead>
             <tr>
                 <th>&{'Host'}</th>

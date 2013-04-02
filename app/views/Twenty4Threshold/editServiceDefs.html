@@ -1,38 +1,40 @@
 #{extends 'main.html' /}
 #{set title: 'Edit servicedefs' /}
 
-<h1>
+<h3>
 &{'EditServicedefs'}
-</h1>
+</h3>
 
-<h2>
+<h4>
      <a href="@{Bischeck.edithost(servicedef.hostname)}">${servicedef.hostname}</a>
      &#8658; 
      <a href="@{Bischeck.editservice(servicedef.hostname,servicedef.servicename)}">${servicedef.servicename}</a>
      &#8658; 
      <a href="@{Bischeck.editserviceitem(servicedef.hostname,servicedef.servicename,servicedef.serviceitemname)}">${servicedef.serviceitemname}</a>
-</h2>
+</h4>
     
-<div class="downlink">
-<ul>
-    <li>
-        <a href="@{addPeriod(servicedef.hostname,servicedef.servicename,servicedef.serviceitemname)}">&{'Add'}</a>
-    </li>
-    <li>
-        <a href="@{listServiceDefs()}">&{'ListServiceDefs'}</a>
-    </li>
-<ul>
+<div class="navbar">
+    <div class="navbar-inner">
+        <ul class="nav">
+            <li>
+            <a href="@{addPeriod(servicedef.hostname,servicedef.servicename,servicedef.serviceitemname)}"><i class="icon-plus icon-white"></i> &{'Add'}</a>
+            </li>
+            <li>
+            <a href="@{listServiceDefs()}">&{'ListServiceDefs'}</a>
+            </li>
+        <ul>
+    </div>
 </div>
  
 #{if hashperiod}
-    <table class="periods">
+    <table class="table table-bordered table-condensed table-hover">
         <thead>
             <tr>
-                <th>&{'Periods'}</th>
-                <th>&{'PeriodData'}</th>
-                <th>&{'Hour'}</th>
-                <th>&{'Action'}</th>
-                *{ <th>&{'Hash'}</th> }*
+                <th style="width: 20%">&{'Periods'}</th>
+                <th style="width: 10%">&{'PeriodData'}</th>
+                <th style="width: 55%">&{'Hour'}</th>
+                <th style="width: 5%">&{'Action'}</th>
+                *{ <th style="width: 0%">&{'Hash'}</th> }*
             </tr>
         </thead>
         <tbody>
@@ -41,40 +43,26 @@
                 <tr>
                     
                     <td>
-                                
-                    <table class="period">
+                    <!--  The period table - Start -->                     
+                    <table>
                         
                         <thead>
                             <tr>
-                                <th>&{'Month'}</th>
-                                <th>&{'DayOfMonth'}</th>
-                                <th>&{'Action'}</th>
+                                <th style="width: 40%">&{'Month'}</th>
+                                <th style="width: 40%">&{'DayOfMonth'}</th>
+                                <th style="width: 20%">&{'Action'}</th>
                             </tr>
                         </thead>
                         
                         <tbody>
                             
-                            #{list hashperiod.get(period).months, as:'month'}
-                            <tr>
-                                <td>
-                                    ${month.month}
-                                </td>
-                                <td>
-                                    ${month.dayofmonth}
-                                </td>
-                                <td> 
-                                <a href="@{deletePeriodMonth(servicedef.hostname,servicedef.servicename,servicedef.serviceitemname,period,month.month,month.dayofmonth)}">&{'Delete'}</a>
-                                </td>
-                            </tr>
-                            #{/list}
                 
                             <tr>
                         
                             #{form @Twenty4Threshold.addPeriodMonth()}
                             <td>
                         
-                            &{'Month'}: 
-                            <select class="selectperiod" name="month">
+                            <select class="input-small"  name="month">
                                 <option value="none">&{'None'}</option>
                                 #{list items:1..12, as:'i'}
                                     <option value="${i}">${i}</option>
@@ -83,8 +71,7 @@
                         
                             </td><td>
                         
-                            &{'DayOfMonth'}: 
-                            <select class="selectperiod" name="dayofmonth">
+                            <select class="input-small" name="dayofmonth">
                                 <option value="none">&{'None'}</option>
                                 #{list items:1..31, as:'i'}
                                     <option value="${i}">${i}</option>
@@ -105,12 +92,25 @@
                             #{/form}
                             
                             </tr>
+                            #{list hashperiod.get(period).months, as:'month'}
+                            <tr>
+                                <td>
+                                    ${month.month}
+                                </td>
+                                <td>
+                                    ${month.dayofmonth}
+                                </td>
+                                <td> 
+                                <a href="@{deletePeriodMonth(servicedef.hostname,servicedef.servicename,servicedef.serviceitemname,period,month.month,month.dayofmonth)}">&{'Delete'}</a>
+                                </td>
+                            </tr>
+                            #{/list}
                         
                         </tbody>
                                                      
                    </table>
-                    
-                   <table class="period">
+                     
+                   <table>
                         <thead>
                             <tr>
                                 <th>&{'Week'}</th>
@@ -119,51 +119,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            #{list hashperiod.get(period).weeks, as:'week'}
-                
-                            <tr>
-                                <td>
-                                    ${week.week}
-                                </td>
-                                <td>
-                                 #{if week.dayofweek}
-                                    #{if week.dayofweek-1 == 0}
-                                        &{'Sunday'}
-                                    #{/if}
-                                    #{if week.dayofweek-1 == 1}
-                                        &{'Monday'}
-                                    #{/if}
-                                    #{if week.dayofweek-1 == 2}
-                                        &{'Tuesday'}
-                                    #{/if}
-                                    #{if week.dayofweek-1 == 3}
-                                        &{'Wednesday'}
-                                    #{/if}
-                                    #{if week.dayofweek-1 == 4}
-                                        &{'Thursday'}
-                                    #{/if}
-                                    #{if week.dayofweek-1 == 5}
-                                        &{'Friday'}
-                                    #{/if}
-                                    #{if week.dayofweek-1 == 6}
-                                        &{'Saturday'}
-                                    #{/if}
-                                  #{/if}
-                                </td>
-                                <td> 
-                                <a href="@{deletePeriodWeek(servicedef.hostname,servicedef.servicename,servicedef.serviceitemname,period,week.week,week.dayofweek)}">&{'Delete'}</a>
-                                </td>
-                            </tr>
-                            #{/list}
                 
                         
                             <tr>
 
                     
                             #{form @Twenty4Threshold.addPeriodWeek()}
+
                             <td>    
-                            &{'Week'}: 
-                            <select class="selectperiod" name="week">
+                            <select class="input-small" name="week">
                                 <option value="none">&{'None'}</option>
                                 #{list items:1..53, as:'i'}
                                     <option value="${i}">${i}</option>
@@ -171,8 +135,7 @@
                             </select>
                             </td><td>
                             
-                            &{'DayOfWeek'}: 
-                            <select class="selectperiod" name="dayofweek">
+                            <select class="input-small" name="dayofweek">
                                 <option value="none">&{'None'}</option>
                                     <option value="1">&{'Sunday'}</option>
                                     <option value="2">&{'Monday'}</option>
@@ -197,19 +160,57 @@
                             
                     
                             </tr>    
+                            #{list hashperiod.get(period).weeks, as:'week'}
+                
+                            <tr>
+                                <td>
+                                    ${week.week}
+                                </td>
+                                <td>
+                                    #{if week.dayofweek}
+                                    #{if week.dayofweek-1 == 0}
+                                        &{'Sunday'}
+                                    #{/if}
+                                    #{if week.dayofweek-1 == 1}
+                                        &{'Monday'}
+                                    #{/if}
+                                    #{if week.dayofweek-1 == 2}
+                                        &{'Tuesday'}
+                                    #{/if}
+                                    #{if week.dayofweek-1 == 3}
+                                        &{'Wednesday'}
+                                    #{/if}
+                                    #{if week.dayofweek-1 == 4}
+                                        &{'Thursday'}
+                                    #{/if}
+                                    #{if week.dayofweek-1 == 5}
+                                        &{'Friday'}
+                                    #{/if}
+                                    #{if week.dayofweek-1 == 6}
+                                        &{'Saturday'}
+                                    #{/if}
+                                    #{/if}
+                                </td>
+                                <td> 
+                                <a href="@{deletePeriodWeek(servicedef.hostname,servicedef.servicename,servicedef.serviceitemname,period,week.week,week.dayofweek)}">&{'Delete'}</a>
+                                </td>
+                            </tr>
+                            #{/list}
+
                         <tbody>
                              
                     </table>
+                   <!--  The period table - end -->                     
                    
                     
                     </td>
-                    <td>
                     
-                    <div class="periodedit">    
+                    <td>
                     #{form @Twenty4Threshold.savePeriodData()}
-                        <br />
-                        <label for="calcmethod">&{'CalcMetod'}</label>
-                        <select id="calcmethod" name="calcmethod">
+                    <fieldset>
+                       
+                        <label for="calcmethod"><strong>&{'CalcMetod'}</strong></label>
+                        <select class="input-mini" id="calcmethod" name="calcmethod">
                             <option value="${hashperiod.get(period).calcmethod}">${hashperiod.get(period).calcmethod}</option>
                             
                                 <option value="&gt;">&gt;</option>
@@ -217,10 +218,9 @@
                                 <option value="=">=</option>
                             
                         </select>
-                        <br />
-                       
-                        <label for="warning">&{'Warning'}</label>
-                        <input id="warning" type="text" name="warning" value="${hashperiod.get(period).warning}" />
+                        
+                        <label for="warning"><strong>&{'Warning'}</strong></label>
+                        <input class="input-mini" id="warning" type="text" name="warning" value="${hashperiod.get(period).warning}" />
                         
                         #{if flash.errperiod}
                             <!-- ${err=new Integer(flash.errperiod)}  -->
@@ -228,17 +228,15 @@
                             <span class="error">#{error 'warningerror' /}</span>
                             #{/if}
                         #{/if}
-                        <br />
                         
-                        <label for="critical">&{'Critical'}</label>
-                        <input id="critical" type="text" name="critical" value="${hashperiod.get(period).critical}" /> 
+                        <label for="critical"><strong>&{'Critical'}</strong></label>
+                        <input class="input-mini" id="critical" type="text" name="critical" value="${hashperiod.get(period).critical}" /> 
                         #{if flash.errperiod}
                             <!-- ${err=new Integer(flash.errperiod)}  -->
                             #{if err == period }
                             <span class="error">#{error 'criticalerror' /}</span>
                             #{/if}
                         #{/if}
-                        <br />
                         
                         <input type="hidden" name="periodindex" value="${period}" />
                         <input type="hidden" name="hostname" value="${servicedef.hostname}" />
@@ -246,9 +244,8 @@
                         <input type="hidden" name="serviceitemname" value="${servicedef.serviceitemname}" />
                     
                         <input class="submitbutton" type="submit" value="&{'Save'}" /><br />
-
+                    </fieldset>
                     #{/form}
-                    </div>
                     </td>
         
                             
@@ -256,7 +253,6 @@
                     <!-- CHECK THE HOUR FORMAT -->    
                     <td>
                         <!-- ${hourCounter=new Integer(0)} -->
-                        <a name="${period}"/>
                         
                         #{if hours.get(hashperiod.get(period).hoursIDREF).getTypeOfHour().toString() == 'HOUR24'}
                         
@@ -289,11 +285,11 @@
                         
                         #{/if}
                         
-                        <div class="hourselect">
                         #{form @Twenty4Threshold.selectHourID()}
-    
-                        <label for="hourid">&{'HourID'}:</label>
-                        <select id="hourid" name="hourid">
+                        <fieldset>
+                    
+                        <label for="hourid"><strong>&{'HourID'}</strong></label>
+                        <select class="input-mini" id="hourid" name="hourid">
                             <option value="${hashperiod.get(period).hoursIDREF}" >${hashperiod.get(period).hoursIDREF}</option>
                             #{list allhourids, as: 'hour'}
                                 <option value="${hour}">${hour}</option>
@@ -305,11 +301,11 @@
                         <input type="hidden" name="servicename" value="${servicedef.servicename}" />
                         <input type="hidden" name="serviceitemname" value="${servicedef.serviceitemname}" />
                         <input class="submitbutton" type="submit" value="&{'Select'}" /><br />
-
+                        </fieldset>
+                    
                          #{/form}
                          <a href="@{editHour(hashperiod.get(period).hoursIDREF)}">&{'Edit'}</a>
-                         </div>
-                         <br />                        
+                                            
                     </td>
                 *{    <td>${hashperiod.get(period).critical}</td> }*
                 *{    <td>${hashperiod.get(period).hoursIDREF}</td> }*
