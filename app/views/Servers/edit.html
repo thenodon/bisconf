@@ -2,71 +2,67 @@
 #{set title: 'Edit servers' /}
 
 
-<h1>
-&{'EditServer'}    
-</h1>
+<h3>&{'EditServer'}</h3>
 
-<h2>
-${server.name}
-<h2>
+<h4>${server.name}</h4>
 
-<div class="downlink">
-<ul>
-#{ifnot hasdefaultproperties }
-<li>
-<a href="@{Servers.addProperty(server.name)}">&{'AddProperty'}</a>
-</li>
-#{/ifnot}
-<li>
-<a href="@{Servers.list()}">&{'ListServers'}</a>
-</li>
-</ul>
+<div class="navbar">
+    <div class="navbar-inner">
+        <ul class="nav">
+        #{ifnot hasdefaultproperties }
+		<li><a href="@{Servers.addProperty(server.name)}"><i class="icon-plus icon-white"></i> &{'AddProperty'}</a>
+		</li> #{/ifnot}
+		<li><a href="@{Servers.list()}"><i class="icon-list icon-white"></i> &{'ListServers'}</a></li>
+		</ul>
+		
+    </div>
 </div>
 
-<div class="saveedit">
-
+<div class="form-horizontal">
 #{form @Servers.save()}
-        
-    <label for="classname">&{'Classname'}</label>
 
+<div class="control-group">
+    <label class="control-label" for="classname">&{'Classname'}</label>
+    <div class="controls">
     <select id="classname" name="classname">
-        <option value="${server.clazz}" >${server.clazz}</option>
-        #{list serverclasses, as: 'clazz'}
-            <option value="${clazz}">${clazz}</option>
-        #{/list}
-    </select>
-    <br />
-    
-    <input type="hidden" name="servername" value="${server.name}">
-    <input type="hidden" name="oldclassname" value="${server.clazz}">
-    
-    <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" />
+	   <option value="${server.clazz}">${server.clazz}</option> 
+	   #{list serverclasses, as: 'clazz'}
+	       <option value="${clazz}">${clazz}</option> 
+	       #{/list}
+	</select>
+	</div>
+	</div>
+	<div class="control-group">
+		<div class="controls">
 
+			<input type="hidden" name="servername" value="${server.name}">
+			<input type="hidden" name="oldclassname" value="${server.clazz}">
+			<input onClick="saved()" class="btn" type="submit" value="&{'Save'}" />
+		</div>
+	</div>
 #{/form}
 </div>
 
-    <table class="listtable">
-        <thead>
-            <tr>
-                <th>&{'Key'}</th>
-                <th>&{'Value'}</th>
-                <th>&{'Action'}</th>
-            </tr>
-        </thead>
-        <tbody>
-            #{list server.property, as:'property'}
-                <tr>
-                    <td>${property.key}</td>
-                    <td>${property.value}</td>
-                    <td>
-                        <a href="@{editProperty(server.name,property.key,property.value)}">&{'Edit'}</a>
-                        #{ifnot hasdefaultproperties}
-                            <a href="@{deleteProperty(server.name,property.key)}">&{'Delete'}</a>
-                        #{/ifnot}
-                    </td>
-                </tr>
-            #{/list}
-        </tbody>
-    </table>
-    
+<table class="table table-striped table-bordered table-condensed">
 
+	<thead>
+		<tr>
+			<th style="width: 30%">&{'Key'}</th>
+			<th style="width: 50%">&{'Value'}</th>
+			<th style="width: 20%">&{'Action'}</th>
+		</tr>
+	</thead>
+	<tbody>
+		#{list server.property, as:'property'}
+		<tr>
+			<td>${property.key}</td>
+			<td>${property.value}</td>
+			<td><a
+				href="@{editProperty(server.name,property.key,property.value)}">&{'Edit'}</a>
+				#{ifnot hasdefaultproperties} <a
+				href="@{deleteProperty(server.name,property.key)}">&{'Delete'}</a>
+				#{/ifnot}</td>
+		</tr>
+		#{/list}
+	</tbody>
+</table>

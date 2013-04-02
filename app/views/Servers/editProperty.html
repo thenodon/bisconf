@@ -1,33 +1,25 @@
 #{extends 'main.html' /}
 #{set title:'Edit property' /}
 
-<h1>
-&{'EditServerProperty'}
-</h1>
+<h3>&{'EditServerProperty'}</h3>
 
-<h2>
-${servername}
-</h2>
+<h4>${servername}</h4>
 
 
-<div class="downlink">
-<ul>
-<li>
-<a href="@{Servers.edit(servername)}">&{'Edit'}</a>
-</li>
-</ul>
+<div class="navbar">
+	<div class="navbar-inner">
+		<ul class="nav">
+			<li><a href="@{Servers.edit(servername)}"><i class="icon-step-backward icon-white"></i> &{'BackToServer'}</a></li>
+		</ul>
+	</div>
 </div>
 
-<div class="saveedit">
-
+<div class="form-inline">
 #{form @Servers.saveProperty()}
-    <label for="value">${key}</label>
-    <input id="value" type="text" name="value" value="${value}" />
-    <br />
-    
-    <input type="hidden" name="key" value="${key}" />
+    <label for="value">${key}</label> 
+    <input id="value" type="text" name="value" value="${value}" /> 
+    <input type="hidden" name="key" value="${key}" /> 
     <input type="hidden" name="servername" value="${servername}" />
-    <input  onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" /><br />
-
+    <input onClick="saved()" class="btn" type="submit" value="&{'Save'}" /> 
 #{/form}
 </div>

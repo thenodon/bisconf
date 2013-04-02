@@ -1,40 +1,43 @@
 #{extends 'main.html' /}
 #{set title: 'Add servers' /}
 
-<h1>
-&{'AddServer'}    
-</h1>
+<h3>&{'AddServer'}</h3>
 
-<div class="downlink">
-<ul>
-<li>
-<a href="@{Servers.list()}">&{'ListServers'}</a>
-</li>
-</ul>
+<div class="navbar">
+    <div class="navbar-inner">
+        <ul class="nav">
+            <li><a href="@{Servers.list()}"><i class="icon-list icon-white"></i> &{'ListServers'}</a></li>
+        </ul>
+    </div>
 </div>
 
-<div class="saveedit">
+<div class="form-horizontal">
+#{form @Servers.save()} 
+    <div class="control-group">
+	   <label class="control-label" for="servername">&{'Servername'}</label>
+       <div class="controls">
+		  <input id="servername" type="text" name="servername" /> 
+		  <span class="error">#{error 'servername' /}</span>
+	   </div>
+    </div>
 
-#{form @Servers.save()}
-    
-    <label for="servername">&{'Servername'}</label>
-    <input id="servername" type="text" name="servername" />
-    <span class="error">#{error 'servername' /}</span>
-    
-    <br />
+    <div class="control-group">
+        <label class="control-label" for="classname">&{'Classname'}</label>
+        <div class="controls">
+            <select id="classname" name="classname">
+            #{list serverclasses, as: 'clazz'}
+                <option value="${clazz}">${clazz}</option>
+            #{/list}
+            </select>
+        </div>
+    </div>
 
-    <label for="classname">&{'Classname'}</label>
-
-    <select id="classname" name="classname">
-        
-        #{list serverclasses, as: 'clazz'}
-            <option value="${clazz}">${clazz}</option>
-        #{/list}
-    </select>
-    <br />
+    <div class="control-group">
+        <div class="controls">
+            <input onClick="saved()" class="btn" type="submit" value="&{'Save'}" />
+        </div>
+    </div>
        
-    <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" />
 
-#{/form}
-
+    #{/form}
 </div>
