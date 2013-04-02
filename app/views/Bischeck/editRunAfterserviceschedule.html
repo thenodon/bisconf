@@ -1,46 +1,55 @@
 #{extends 'main.html' /}
 #{set title:'Edit service schedule' /}
 
-<h1>
+<h3>
 &{'EditRunAfterServiceSchedule'}    
-</h1>
+</h3>
 
-<h2>
+<h4>
 ${host.name} &#8658; ${service.name} 
-</h2>
+</h4>
 
-<div class="downlink">
-<ul>
-<a href="@{listserviceschedules(host.name,service.name)}">&{'ListServiceSchedules'}</a>
-</li><li>
-<a href="@{editservice(host.name,service.name)}">&{'BackToService'}</a>
-</li><li>
-<a href="@{listhosts()}">&{'BackToHosts'}</a>
-</li>
-<ul>
+<div class="navbar">
+	<div class="navbar-inner">
+		<ul class="nav">
+		    <li>
+            <a href="@{listserviceschedules(host.name,service.name)}"><i class="icon-list icon-white"></i> &{'ListServiceSchedules'}</a>
+            </li>
+            <li><a href="@{editservice(host.name,service.name)}"><i class="icon-step-backward icon-white"></i> &{'BackToService'}</a>
+            </li>
+            <li><a href="@{listhosts()}"><i class="icon-fast-backward icon-white"></i> &{'BackToHosts'}</a></li>
+			<ul>
+	</div>
 </div>
 
 
-<div class="scheduleform">
+<div class="form-horizontal">
 #{form @Bischeck.saveRunAfterServiceSchedule()}
     
-    <label for="hostservice">&{'RunAfter'}</label>
-    <select id="hostservice" name="hostservice">
-        #{if runafterschedule}
-        <option value="${runafterschedule.hostname}-${runafterschedule.servicename}">${runafterschedule.hostname}-${runafterschedule.servicename}</option>
-        #{/if}
+    <div class="control-group">
+        <label class="control-label" for="hostservice">&{'RunAfter'}</label>
+        <div class="controls">
+            <select id="hostservice" name="hostservice">
+            #{if runafterschedule}
+            <option value="${runafterschedule.hostname}-${runafterschedule.servicename}">${runafterschedule.hostname}-${runafterschedule.servicename}</option>
+            #{/if}
         
-        #{list runafterlist, as: 'afterhostservice'}
+            #{list runafterlist, as: 'afterhostservice'}
             <option value="${afterhostservice.hostname}-${afterhostservice.servicename}">${afterhostservice.hostname}-${afterhostservice.servicename}</option>
-        #{/list}
-                            
-    </select>
-        
-    <input type="hidden" name="curschedule" value="${schedule}">
-    <input type="hidden" name="servicename" value="${service.name}">
-    <input type="hidden" name="hostname" value="${host.name}">
-    <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" />
+            #{/list}                
+            </select>
+        </div>
+    </div>
     
+    <div class="control-group">
+        <div class="controls">
+            <input type="hidden" name="curschedule" value="${schedule}">
+            <input type="hidden" name="servicename" value="${service.name}">
+            <input type="hidden" name="hostname" value="${host.name}">
+            <input onClick="saved()" class="btn" type="submit" value="&{'Save'}" />
+        </div>
+    </div>
+        
 #{/form}
 </div>
 

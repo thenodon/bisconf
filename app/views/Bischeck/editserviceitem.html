@@ -2,69 +2,84 @@
 #{set title:'Edit serviceitem' /}
 
 
-<h1>
+<h3>
 &{'EditServiceItem'}
-</h1>
+</h3>
 
-<h2>
+<h4>
 ${host.name} &#8658; ${service.name} &#8658; ${serviceitem.name} 
-</h2>
+</h4>
 
-<div class="downlink">
-<ul>
-<li>
-<a href="@{editservice(host.name,service.name)}">&{'BackToService'}</a>
-</li><li>
-<a href="@{edithost(host.name)}">&{'BackToHost'}</a>
-</li><li>
-<a href="@{listhosts()}">&{'BackToHosts'}</a>
-</li>
-<ul>
+<div class="navbar">
+	<div class="navbar-inner">
+		<ul class="nav">
+			<li><a href="@{editservice(host.name,service.name)}"><i class="icon-step-backward icon-white"></i> &{'BackToService'}</a>
+			</li>
+			<li><a href="@{edithost(host.name)}"><i class="icon-step-backward icon-white"></i> &{'BackToHost'}</a></li>
+			<ul>
+	</div>
 </div>
 
-<div class="saveedit">
+<div class="form-horizontal">
 #{form @Bischeck.saveserviceitem()}
     
+    <div class="control-group">
+        <label class="control-label" for="name">&{'ServiceItemName'}</label>
+        <div class="controls">
+            <input type="text" id="name" name="name" value="${serviceitem.name}">
+            <span class="error">#{error 'name' /}</span>
+        </div>
+    </div>
     
-    <label for="name">&{'ServiceItemName'}</label> 
-    <input id="name" type="text" name="name" value="${serviceitem.name}" />
-    <span class="error">#{error 'name' /}</span>
-    <br />
+    <div class="control-group">
+        <label class="control-label" for="desc">&{'Description'}</label>
+        <div class="controls">
+            <textarea id="desc" name="desc">${serviceitem.desc}</textarea>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label" for="execstatement">&{'ServiceItemExecstatement'}</label>
+        <div class="controls">
+            <textarea id="execstatement" name="execstatement">${serviceitem.execstatement}</textarea>
+        </div>
+    </div>
+
+	<div class="control-group">
+		<label class="control-label" for="serviceitemclass">&{'ServiceItemClass'}</label>
+		<div class="controls">
+			<select id="serviceitemclass" name="serviceitemclass">
+				<option value="${serviceitem.serviceitemclass}">${serviceitem.serviceitemclass}</option>
+				#{list serviceitemclasses, as: 'clazz'}
+				<option value="${clazz}">${clazz}</option> 
+				#{/list}
+			</select>
+		</div>
+	</div>
+
+
+    <div class="control-group">
+        <label class="control-label" for="thresholdclass">&{'ServiceItemThresholdclass'}</label>
+        <div class="controls">
+            <select id="thresholdclass" name="thresholdclass">
+                <option value="${serviceitem.thresholdclass}">${serviceitem.thresholdclass}</option>
+                #{list thresholdclasses, as: 'clazz'}
+                <option value="${clazz}">${clazz}</option> 
+                #{/list}
+            </select>
+        </div>
+    </div>
+
     
-    <label for="desc">&{'Description'}</label> 
-    <textarea id="desc" name="desc">${serviceitem.desc}</textarea>
-    <br />
+     <div class="control-group">
+        <div class="controls">
+            <input type="hidden" name="oldname" value="${serviceitem.name}">
+            <input type="hidden" name="servicename" value="${service.name}">
+            <input type="hidden" name="hostname" value="${host.name}">
+            <input onClick="saved()" class="btn" type="submit" value="&{'Save'}" />
+        </div>
+    </div>
     
-    <label for="execstatement">&{'ServiceItemExecstatement'}</label> 
-    <textarea id="execstatement" name="execstatement">${serviceitem.execstatement}</textarea>
-    <br />
-    
-    <label for="serviceitemclass">&{'ServiceItemClass'}</label> 
-    <select id="serviceitemclass" name="serviceitemclass">
-        <option value="${serviceitem.serviceitemclass}" >${serviceitem.serviceitemclass}</option>
-        #{list serviceitemclasses, as: 'clazz'}
-            <option value="${clazz}">${clazz}</option>
-        #{/list}
-    </select>
-    <br />                    
-    
-    
-        
-    <label for="thresholdclass">&{'ServiceItemThresholdclass'}</label> 
-    <select id="thresholdclass" name="thresholdclass">
-        <option value="${serviceitem.thresholdclass}" >${serviceitem.thresholdclass}</option>
-        #{list thresholdclasses, as: 'clazz'}
-            <option value="${clazz}">${clazz}</option>
-        #{/list}
-    </select>
-    <br />
-    
-    
-    <input type="hidden" name="oldname" value="${serviceitem.name}">
-    <input type="hidden" name="servicename" value="${service.name}">
-    <input type="hidden" name="hostname" value="${host.name}">
-    
-    <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" />
     
 
 #{/form}

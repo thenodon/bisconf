@@ -1,32 +1,38 @@
-#{extends 'main.html' /}
-#{set title:'Add service' /}
+#{extends 'main.html' /} #{set title:'Add service' /}
 
-<h1>
-&{'AddHost'}    
-</h1>
+<h3>&{'AddHost'}</h3>
 
-<div class="downlink">
-<ul>
-<li>
-<a href="@{listhosts()}">&{'BackToHosts'}</a>
-</li>
-</ul>
+<div class="navbar">
+	<div class="navbar-inner">
+		<ul class="nav">
+			<li><a href="@{listhosts()}"><i class="icon-step-backward icon-white"></i>&{'BackToHosts'}</a></li>
+		</ul>
+	</div>
 </div>
 
-<div class="saveedit">
-#{form @Bischeck.savehost()}
-    
-    <label for="name">&{'HostName'}</label>
-    <input id="name" type="text" name="name" value="${host.name}" />
-    <span class="error">#{error 'name' /}</span>
-    <br />
-    
-    <label for="desc">&{'Description'}</label>
-    <textarea id="desc" name="desc">${host.desc}</textarea>
-    <br/>
-    
-    <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" />
-    <br/>
-    
-#{/form}
 
+
+<div class="form-horizontal">
+	#{form @Bischeck.savehost()}
+
+	<div class="control-group">
+		<label class="control-label" for="name">&{'HostName'}</label>
+		<div class="controls">
+			<input type="text" id="name" name="name" value="${host.name}">
+			<span class="error">#{error 'name' /}</span>
+
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="desc">&{'Description'}</label>
+		<div class="controls">
+			<textarea id="desc" name="desc">${host.desc}</textarea>
+		</div>
+	</div>
+	<div class="control-group">
+		<div class="controls">
+			<input onClick="saved()" class="btn" type="submit" value="&{'Save'}" />
+		</div>
+	</div>
+	#{/form}
+</div>

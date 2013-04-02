@@ -1,98 +1,131 @@
 #{extends 'main.html' /}
 #{set title:'Edit service' /}
 
-<h1>
+<h3>
 &{'EditService'}    
-</h1>
+</h3>
 
-<h2>
+<h4>
 ${host.name} &#8658; ${service.name}
-</h2>
+</h4>
 
-<div class="downlink">
-<ul>
-<li>
-<a href="@{addserviceitem(host.name,service.name)}">&{'AddServiceItem'}</a>
-</li><li>
-<a href="@{listserviceschedules(host.name,service.name)}">&{'ListServiceSchedules'}</a>
-</li><li>
-<a href="@{edithost(host.name)}">&{'BackToHost'}</a>
-</li><li>
-<a href="@{listhosts()}">&{'BackToHosts'}</a>
-</li><li>
-</ul>
+<div class="navbar">
+	<div class="navbar-inner">
+		<ul class="nav">
+			<li><a href="@{addserviceitem(host.name,service.name)}"><i class="icon-plus icon-white"></i> &{'AddServiceItem'}</a>
+			</li>
+			<li><a href="@{listserviceschedules(host.name,service.name)}"><i class="icon-list icon-white"></i> &{'ListServiceSchedules'}</a>
+			</li>
+			<li><a href="@{edithost(host.name)}"><i class="icon-step-backward icon-white"></i> &{'BackToHost'}</a></li>
+    		<li>
+		</ul>
+	</div>
 </div>
 
-<div class="saveedit">
+<div class="form-horizontal">
 #{form @Bischeck.saveservice()  }
     
-    <label for="name">&{'ServiceName'}</label> 
-    <input id="name" type="text" name="name" value="${service.name}" />
-    <span class="error">#{error 'name' /}</span>
-    <br />
-    
-    <label for="desc">&{'Description'}</label> 
-    <textarea id="desc" name="desc">${service.desc}</textarea>
-    <br />
-    
-    <label for="url">&{'ServiceUrl'}</label> 
-    <textarea id="url" name="url">${service.url}</textarea>
-    <br />
-    
-    <label for="driver">&{'ServiceDriver'}</label> 
-    <input id="driver" type="text" name="driver" value="${service.driver}" />
-    <br />
-    
-    <p>
-    &{'ServiceSendServer'}
-    </p>
-    
-    <div class="radio">
-    #{if service.sendserver}
-       
-        <label for="true">True</label><INPUT id="true" type="radio" name="sendserver" value="true" checked> <br />
-        <label for="false">False</label><INPUT id="false" type="radio" name="sendserver" value="false">   
-    #{/if}
-    #{else}
-        <label for="true">True</label><INPUT id="true" type="radio" name="sendserver" value="true" > <br />
-        <label for="false">False</label><INPUT id="false" type="radio" name="sendserver" value="false" checked>  
-    #{/else}
+    <div class="control-group">
+        <label class="control-label" for="name">&{'ServiceName'}</label>
+        <div class="controls">
+            <input type="text" id="name" name="name" value="${service.name}">
+            <span class="error">#{error 'name' /}</span>
+
+        </div>
     </div>
     
-    <input type="hidden" name="oldname" value="${service.name}">
-    <input type="hidden" name="hostname" value="${host.name}">
+    <div class="control-group">
+        <label class="control-label" for="desc">&{'Description'}</label>
+        <div class="controls">
+            <textarea id="desc" name="desc">${service.desc}</textarea>
+        </div>
+    </div>
     
-    <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" />
+    <div class="control-group">
+        <label class="control-label" for="url">&{'ServiceUrl'}</label>
+        <div class="controls">
+            <textarea id="url" name="url">${service.url}</textarea> 
+        </div>
+    </div>
     
+    
+    <div class="control-group">
+        <label class="control-label" for="driver">&{'ServiceDriver'}</label>
+        <div class="controls">
+            <textarea id="driver" name="driver">${service.driver}</textarea>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label">&{'ServiceSendServer'}</label>
+        <div class="controls">
+
+            <div class="input radio">
+                #{if service.sendserver} 
+                    <fieldset>
+                    
+                    <input id="true" type="radio" name="sendserver" value="true" checked>
+                    <label  for="true">True</label>
+                   
+                    <input id="false" type="radio" name="sendserver" value="false">
+                     <label for="false">False</label>
+                    </fieldset> 
+                #{/if}
+                #{else}
+                     <fieldset>
+                    <input id="true" type="radio" name="sendserver" value="true">  
+                    <label class="radio" for="true">True</label>
+                    
+                    <input id="false" type="radio" name="sendserver" value="false" checked>
+                    <label class="radio"  for="false">False</label>
+                    </fieldset>
+                #{/else}
+            </div>
+        
+        </div>
+    </div>
+
+    <div class="control-group">
+        <div class="controls">
+            <input type="hidden" name="oldname" value="${service.name}">
+            <input type="hidden" name="hostname" value="${host.name}">
+            <input onClick="saved()" class="btn" type="submit" value="&{'Save'}" />
+        </div>
+    </div>
 
 #{/form}
 </div>
 
 
 #{if service.serviceitem}
-    <table class="listtable">
     #{list service.serviceitem, as:'serviceitem'}
+    <table class="table table-bordered table-condensed table-hover">
+        <thead>
         <tr>
-            <td>&{'ServiceItemName'}</td><td>${serviceitem.name}</td>
+            <th class="" style="width: 20%">&{'ServiceItem'}</th>
+            <th height="0" style="width: 80%"></th>
+        </tr>
+        </thead>
+        
+        <tr>
+            <td><strong>&{'ServiceItemName'}</strong></td><td>${serviceitem.name}</td>
         </tr><tr>
-            <td>&{'ServiceItemDesc'}</td><td>${serviceitem.desc}</td>
+            <td><strong>&{'ServiceItemDesc'}</strong></td><td>${serviceitem.desc}</td>
         </tr><tr>
-            <td>&{'ServiceItemExecstatment'}</td><td>${serviceitem.execstatement}</td>
+            <td><strong>&{'ServiceItemExecstatment'}</strong></td><td>${serviceitem.execstatement}</td>
         </tr><tr>
-            <td>&{'ServiceItemClass'}</td><td>${serviceitem.serviceitemclass}</td>
+            <td><strong>&{'ServiceItemClass'}</strong></td><td>${serviceitem.serviceitemclass}</td>
         </tr><tr>
-            <td>&{'ServiceItemThresholdClass'}</td><td>${serviceitem.thresholdclass}</td>
+            <td><strong>&{'ServiceItemThresholdClass'}</strong></td><td>${serviceitem.thresholdclass}</td>
         </tr><tr>
             <td>
-            <a href="@{editserviceitem(host.name,service.name,serviceitem.name)}">&{'EditServiceItem'}</a>
-            <a href="@{deleteserviceitem(host.name,service.name,serviceitem.name)}">&{'DeleteServiceItem'}</a>
+            <a href="@{editserviceitem(host.name,service.name,serviceitem.name)}"><i class="icon-pencil"></i>&{'EditServiceItem'}</a>
+            <a href="@{deleteserviceitem(host.name,service.name,serviceitem.name)}"><i class="icon-trash"></i>&{'DeleteServiceItem'}</a>
             </td>
         </tr>
-        <tr class="separator">
-            <td></td><td></td>
-        </tr>
-    #{/list}
     </table>    
+    #{/list}
+    
 #{/if}
 #{else}
     Must add serviceitem! </br>

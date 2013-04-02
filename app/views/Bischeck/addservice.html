@@ -1,67 +1,96 @@
 #{extends 'main.html' /}
 #{set title:'Edit host' /}
 
-<h1>
+<h3>
 &{'AddService'}    
-</h1>
+</h3>
 
-<h2>
+<h4>
 ${hostname}
-</h2>
+</h4>
 
 
-<div class="downlink">
-<ul>
-<li>
-<a href="@{edithost(hostname)}">&{'BackToHost'}</a>
-</li>
-</ul>
+<div class="navbar">
+	<div class="navbar-inner">
+		<ul class="nav">
+			<li><a href="@{edithost(hostname)}"><i class="icon-step-backward icon-white"></i>&{'BackToHost'}</a></li>
+		</ul>
+	</div>
 </div>
 
 
-<div class="saveedit">
-#{form @Bischeck.saveservice()  }
-    
-    <label for="name">&{'ServiceName'}</label> 
-    <input id="name" type="text" name="name" value="${service.name}" />
-    <span class="error">#{error 'name' /}</span>
-    <br />
-    
-    <label for="desc">&{'Description'}</label> 
-    <textarea id="desc" name="desc">${service.desc}</textarea>
-    <br />
-    
-    <label for="url">&{'ServiceUrl'}</label> 
-    <input  id="url" type="text" name="url" value="${service.url}" />
-    <br />
-    
-    <label for="driver">&{'ServiceDriver'}</label> 
-    <input id="driver" type="text" name="driver" value="${service.driver}" />
-    <br />
-    
-    <p>
-    &{'ServiceSendServer'}
-    </p>
-    
-    <div class="radio">
-    #{if service.sendserver}
-       
-        <label for="true">True</label><INPUT id="true" type="radio" name="sendserver" value="true" checked> <br />
-        <label for="false">False</label><INPUT id="false" type="radio" name="sendserver" value="false">   
-    #{/if}
-    #{else}
-        <label for="true">True</label><INPUT id="true" type="radio" name="sendserver" value="true" > <br />
-        <label for="false">False</label><INPUT id="false" type="radio" name="sendserver" value="false" checked>  
-    #{/else}
+<div class="form-horizontal">
+	#{form @Bischeck.saveservice() }
+
+	<div class="control-group">
+		<label class="control-label" for="name">&{'ServiceName'}</label>
+		<div class="controls">
+			<input type="text" id="name" name="name" value="${service.name}">
+			<span class="error">#{error 'name' /}</span>
+
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="desc">&{'Description'}</label>
+		<div class="controls">
+			<textarea id="desc" name="desc">${service.desc}</textarea>
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="url">&{'ServiceUrl'}</label>
+		<div class="controls">
+		  <textarea id="url" name="url">${service.url}</textarea> 
+		</div>
+	</div>
+
+    <div class="control-group">
+        <label class="control-label" for="driver">&{'ServiceDriver'}</label>
+        <div class="controls">
+            <textarea id="driver" name="driver">${service.driver}</textarea>
+        </div>
     </div>
-    <br />
-    <input type="hidden" name="hostname" value="${hostname}">
-    
-    <input onClick="saved()" class="submitbutton" type="submit" value="&{'Save'}" />
-    
+
+	<div class="control-group">
+        <label class="control-label">&{'ServiceSendServer'}</label>
+        <div class="controls">
+
+            <div class="input radio">
+                #{if service.sendserver} 
+                    <fieldset>
+                    
+                    <input id="true" type="radio" name="sendserver" value="true" checked>
+                    <label  for="true">True</label>
+                   
+                    <input id="false" type="radio" name="sendserver" value="false">
+                     <label for="false">False</label>
+                    </fieldset> 
+                #{/if}
+                #{else}
+                     <fieldset>
+                    <input id="true" type="radio" name="sendserver" value="true">  
+                    <label class="radio" for="true">True</label>
+                    
+                    <input id="false" type="radio" name="sendserver" value="false" checked>
+                    <label class="radio"  for="false">False</label>
+                    </fieldset>
+                #{/else}
+            </div>
+        
+        </div>
+    </div>
 
 
-#{/form}
+	
+	<div class="control-group">
+		<div class="controls">
+			<input type="hidden" name="hostname" value="${hostname}"> <input
+				onClick="saved()" class="btn" type="submit" value="&{'Save'}" />
+		</div>
+	</div>
+	#{/form}
 </div>
 
- 
+
+
