@@ -10,4 +10,4 @@ CLASSPLAY=$PLAYHOME/framework/play-1.2.4.jar:$PLAYHOME/framework/lib/*
 
 CLASSPATH=$CLASSBISCONF:$CLASSPLAY:$CLASSBISCHECK
 
-java -classpath $CLASSPATH -Dbisconfhome=$BISCONFHOME -Dbishome=/opt/socbox/addons/bischeck -Dplay.id=prod -Dapplication.path=$BISCONFHOME -Djava.endorsed.dirs=$PLAYHOME/framework/endorsed  -Dfile.encoding=UTF-8  play.server.Server
+java -classpath $CLASSPATH -Dbisconfhome=$BISCONFHOME -Dbishome=$BISHOME -Dplay.id=prod -Dapplication.path=$BISCONFHOME -Djava.endorsed.dirs=$PLAYHOME/framework/endorsed  -Dfile.encoding=UTF-8  play.server.Server
