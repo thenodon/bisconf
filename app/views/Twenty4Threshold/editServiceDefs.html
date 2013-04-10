@@ -249,13 +249,16 @@
                     </td>
         
                             
-                    <!-- ${hours.get(hashperiod.get(period).hoursIDREF).getTypeOfHour().toString()} -->
                     <!-- CHECK THE HOUR FORMAT -->    
                     <td>
                         <!-- ${hourCounter=new Integer(0)} -->
                         
+                        #{if hours.get(hashperiod.get(period).hoursIDREF) == null}
+                        <!-- ${currentHour=new String(" - ")} -->
+                        #{/if}
+                        #{else}
                         #{if hours.get(hashperiod.get(period).hoursIDREF).getTypeOfHour().toString() == 'HOUR24'}
-                        
+                        <!-- ${currentHour=hashperiod.get(period).hoursIDREF} -->
                         <table class="hour">
                         #{list hours.get(hashperiod.get(period).hoursIDREF).getHour24(), as:'hour'}
                             <tr>
@@ -272,7 +275,7 @@
                         #{/if}
                         
                         #{if hours.get(hashperiod.get(period).hoursIDREF).getTypeOfHour().toString() == 'HOURINTERVAL'}
-                        
+                        <!-- ${currentHour=hashperiod.get(period).hoursIDREF} -->
                         <table class="hour">
                         #{list hours.get(hashperiod.get(period).hoursIDREF).getHourInterval(), as:'hour'}
                             <tr>
@@ -284,13 +287,13 @@
                         </table>
                         
                         #{/if}
-                        
+                        #{/else}
                         #{form @Twenty4Threshold.selectHourID()}
                         <fieldset>
-                    
+                                            
                         <label for="hourid"><strong>&{'HourID'}</strong></label>
                         <select class="input-mini" id="hourid" name="hourid">
-                            <option value="${hashperiod.get(period).hoursIDREF}" >${hashperiod.get(period).hoursIDREF}</option>
+                            <option value="${currentHour}" >${currentHour}</option>
                             #{list allhourids, as: 'hour'}
                                 <option value="${hour}">${hour}</option>
                             #{/list}

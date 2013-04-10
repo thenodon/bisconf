@@ -379,15 +379,19 @@ public class Twenty4Threshold extends BasicController {
 			if (servicedef.getHostname().equals(hostname)
 					&& servicedef.getServicename().equals(servicename)
 					&& servicedef.getServiceitemname().equals(serviceitemname)) {
-
-				servicedef.getPeriod().add(new XMLPeriod());
+				
+				XMLPeriod period = new XMLPeriod();
+				period.setCalcmethod(">");
+				period.setCritical(0);
+				period.setWarning(0);
+				servicedef.getPeriod().add(period);
 				flash.success(Messages.get("SavePeriodSuccess"));
 				editServiceDefs(hostname, servicename, serviceitemname, "");
 			}
 		}
 
 		// if new and not existing
-
+		Logger.info("New period");
 		XMLServicedef servicedef = new XMLServicedef();
 		servicedef.setHostname(hostname);
 		servicedef.setServicename(servicename);
@@ -418,7 +422,13 @@ public class Twenty4Threshold extends BasicController {
 				XMLPeriod period = getPeriodByIndex(servicedef, Integer
 						.parseInt(params.get("periodindex")));
 
-				period.setHoursIDREF(Integer.parseInt(params.get("hourid")));
+				try {
+					period.setHoursIDREF(Integer.parseInt(params.get("hourid")));
+				} catch (NumberFormatException ne) {
+					flash.error(Messages.get("SelectHourIDError"));
+					editServiceDefs(params.get("hostname"), params.get("servicename"),
+							params.get("serviceitemname"), params.get("periodindex"));
+				}
 
 			}
 		}
