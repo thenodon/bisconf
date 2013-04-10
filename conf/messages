@@ -181,3 +181,22 @@ Warning=Warning
 Wednesday=Wednesday
 Week=Week
 Year=Year
+
+# Success and Errors
+DeleteAllPeriodsSuccess=Delete all periods
+DeletePeriodSuccess=Delete period
+SavePeriodSuccess=Save period
+SaveServiceDefSuccess=Save service definition
+SelectHourIDError=Hour id must be a number
+SelectHourIDSuccess=Save hour id
+SavePeriodDataSuccess=Save period settings
+DeletePeriodMonthSuccess=Delete month
+SavePeriodMonthSuccess=Save month
+DeletePeriodWeekSuccess=Delete week
+SavePeriodMonthSuccess=Save month
+DeleteYearSuccess=Delete year
+SaveYearSuccess=Save year
+DeleteDaySuccess=Delete day
+SaveDaySuccess=Save day
+SaveHourSuccess=Save hour
+DeleteHourSuccess=Delete hour

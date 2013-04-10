@@ -281,9 +281,8 @@ public class Twenty4Threshold extends BasicController {
 		Iterator<XMLPeriod> perioditer = periodlist.iterator();
 		//System.out.println("crete - periodlist:" + periodlist.size());
 		Map<Integer, XMLPeriod> hashperiod = new HashMap<Integer, XMLPeriod>();
-		int count = 0;
+		
 		while (perioditer.hasNext()) {
-			count++;
 			XMLPeriod period = perioditer.next();
 			hashperiod.put(period.hashCode(), period);
 			//System.out.println("HASHcode: " + period.hashCode() + "Period obj: " + period.toString());
@@ -381,7 +380,12 @@ public class Twenty4Threshold extends BasicController {
 					&& servicedef.getServicename().equals(servicename)
 					&& servicedef.getServiceitemname().equals(serviceitemname)) {
 
-				servicedef.getPeriod().add(new XMLPeriod());
+				
+				XMLPeriod period = new XMLPeriod();
+				period.setCalcmethod(">");
+				period.setCritical(0);
+				period.setWarning(0);
+				servicedef.getPeriod().add(period);
 				flash.success(Messages.get("SavePeriodSuccess"));
 				editServiceDefs(hostname, servicename, serviceitemname, "");
 			}
@@ -418,9 +422,14 @@ public class Twenty4Threshold extends BasicController {
 
 				XMLPeriod period = getPeriodByIndex(servicedef, Integer
 						.parseInt(params.get("periodindex")));
-
-				period.setHoursIDREF(Integer.parseInt(params.get("hourid")));
-
+				
+				try {
+					period.setHoursIDREF(Integer.parseInt(params.get("hourid")));
+				} catch (NumberFormatException ne) {
+					flash.error(Messages.get("SelectHourIDError"));
+					editServiceDefs(params.get("hostname"), params.get("servicename"),
+							params.get("serviceitemname"), params.get("periodindex"));
+				}
 			}
 		}
 		flash.success(Messages.get("SelectHourIDSuccess"));
