@@ -173,7 +173,6 @@ public class Twenty4Threshold extends BasicController {
 	public static void editServiceDefs(String hostname, String servicename,
 			String serviceitemname, String period) {
 
-		//System.out.println("Period " + period);
 		String anchor = period;
 
 		XMLTwenty4Threshold config = getCache();
@@ -279,13 +278,11 @@ public class Twenty4Threshold extends BasicController {
 	private static Map<Integer, XMLPeriod> createIndexPeriodMap(
 			List<XMLPeriod> periodlist) {
 		Iterator<XMLPeriod> perioditer = periodlist.iterator();
-		//System.out.println("crete - periodlist:" + periodlist.size());
 		Map<Integer, XMLPeriod> hashperiod = new HashMap<Integer, XMLPeriod>();
 		
 		while (perioditer.hasNext()) {
 			XMLPeriod period = perioditer.next();
 			hashperiod.put(period.hashCode(), period);
-			//System.out.println("HASHcode: " + period.hashCode() + "Period obj: " + period.toString());
 		}
 
 
@@ -298,7 +295,7 @@ public class Twenty4Threshold extends BasicController {
 			Integer myp = iter.next();
 			System.out.println("HASHcode: " + myp + "Period obj: " + sorted_map.get(myp).toString());
 		}
-		 */
+		*/
 		return sorted_map;
 	}
 
@@ -340,7 +337,7 @@ public class Twenty4Threshold extends BasicController {
 
 		while (servicedefs.hasNext()) {
 			XMLServicedef servicedef = servicedefs.next();
-			System.out.println("Search");
+			
 			/*
 			 * Get
 			 */
