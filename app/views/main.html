@@ -37,8 +37,12 @@
     #{get 'moreScripts' /}
   </head>
 
-  <body onload="jump(${anchor})">
 
+  <body onload="jump(${anchor})">
+    #{if user != null }    
+
+    
+    
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container-fluid">
@@ -66,23 +70,25 @@
                     <ul class="nav">
 
                         <li class="active"><a href="@{Application.index()}"><i
-                                class="icon-home icon-white"></i> &{'Home'}</a></li>
-                        <li><a href="@{Application.resetAll()}"><i
-                                class="icon-refresh icon-white"></i> &{'ResetAll'}</a></li>
-                        <li><a href="@{Application.about()}"><i
-                                class="icon-eye-open icon-white"></i> &{'About'}</a></li> #{if
-                        user.isAdmin}
-                        <li><a href="${play.configuration['http.path']}/admin"><i
-                                class="icon-user icon-white"></i> &{'Admin'}</a></li> #{/if}
-                        <li>#{if newVersion } <span class="error"><strong>&{'NewVersionExistCreatedBy'}
-                                    ${newVersionUser}</strong></span> #{/if}
+                                class="icon-home icon-white"></i> &{'Home'}</a>
                         </li>
-
-
-
-
-
-
+                        <li><a href="@{Application.resetAll()}"><i
+                                class="icon-refresh icon-white"></i> &{'ResetAll'}</a>
+                        </li>
+                        <li><a href="@{Application.about()}"><i
+                                class="icon-eye-open icon-white"></i> &{'About'}</a>
+                        </li> 
+                        #{if user.isAdmin}
+                        <li><a href="${play.configuration['http.path']}/admin"><i
+                                class="icon-user icon-white"></i> &{'Admin'}</a>
+                        </li> 
+                        #{/if}
+                        #{if newVersion }
+                        <li><a href="@{Version.list()}"><i class="icon-warning-sign icon-white"></i> <span class="text-warning"><strong>&nbsp; &{'NewVersionExistCreatedBy'} ${newVersionUser}&nbsp;</strong></span></a> 
+                        
+                         
+                        </li>
+                        #{/if}
                     </ul>
                 </div>
                 <!--/.nav-collapse -->
@@ -200,12 +206,21 @@ function setFocus(id) {
     
     <script src="@{'/public/javascripts/verifynotify.js'}" type="text/javascript" charset="${_response_encoding}"></script>
 
-<script>
+    <script>
 
-$(document).ready(function(){
-});
+    $(document).ready(function(){
+    });
 
-</script>
+    </script>
+    
+    #{/if}
+    #{else}
+        <p>
+        <center>
+        <a href="@{Secure.logout()}">&{'PleaseLoginAgain'}</a>
+        </center>
+        <p>
+    #{/else}
     
   </body>
 </html>
