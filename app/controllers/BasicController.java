@@ -27,17 +27,18 @@ public class BasicController extends Controller{
 
 	@Before 
 	static void checkNewVersion() {
-		if (!Cache.get("lastVersionId").equals(session.get("lastVersionId"))) {
-			Logger.debug("Check - session - lastVersionId " + session.get("lastVersionId"));
-			Logger.debug("Check - Cache - lastVersionId " + Cache.get("lastVersionId"));
-			Logger.debug("Check - Cache - lastUserId " + Cache.get("lastUserId"));
-			
-			renderArgs.put("newVersion", true);	
-			renderArgs.put("newVersionUser", Cache.get("lastUserId"));
-		} else {
-			renderArgs.put("newVersion", false);
+		if (Cache.get("lastVersionId") != null) { 
+			if (!Cache.get("lastVersionId").equals(session.get("lastVersionId"))) {
+				Logger.debug("Check - session - lastVersionId " + session.get("lastVersionId"));
+				Logger.debug("Check - Cache - lastVersionId " + Cache.get("lastVersionId"));
+				Logger.debug("Check - Cache - lastUserId " + Cache.get("lastUserId"));
+
+				renderArgs.put("newVersion", true);	
+				renderArgs.put("newVersionUser", Cache.get("lastUserId"));
+			} else {
+				renderArgs.put("newVersion", false);
+			}
 		}
-		
 	}
 	
 	//@Before
