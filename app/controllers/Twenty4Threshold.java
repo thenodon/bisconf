@@ -560,9 +560,9 @@ public class Twenty4Threshold extends BasicController {
 						.parseInt(params.get("periodindex")));
 
 				XMLMonths month2add = new XMLMonths();
-				if (!params.get("month").equalsIgnoreCase("None"))
+				if (!params.get("month").equalsIgnoreCase(Messages.get("any")))
 					month2add.setMonth(Integer.parseInt(params.get("month")));
-				if (!params.get("dayofmonth").equalsIgnoreCase("None"))
+				if (!params.get("dayofmonth").equalsIgnoreCase(Messages.get("any")))
 					month2add.setDayofmonth(Integer.parseInt(params
 							.get("dayofmonth")));
 
@@ -630,10 +630,10 @@ public class Twenty4Threshold extends BasicController {
 						.parseInt(params.get("periodindex")));
 				XMLWeeks week2add = new XMLWeeks();
 
-				if (!params.get("week").equalsIgnoreCase("None"))
+				if (!params.get("week").equalsIgnoreCase(Messages.get("any")))
 					week2add.setWeek(Integer.parseInt(params.get("week")));
 
-				if (!params.get("dayofweek").equalsIgnoreCase("None"))
+				if (!params.get("dayofweek").equalsIgnoreCase(Messages.get("any")))
 					week2add.setDayofweek(Integer.parseInt(params
 							.get("dayofweek")));
 

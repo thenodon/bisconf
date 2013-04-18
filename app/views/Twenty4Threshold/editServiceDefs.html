@@ -63,7 +63,7 @@
                             <td>
                         
                             <select class="input-small"  name="month">
-                                <option value="none">&{'None'}</option>
+                                <option value="any">&{'Any'}</option>
                                 #{list items:1..12, as:'i'}
                                     <option value="${i}">${i}</option>
                                 #{/list}
@@ -72,7 +72,7 @@
                             </td><td>
                         
                             <select class="input-small" name="dayofmonth">
-                                <option value="none">&{'None'}</option>
+                                <option value="any">&{'Any'}</option>
                                 #{list items:1..31, as:'i'}
                                     <option value="${i}">${i}</option>
                                 #{/list}
@@ -128,7 +128,7 @@
 
                             <td>    
                             <select class="input-small" name="week">
-                                <option value="none">&{'None'}</option>
+                                <option value="any">&{'Any'}</option>
                                 #{list items:1..53, as:'i'}
                                     <option value="${i}">${i}</option>
                                 #{/list}
@@ -136,7 +136,7 @@
                             </td><td>
                             
                             <select class="input-small" name="dayofweek">
-                                <option value="none">&{'None'}</option>
+                                <option value="any">&{'Any'}</option>
                                     <option value="1">&{'Sunday'}</option>
                                     <option value="2">&{'Monday'}</option>
                                     <option value="3">&{'Tuesday'}</option>
